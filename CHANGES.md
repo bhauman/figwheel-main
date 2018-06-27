@@ -1,3 +1,7 @@
+# 0.1.4 Move into own Repository
+
+This release was only to establish https://github.com/bhauman/figwheel-main as the new home of com.bhauman/figwheel-main
+
 # 0.1.3
 
 * enable reloading of dependents, configurable with :reload-dependents
