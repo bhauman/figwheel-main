@@ -1,3 +1,7 @@
 target
 .cpcache
 *.log
+
+dev.cljs.edn
+
+figwheel-main.edn
