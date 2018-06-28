@@ -147,7 +147,7 @@ Add `com.bhauman/rebel-readline-cljs 0.1.4` as another dependency in your `deps.
 
 When you launch `figwheel.main` now it will detect the presence of
 `com.bhauman/rebel-readline-cljs` and it will launch a REPL using this
-fully functional line reader.
+new and improved terminal line reader.
 
 Let's launch `figwheel.main` again, from the `hello-cljs` directory:
 
@@ -155,7 +155,91 @@ Let's launch `figwheel.main` again, from the `hello-cljs` directory:
 $ clojure -m figwheel.main
 ```
 
+After launching a Browser will open and a REPL will start just as when
+we launched it above. However, you will see the following line right
+before the `cljs.user=>` prompt. 
 
+```shell
+[Rebel readline] Type :repl/help for online help info
+```
+
+This notifies you that you are using Rebel Readline. 
+
+If you type `:repl/help` at the prompt you will first notice that
+`:repl/help` itself is now has color syntax highlighting. Upon hitting
+enter it will output a useful reference for the REPL's capabilities.
+
+![rebel readline help](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/rebel-readline-help.png)
+
+#### Rebel Readline feature walkthrough
+
+Let's quickly walk through how to use some of the **Clojure Key
+Bindings** listed in the help.
+
+Type `(ra` at the prompt and don't hit enter but hit the TAB key.
+
+You will see a list of choices that you can TAB through or you can
+keep typing to narrow the selection down.
+
+Select `rand-int`, you will now have `cljs.user=> (rand-int` on the
+line. 
+
+Let's find out how to use `rand-int`. Hit `Control-X Control-D` to
+bring up the documentation for `rand-int`, upon doing so you will see 
+
+![rebel redline displaying rand-int doc](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/demo-rebel-documentation.png)
+
+This documentation is showing you the function argument signature
+`([n])` which indicates that it takes one argument `n` and from the
+rest of the documentation and the name of the function we can infer
+that it takes a single integer argument.
+
+If we want to know how `rand-int` was implemented we can see it's
+source code by hitting `Control-X Control-S`.
+
+Now that we know that `rand-int` takes a single integer argument let's
+call it. Complete the REPL line by typing `(rand-int 5)` and hit enter
+and you should indeed get a random number from 0 to 4.
+
+If you hit the up arrow you can get `(rand-int 5)` back at the REPL
+prompt and you can hit enter again to get a different result.
+
+Now let's look at a function with a more complex argument signature.
+
+Enter `(range` at the prompt (use TAB completion if you like). Now
+look at it's documentation with `Control-X Control-D` you will notice
+that the argument signature is described differently. 
+
+```clojure
+([] [end] [start end] [start end step])
+```
+
+It's actually just a list of signatures. So for `range` you can call
+it with no arguments `[]` which will return an infinite sequence (not
+recommended at the REPL), you can call it with one argument `[end]`
+specifying where a range starting at `0` should end, you can call it
+with the other argument arities `[start end]` and `[start end step]`.
+
+Let's try this:
+
+```clojure
+cljs.user=> (range 4)
+(0 1 2 3)
+cljs.user=> (range 4 10)
+(4 5 6 7 8 9)
+cljs.user=> (range 4 10 2)
+(4 6 8)
+```
+
+We intentionally didn't try to use `(range)` you can try this now.  It
+should freeze the REPL and the browser. 
+
+> TiP If your REPL gets stuck in a tight loop, you can simply kill the
+> REPL with `Control-C Control-D` and start it again OR you can return
+> to the REPL host page and take note of the URL (most likely
+> `http://localhost:9500/` in our case) and then open it again. If you
+> need to reset the state of the REPL at any point you can simply
+> refresh/reload the REPL host page.
 
 
 
