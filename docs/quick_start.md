@@ -3,7 +3,7 @@
 This document is intended to get you aquainted with the features and
 workflow of Figwheel.
 
-This quick start is based on the Clojure CLI tools if you are on
+This quick start is based on the Clojure CLI tools. If you are on
 Windows Opersting System you will want to use the [Leiningen version of
 this document](/quick_start_lein.html)
 
@@ -49,7 +49,7 @@ If everything worked well you have successfully installed Clojure!
 Make a directory for an example ClojureScript project.
 
 For example in `/Users/[your username]/workspace` you could create a
-directory called:
+directory called `hello-cljs`:
 
 ```
 workspace$ mkdir hello-cljs
@@ -83,11 +83,36 @@ clj -m figwheel.main
 ```
 
 This should boot up a ClojureScript REPL and pop open a Browser
-window.
+window with a page like this:
 
+![Repl host page in browser](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-repl-host-page.png)
 
+If you see the green "Connected" animation it means that this page is
+connected to the REPL that you just launched. This webpage is where all
+the ClojureScript expressions that you type into the REPL will be
+evaluated.
 
+Speaking of the REPL, if you head back to the terminal window where you
+launched Figwheel from, you should now see something like:
 
+![figwheel repl prompt in terminal](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-repl.png)
+
+If this is the case you have successfully started a ClojureScript REPL
+and you can now type ClojureScript at the `cljs.user=>` prompt.
+
+Let's try some ClojureScript:
+
+```clojure
+cljs.user=> (println "Hello World!")
+Hello World
+nil
+cljs.user=> (range 5)
+(0 1 2 3 4)
+cljs.user=> (map (fn [x] (+ 1 x)) (range 5))
+(1 2 3 4 5)
+cljs.user=> (filter odd? (map (fn [x] (+ 1 x)) (range 5)))
+(1 3 5)
+```
 
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
