@@ -74,6 +74,8 @@ following contents.
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}}}
 ```
 
+## Starting a ClojureScript REPL
+
 Now that you have done that you can get a ClojureScript REPL running
 straight away. Make sure you are still in the `hello-cljs` directory
 and enter:
@@ -100,10 +102,11 @@ launched Figwheel from, you should now see something like:
 If this is the case you have successfully started a ClojureScript REPL
 and you can now type ClojureScript at the `cljs.user=>` prompt.
 
-Let's try some ClojureScript:
+Let's try some ClojureScript. Type the following expressions at the
+prompt as demonstrated in the example REPL session below:
 
 ```clojure
-cljs.user=> (println "Hello World!")
+cljs.user=> 
 Hello World
 nil
 cljs.user=> (range 5)
@@ -112,7 +115,15 @@ cljs.user=> (map (fn [x] (+ 1 x)) (range 5))
 (1 2 3 4 5)
 cljs.user=> (filter odd? (map (fn [x] (+ 1 x)) (range 5)))
 (1 3 5)
+cljs.user=> (js/alert "ClojureScript!")
+nil
 ```
+
+That last expression should cause a JavaScript Alert to pop up in the
+browser on our REPL host page.
+
+
+
 
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
