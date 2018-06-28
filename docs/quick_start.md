@@ -44,7 +44,7 @@ of the Clojure REPL.
 
 If everything worked well you have successfully installed Clojure!
 
-# Make a new directory to work in
+## Make a new directory to work in
 
 Make a directory for an example ClojureScript project.
 
@@ -55,7 +55,7 @@ directory called `hello-cljs`:
 workspace$ mkdir hello-cljs
 ```
 
-# Specifying that you want to use Figwheel
+## Specifying that you want to use Figwheel
 
 Figwheel is a library, or rather it is a Jar of Clojure code that you
 will use. If you are familiar Ruby's `bundler` and `Gemfile`, Python's
@@ -99,15 +99,15 @@ launched Figwheel from, you should now see something like:
 
 ![figwheel repl prompt in terminal](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-repl.png)
 
-If this is the case you have successfully started a ClojureScript REPL
+If this is the case, you have successfully started a ClojureScript REPL
 and you can now type ClojureScript at the `cljs.user=>` prompt.
 
 Let's try some ClojureScript. Type the following expressions at the
 prompt as demonstrated in the example REPL session below:
 
 ```clojure
-cljs.user=> 
-Hello World
+cljs.user=> (println "Hello World!")
+Hello World!
 nil
 cljs.user=> (range 5)
 (0 1 2 3 4)
@@ -122,9 +122,45 @@ nil
 That last expression should cause a JavaScript Alert to pop up in the
 browser on our REPL host page.
 
+## Amping up the REPL
+
+The REPL we just launched will do fine for trying simple expressions
+but if you are learning a new language it's nice to have a REPL that
+can 
+
+* syntax highlight the code as you type it
+* allows for easy multi-line editing of expressions
+* autocomplete the current function name that you are typing
+* display the documentation for the function where your cursor is
+* display the source code of the function where your cursor is
+* allows you to query for functions that are similar to the word under your cursor
+
+My library [Rebel Readline](rebel) provides these features for Clojure REPLs and it
+will be very helpful for further explorations of using Figwheel and ClojureScript.
+
+Add `com.bhauman/rebel-readline-cljs 0.1.4` as another dependency in your `deps.edn` file:
+
+```clojure
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
+```
+
+When you launch `figwheel.main` now it will detect the presence of
+`com.bhauman/rebel-readline-cljs` and it will launch a REPL using this
+fully functional line reader.
+
+Let's launch `figwheel.main` again, from the `hello-cljs` directory:
+
+```shell
+$ clojure -m figwheel.main
+```
+
+
+
+
 
 
 
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
-
+[rebel]: https://github.com/bhauman/rebel-readline
