@@ -81,7 +81,7 @@ straight away. Make sure you are still in the `hello-cljs` directory
 and enter:
 
 ```clojure
-clj -m figwheel.main
+clojure -m figwheel.main
 ```
 
 This should boot up a ClojureScript REPL and pop open a Browser
@@ -456,8 +456,73 @@ hello.cruel-world=> (set! (.-innerHTML app-element) (what-kind?))
 ```
 
 Well that was just a brief tour of what you can do working from the
-REPL. I'm hoping to create a more advanced guide to walk you though
-some more interesting example's.
+REPL. This knowlegde should be enough to allow you to explore the
+ClojureScript language a bit. 
+
+> **TIP**: Much of what you learned above applies equally well to
+> Clojure. So if you would like to try your hand at Clojure, as well,
+> you can get a working Rebel Readline Clojure REPL by typing `clojure
+> -m rebel-readline.main` in the `hello-cljs` directory. If you want
+> to create and load Clojure files, everything is the same as above
+> except Clojure files end with `.clj`
+
+## Working with code more interactively
+
+Sometimes you want to start the REPL with some code already compiled and loaded.
+
+You can accomplish this by using the following command:
+
+```clojure
+clojure -m figwhee.main --compile hello.cruel-world --repl
+```
+
+You will notice some differences in the output this time:
+
+![compile terminal output](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile.png)
+
+The output looks very similar to launching launching a REPL without
+compiling. There are some important differences that I'd like to
+address next.
+
+The first thing of note is this warning:
+
+![target classpath warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile-warning.png)
+
+This is absolutely expected and important. When started the
+`figwheel.main` REPL without any arguments, it used a temporary
+directory to host the compiled ClojureScript assets and added it to
+the classpath automatically.
+
+The path to the compiled assets must be on the classpath so that they
+can be served by the built in figwheel server.
+
+Running `figwheel.main` normally indicates that you are just
+experimenting with some code and that you are not working on a project
+that you have a commitment to yet. Once you start compiling things
+this is an indication that we are commiting to a project of some kind
+and thus we have to start maintaining the classpath correctly if we
+want to be able to compile and run our code with `cljs.main` and other
+tools that don't automatically add paths to the classpath for you.
+
+We can fix the classpath warning by adding both `"src"` and `"target"`
+to the `:paths` key in our `deps.edn` file:
+
+```clojure
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+ :paths ["src" "target"]}
+```
+
+We have to explicitly include `"src"` as well as `"target"` as once
+you define a `:paths` key it becomes the definition and there are no
+other implicit paths added.
+
+Now we will return to run our REPL again from the `hello-cljs`
+directory.
+
+```clojure
+clojure -m figwhee.main --compile hello.cruel-world --repl
+```
 
 
 
