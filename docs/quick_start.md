@@ -473,7 +473,7 @@ Sometimes you want to start the REPL with some code already compiled and loaded.
 You can accomplish this by using the following command:
 
 ```clojure
-clojure -m figwhee.main --compile hello.cruel-world --repl
+$ clojure -m figwhee.main --compile hello.cruel-world --repl
 ```
 
 You will notice some differences in the output this time:
@@ -521,8 +521,76 @@ Now we will return to run our REPL again from the `hello-cljs`
 directory.
 
 ```clojure
-clojure -m figwhee.main --compile hello.cruel-world --repl
+$ clojure -m figwhee.main --compile hello.cruel-world --repl
 ```
+
+You should see the familiar output when starting a `figwheel.main` REPL.
+
+You shold see that your ClojureScript is being compiled to the local
+"target" directory now and not to some temporary directory.
+
+You should also notice this line:
+
+![watching line in output](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/watching-line.png)
+
+This line indicates that Figwheel is now watching the ClojureScript
+files in the `src` directory for changes. When a change is detected
+Figwheel will now hot reload it into the JavaScript environment.
+
+This is a big difference from reloading the `hello.cruel-world`
+namespace by hand at the REPL, now when you change and save the
+`src/hello/cruel_world.cljs` file it will be automatically loaded for
+you.
+
+Let's try this out.
+
+First let's verify that `hello.cruel-world` is loaded.
+
+```clojure
+cljs.user=> (hello.cruel-world/what-kind?)
+"Brilliantly Cruel"
+```
+
+Looks good! We successfully started the repl with our namespace
+already available so we don't have to explicitly require it.
+
+Now let's change the namespace. Go to the `src/hello/cruel_world.cljs`
+and change the `what-kind?` function so it returns `"Cruel No More"`
+and then save the file.
+
+```clojure
+(ns hello.cruel-world)
+
+(defn what-kind? []
+  "Cruel No More")
+```
+
+Once you save the file you should see a green `Successfully compiled`
+message appear in the REPL. You can now check the REPL to see that
+your code has indeed been reloaded automatically. (Don't forget that
+you can use TAB to help you enter the following)
+
+```clojure
+cljs.user=> (hello.cruel-world/what-kind?)
+"Cruel No More"
+```
+
+Our code has been loaded. Now, we don't have to explicitly reload a
+namespace as we work, we can simply save the file we are working on
+and it will be reloaded automatically.
+
+Now let's demonstrate how Figwheel provides feedback while you are
+working. 
+
+Normally when you are working on a Web Application your attention is
+on the web page you are working on in the Browser. So let's bring our
+focus to the "Figwheel Default Dev Page" that was launched.
+
+
+
+
+
+
 
 
 
