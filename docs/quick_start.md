@@ -295,6 +295,8 @@ in your expression while the cursor was inside of an **open
 expression** and that once you closed the expression (by adding the
 last paren), when you hit enter it was submitted for evaluation.
 
+You can exit the Rebel Readline REPL by hitting `Control-C Control-D`.
+
 ## Break Time
 
 Once you have made it this far you have learned how to add
@@ -303,10 +305,21 @@ with Clojure's CLI tools. You have then learned how to include
 [Rebel Readline](rebel) and how to use it to intraspect your
 environment and evalute code.
 
+
+
 This is more than enough to justify a break, may a suggest a nice walk
 or perhaps a chat with a co-worker nearby?
 
-## 
+## Working at the REPL
+
+Now let's create a file that contains some ClojureScript source code
+and load it into the REPL.
+
+We'll have to create a file where it can be found, which means it will
+have to be on the classpath. It just so happens the the Clojure tool
+adds the local `src` directory to the classpath. 
+
+
 
 
 

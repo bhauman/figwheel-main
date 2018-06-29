@@ -34,13 +34,15 @@ footer {
 }
 
 code {
-  background-color: #eee;
+  background-color: #f3f3f3;
   display: inline-block;
   padding: 0px 3px;
   border-radius: 2px;
+  font-size: 0.865em;
 }
 
 pre code {
   background: initial;
   display: initial;
+  font-size: inherit;
 }
