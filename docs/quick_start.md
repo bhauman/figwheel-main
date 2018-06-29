@@ -232,14 +232,81 @@ cljs.user=> (range 4 10 2)
 ```
 
 We intentionally didn't try to use `(range)` you can try this now.  It
-should freeze the REPL and the browser. 
+should freeze the REPL and the browser because the browser is now
+stuck in a tight loop trying to iterate through all the integers up
+the maximum integer possible.
 
-> TiP If your REPL gets stuck in a tight loop, you can simply kill the
-> REPL with `Control-C Control-D` and start it again OR you can return
-> to the REPL host page and take note of the URL (most likely
-> `http://localhost:9500/` in our case) and then open it again. If you
-> need to reset the state of the REPL at any point you can simply
-> refresh/reload the REPL host page.
+> **TIP**: Sometimes its easy to forget that the REPL is backed by a
+> browser window, which is a very simple thing to reset. If your REPL
+> gets stuck in a tight loop, you can return to the REPL host page,
+> take note of the URL (most likely `http://localhost:9500/` in our
+> case) and then explicitly close it (a page reload often doesn't work
+> in this case) to kill the tight loop and then open it again. At this
+> point the REPL should have timed out and returned to functioning
+> normally. If you are not in a tight loop and need to reset the state
+> of the REPL at any point you can simply reload the REPL host page
+> and that will give you a fresh slate to start from.
+
+Okay, back from the brink?
+
+Be sure that you have started a REPL again and that you are back at
+the `cljs.user=>` prompt.
+
+There is one more Rebel Readline feature that I'd like to go over
+before moving on.
+
+At the prompt enter the expression `(+ 1 2 3 4)`, and after that when
+your cursor is just after the last `)`, hit `Control-X Control-E`.
+
+You should see that the expression was evaluated and the result `#_=>
+10` displayed just under the line where your cursor is. Rebel readline
+allows you to evaluate any expression or sub expression before hitting
+enter.
+
+Let's try that again, now get back to an empty prompt and enter the
+expression `(+ (+ 1 2 3) (+ 4 5 6))` and now place the cursor after
+the last paren of the sub-expression `(+ 1 2 3)`. If you hit
+`Control-X Control-E` at this point you will see that you get the
+value `6`. Experiment with evaluating in other parts of the expression
+on this line.
+
+What's the value of this feature? It allows you to work on larger
+multiline expressions while verifying that the sub expressions are
+doing what you expect them to do.
+
+> Having easy to parse expressions is part of the magic of LISP. It
+> allows tools to understand delimited expressions without having to
+> implement a complete parser for the language.
+
+Also you may have noticed that you can create multi-line expressions
+at the REPL prompt in a fairly straight forward way.
+
+Try enterinng the following expression at the prompt and make sure you
+format it so that it spans multiple lines.
+
+```clojure
+cljs.user=> (+ 1
+       #_=>    2
+       #_=>    3)
+```
+
+You should notice that you were able to hit enter to create newlines
+in your expression while the cursor was inside of an **open
+expression** and that once you closed the expression (by adding the
+last paren), when you hit enter it was submitted for evaluation.
+
+## Break Time
+
+Once you have made it this far you have learned how to add
+dependencies to `deps.edn` and how to start a `figwheel.main` REPL
+with Clojure's CLI tools. You have then learned how to include
+[Rebel Readline](rebel) and how to use it to intraspect your
+environment and evalute code.
+
+This is more than enough to justify a break, may a suggest a nice walk
+or perhaps a chat with a co-worker nearby?
+
+## 
 
 
 
