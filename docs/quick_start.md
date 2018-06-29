@@ -317,9 +317,147 @@ and load it into the REPL.
 
 We'll have to create a file where it can be found, which means it will
 have to be on the classpath. It just so happens the the Clojure tool
-adds the local `src` directory to the classpath. 
+adds the local `src` directory to the classpath.
 
+Let's create a file there. 
 
+Leave the REPL running and create a file `src/hello/cruel_world.cljs`
+with the following contents:
+
+```clojure
+(ns hello.cruel-world)
+
+(defn what-kind? []
+  "Cruel")
+```
+
+The file layout should be of your project should now be:
+
+```shell
+hello-cljs
+├── deps.edn
+└── src
+    └── hello
+        └── cruel_world.cljs
+```
+
+Take note that we are declaring a namespace `hello.cruel-world` and
+that the path to our file mirrors this namespace and it is rooted in
+the `src` directory which is on the classpath. This is what will allow
+the REPL to find and compile our code.
+
+> **TIP**: an extremely common mistake is to forget to use replace
+> hyphens `-` with underscores `_` when creating a namespace path for
+> a source file.
+
+Now that we have created the file with the `hello.cruel-world`
+namespace let's require it into our running REPL.
+
+```clojure
+cljs.user=> (require 'hello.cruel-world)
+nil
+```
+
+That `nil` response is exactly what we want, the REPL will let you now
+if it couldn't find the file or if there was a problem compiling it.
+
+Now we can call functions defined in `hello.cruel-world`
+
+```clojure
+cljs.user=> (hello.cruel-world/what-kind?)
+"Cruel"
+```
+
+So above, we call our function and it returns the string `"Cruel"` as
+expected.
+
+But it seems like a bit much to type so let's require
+`hello.cruel-world` again and create an alias for it. Remeber that you
+can hit the up arrow to get back to the original require statement and
+edit it.
+
+```clojure
+cljs.user=> (require '[hello.cruel-world :as world])
+cljs.user=> (world/what-kind?)
+"Cruel"
+```
+
+As you can see we created an alias `world` for our namespace and we
+can now call functions in that namespace with that alias.
+
+Now let's change the and reload it.
+
+Alter the `what-kind?` function int the `src/hello/cruel_world.cljs`
+file so that it looks like this:
+
+```clojure
+(ns hello.cruel-world)
+
+(defn what-kind? []
+  "Brilliantly Cruel")
+```
+
+Now we can head back to the REPL prompt and reload the
+`hello.cruel-world` namespace like so:
+
+```clojure
+cljs.user=> (require '[hello.cruel-world :as world] :reload)
+nil
+```
+
+And then verify that our changes were loaded:
+
+```clojure
+cljs.user=> (world/what-kind?)
+"Brilliantly Cruel"
+```
+
+There is one more quick trick that you will find helpful while working
+at the REPL. You can change your current namespace (`cljs.user`) to
+another loaded namespace.
+
+So for instance we can change into the `hello.cruel-world` namespace
+like so:
+
+```clojure
+cljs.user=> (in-ns 'hello.cruel-world)
+nil
+hello.cruel-world=>
+```
+
+You will see the prompt change and now that your current namespace is
+`hello.cruel-world` you can call functions in that namespace without
+needing to provide a namespace.
+
+For example:
+
+```clojure
+hello.cruel-world=> (what-kind?)
+"Brilliantly Cruel"
+```
+
+Remember that you are working in a Browser environment so you can
+interact with it. 
+
+```clojure
+hello.cruel-world=> (js/document.getElementById "app")
+#object[HTMLDivElement [object HTMLDivElement]]
+```
+
+There is an "app" element available on the REPL host page. Let's
+override the content on it with content from our `what-kind?`
+function.
+
+```clojure
+hello.cruel-world=> (def app-element (js/document.getElementById "app"))
+#'hello.cruel-world/app-element
+hello.cruel-world=> (set! (.-innerHTML app-element) (what-kind?))
+"Brilliantly Cruel"
+```
+
+Well that was just a brief tour of what you can do working from the
+REPL. I'm hoping to create a more advanced guide to walk you though
+some more interesting example's.
 
 
 
