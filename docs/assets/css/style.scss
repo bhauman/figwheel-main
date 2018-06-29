@@ -32,3 +32,16 @@ footer {
 .hithere {
     color:red;
 }
+
+code {
+  background-color: #eee;
+  display: inline-block;
+  padding: 0px 3px;
+  border-radius: 2px;
+}
+
+pre code {
+  background-color: none;
+  display: inline;
+  border-radius: none;
+}
