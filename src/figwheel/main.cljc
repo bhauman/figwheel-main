@@ -930,7 +930,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
 (let [localhost (promise)]
   ;; this call takes a very long time to complete so lets get in in parallel
-  (doto (Thread. #(deliver localhost (java.net.InetAddress/getLocalHost)))
+  (doto (Thread. #(deliver localhost (try (java.net.InetAddress/getLocalHost)
+                                          (catch Throwable e
+                                            nil))))
     (.setDaemon true)
     (.start))
   (defn fill-connect-url-template [url host server-port]
@@ -939,10 +941,14 @@ classpath. Classpath-relative paths have prefix of @ or @/")
       (string/replace "[[config-hostname]]" (or host "localhost"))
 
       (.contains url "[[server-hostname]]")
-      (string/replace "[[server-hostname]]" (.getHostName @localhost))
+      (string/replace "[[server-hostname]]" (or (some-> @localhost
+                                                        .getHostName)
+                                                "localhost"))
 
       (.contains url "[[server-ip]]")
-      (string/replace "[[server-ip]]"       (.getHostAddress @localhost))
+      (string/replace "[[server-ip]]"       (or (some-> @localhost
+                                                        .getHostAddress)
+                                                "127.0.0.1"))
 
       (.contains url "[[server-port]]")
       (string/replace "[[server-port]]"     (str server-port)))))
