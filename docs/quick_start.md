@@ -11,7 +11,7 @@ this document](/quick_start_lein.html)
 
 You will want to install the Clojure CLI tools, they will install the
 Clojure language and install the `clj` and `clojure` command line
-utilities that will be very helpful whne working with Clojure.
+utilities that will be very helpful when working with Clojure.
 
 Install the [Clojure CLI tools](CLI tools).
 
@@ -157,15 +157,16 @@ Now when you launch `figwheel.main`, it will detect the presence of
 `com.bhauman/rebel-readline-cljs` and it will launch a REPL using
 this much more capable terminal line reader.
 
-Let's launch `figwheel.main` again, from the `hello-cljs` directory:
+Let's launch a REPL with `figwheel.main` again, from the `hello-cljs`
+directory:
 
 ```shell
 $ clojure -m figwheel.main
 ```
 
-After launching a Browser will open and a REPL will start just as when
-we launched it above. However, you will see the following line right
-before the `cljs.user=>` prompt. 
+After launching, a Browser will open and a REPL will start just as
+when we launched it before. However, you now will see the following
+line a few lines before the `cljs.user=>` prompt.
 
 ```shell
 [Rebel readline] Type :repl/help for online help info
@@ -173,37 +174,73 @@ before the `cljs.user=>` prompt.
 
 This notifies you that you are using Rebel Readline. 
 
-If you type `:repl/help` at the prompt you will first notice that
-`:repl/help` itself is now has color syntax highlighting. Upon hitting
-enter it will output a useful reference for the REPL's capabilities.
+If you type `:repl/help` command at the prompt, as you type you will
+notice that `:repl/help` itself is now has color syntax
+highlighting. Upon hitting enter, you will see a useful reference for
+the REPL's capabilities displayed.
 
 ![rebel readline help](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/rebel-readline-help.png)
 
-#### Rebel Readline feature walkthrough
+## Rebel Readline feature walkthrough
 
 Let's quickly walk through how to use some of the **Clojure Key
 Bindings** listed in the help.
 
+#### Autocomplete
+
 Type `(ra` at the prompt and don't hit enter but hit the TAB key.
 
-You will see a list of choices that you can TAB through or you can
-keep typing to narrow the selection down.
+You will see a list of choices that you can TAB through and hit enter
+on your selection. You can also keep typing to narrow the selection
+down.
 
 Select `rand-int`, you will now have `cljs.user=> (rand-int` on the
 line. 
+
+#### Inspecting functions
 
 Let's find out how to use `rand-int`. Hit `Control-X Control-D` to
 bring up the documentation for `rand-int`, upon doing so you will see 
 
 ![rebel redline displaying rand-int doc](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/demo-rebel-documentation.png)
 
-This documentation is showing you the function argument signature
-`([n])` which indicates that it takes one argument `n` and from the
-rest of the documentation and the name of the function we can infer
-that it takes a single integer argument.
+One of the more helpful parts of this documentation is the line that
+is displaying `([n])`. It's helpful but extremely concise, and we
+should take a moment to parse it.
 
-If we want to know how `rand-int` was implemented we can see it's
-source code by hitting `Control-X Control-S`.
+`([n])` is a **list** of function signatures for the `rand-int`
+function. It indicates that `rand-int` only has one function signature
+`[n]`, which in turn indicates that `rand-int` takes a single
+argument `n`. 
+
+As for the type of `n` we can infer from the function name and
+documentation that `n` is most likely an integer. But there is another
+indication. The Clojure/Script core libraries, and many others, use the
+following conventions when naming arguments.
+
+* `f`, `g`, `h` - function input
+* `n` - integer input usually a size
+* `index`, `i` - integer index
+* `x`, `y` - numbers
+* `xs` - sequence
+* `m` - map
+* `s` - string input
+* `re` - regular expression
+* `coll` - a collection
+* `pred` - a predicate closure
+* `& more` - variadic input
+* `xf` - xform, a transducer
+
+And there we have it, we now know when we call `rand-int` we should
+supply one integer argument.
+
+If we want to undertand `rand-int` further, we can examine directly
+examine its source code. 
+
+Now, with your cursor anywhere on the `rand-int` function hit
+`Control-X Control-S`. You will see the see the source code for rand
+int displayed and this gives us the ultimate insight into how it works
+and how to use it.
 
 Now that we know that `rand-int` takes a single integer argument let's
 call it. Complete the REPL line by typing `(rand-int 5)` and hit enter
@@ -212,7 +249,7 @@ and you should indeed get a random number from 0 to 4.
 If you hit the up arrow you can get `(rand-int 5)` back at the REPL
 prompt and you can hit enter again to get a different result.
 
-Now let's look at a function with a more complex argument signature.
+Now let's inspect a function with a more complex argument signature.
 
 Enter `(range` at the prompt (use TAB completion if you like). Now
 look at it's documentation with `Control-X Control-D` you will notice
@@ -222,11 +259,12 @@ that the argument signature is described differently.
 ([] [end] [start end] [start end step])
 ```
 
-It's actually just a list of signatures. So for `range` you can call
-it with no arguments `[]` which will return an infinite sequence (not
-recommended at the REPL), you can call it with one argument `[end]`
-specifying where a range starting at `0` should end, you can call it
-with the other argument arities `[start end]` and `[start end step]`.
+This is showing us that `range` can be called with between 0 and 3
+arguments. You can call `range` with no arguments `[]` which will
+return an infinite sequence (not recommended at the REPL), you can
+call it with one argument `[end]` specifying where a range starting at
+`0` should end, you can call it with the other argument arities
+`[start end]` and `[start end step]`.
 
 Let's try this:
 
@@ -239,29 +277,41 @@ cljs.user=> (range 4 10 2)
 (4 6 8)
 ```
 
-We intentionally didn't try to use `(range)` you can try this now.  It
-should freeze the REPL and the browser because the browser is now
-stuck in a tight loop trying to iterate through all the integers up
-the maximum integer possible.
+We intentionally didn't try to use `(range)` as it will cause the
+JavaScript environment to go into a tight loop and it will prevent
+further use or interaction. 
 
-> **TIP**: Sometimes its easy to forget that the REPL is backed by a
-> browser window, which is a very simple thing to reset. If your REPL
-> gets stuck in a tight loop, you can return to the REPL host page,
-> take note of the URL (most likely `http://localhost:9500/` in our
-> case) and then explicitly close it (a page reload often doesn't work
-> in this case) to kill the tight loop and then open it again. At this
-> point the REPL should have timed out and returned to functioning
-> normally. If you are not in a tight loop and need to reset the state
+It is a good exercise to experience this, so if you're up for this try
+entering `(range)` at the prompt. It should freeze the REPL and the
+browser because the browser is now stuck in a tight loop trying to
+iterate through all the integers up the maximum integer possible.
+
+We can recover from this.
+
+Sometimes it's easy to forget that the REPL is backed by a browser
+window, which is a very simple thing to reset. If your REPL gets stuck
+in a tight loop, you can return to the REPL host page, take note of
+the URL (most likely `http://localhost:9500/` in our case) and then
+explicitly close the tab to kill the tight loop (a page reload often
+doesn't work in this case) and then open new tab at the same URL. 
+
+At this point the REPL eval should have timed out and returned to
+functioning normally.
+
+> **TIP** If you are not in a tight loop and need to reset the state
 > of the REPL at any point you can simply reload the REPL host page
 > and that will give you a fresh slate to start from.
 
-Okay, back from the brink?
+Okay, back from the brink? If not you can kill the REPL with
+`Control-C Control-D` and restart it.
 
-Be sure that you have started a REPL again and that you are back at
-the `cljs.user=>` prompt.
+#### Inline eval
 
 There is one more Rebel Readline feature that I'd like to go over
 before moving on.
+
+Assuming that you have a running REPL and that you are back at the
+`cljs.user=>` prompt.
 
 At the prompt enter the expression `(+ 1 2 3 4)`, and after that when
 your cursor is just after the last `)`, hit `Control-X Control-E`.
@@ -271,7 +321,7 @@ You should see that the expression was evaluated and the result `#_=>
 allows you to evaluate any expression or sub expression before hitting
 enter.
 
-Let's try that again, now get back to an empty prompt and enter the
+Let's try that again, get back to an empty prompt and enter the
 expression `(+ (+ 1 2 3) (+ 4 5 6))` and now place the cursor after
 the last paren of the sub-expression `(+ 1 2 3)`. If you hit
 `Control-X Control-E` at this point you will see that you get the
