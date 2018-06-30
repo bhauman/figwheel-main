@@ -368,13 +368,13 @@ or perhaps a chat with a co-worker nearby?
 
 ## Working at the REPL
 
-The Clojure/Script REPL is a fantastic tool. It will be very helpful
+The ClojureScript REPL is a fantastic tool. It will be very helpful
 to understand a basic REPL driven workflow, as it is an important
 skill that is complementary to the more automated hot-reloaded
 workflow.
 
-We are to start with a generic `figwheel.main` REPL and then start to
-compose, require and reload ClojureScript source files.
+We are going to start up a generic `figwheel.main` REPL and then
+start to compose, require and reload ClojureScript source files.
 
 Again, we will begin in our `hello-cljs` directory and start a REPL
 with `figwheel.main`.
@@ -402,7 +402,7 @@ contents:
   "Cruel")
 ```
 
-The file layout should be of your project should now be:
+The file layout of your project should now be:
 
 ```shell
 hello-cljs
@@ -412,14 +412,15 @@ hello-cljs
         └── cruel_world.cljs
 ```
 
-Take note that we are declaring a namespace `hello.cruel-world` and
-that the path to our file mirrors this namespace and it is rooted in
-the `src` directory which is on the classpath. This is what will allow
-the REPL to find and compile our code.
+Take note that in the file we are declaring a namespace
+`hello.cruel-world` and that the path to our file mirrors this
+namespace and it is rooted in the `src` directory which is on the
+classpath. This is what will allow the ClojureScript compiler to find
+and compile our code.
 
 > **TIP**: an extremely common mistake is to forget to use replace
-> hyphens `-` with underscores `_` when creating a namespace path for
-> a source file.
+> hyphens `-` with underscores `_` when creating a namespace file path
+> for a source file.
 
 Now that we have created the file with the `hello.cruel-world`
 namespace let's require it into our running REPL.
