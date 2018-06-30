@@ -389,8 +389,8 @@ file that contains some ClojureScript source code.
 We'll have to create a file where it can be found, which means it will
 have to be named properly and reside on the classpath. 
 
-It just so happens the the Clojure tool adds the local `src` directory
-to the classpath.
+By default, the Clojure tool adds the local `src` directory to the
+classpath.
 
 Create a file `src/hello/cruel_world.cljs` with the following
 contents:
@@ -414,7 +414,7 @@ hello-cljs
 
 Take note that in the file we are declaring a namespace
 `hello.cruel-world` and that the path to our file mirrors this
-namespace and it is rooted in the `src` directory which is on the
+namespace and it is rooted in the `src` directory, which is on the
 classpath. This is what will allow the ClojureScript compiler to find
 and compile our code.
 
@@ -433,20 +433,20 @@ nil
 That `nil` response is exactly what we want, the REPL will let you now
 if it couldn't find the file or if there was a problem compiling it.
 
-Now we can call functions defined in `hello.cruel-world`
+Now we can call our `what-kind?` function defined in `hello.cruel-world`:
 
 ```clojure
 cljs.user=> (hello.cruel-world/what-kind?)
 "Cruel"
 ```
 
-So above, we call our function and it returns the string `"Cruel"` as
-expected.
+As expected, when we call `(hello.cruel-world/what-kind?)` it returns
+the string `"Cruel"`.
 
-But it seems like a bit much to type so let's require
-`hello.cruel-world` again and create an alias for it. Remeber that you
-can hit the up arrow to get back to the original require statement and
-edit it.
+But it seems like a bit much to type out the entire namespace for each
+call, so let's require `hello.cruel-world` again and create an alias
+for it. Remeber that you can hit the up arrow to get back to the
+original require statement and edit it.
 
 ```clojure
 cljs.user=> (require '[hello.cruel-world :as world])
@@ -455,12 +455,14 @@ cljs.user=> (world/what-kind?)
 ```
 
 As you can see we created an alias `world` for our namespace and we
-can now call functions in that namespace with that alias.
+can now invoke functions from `hello.cruel-world` with the alias
+`world`.
 
-Now let's change the and reload it.
+Now let's change the file and reload it.
 
-Alter the `what-kind?` function int the `src/hello/cruel_world.cljs`
-file so that it looks like this:
+Alter the `what-kind?` function in the `src/hello/cruel_world.cljs`
+file so that it returns `"Brilliantly Cruel"`. When you are done the
+file should look like this:
 
 ```clojure
 (ns hello.cruel-world)
@@ -488,7 +490,7 @@ There is one more quick trick that you will find helpful while working
 at the REPL. You can change your current namespace (`cljs.user`) to
 another loaded namespace.
 
-So for instance we can change into the `hello.cruel-world` namespace
+For instance, we can change into the `hello.cruel-world` namespace
 like so:
 
 ```clojure
@@ -516,9 +518,12 @@ hello.cruel-world=> (js/document.getElementById "app")
 #object[HTMLDivElement [object HTMLDivElement]]
 ```
 
-There is an "app" element available on the REPL host page. Let's
-override the content on it with content from our `what-kind?`
-function.
+There is an HTML element with and id of "app" available on the REPL
+host page. This element contains all of the markup and style for the
+helper application. Let's override the helper app content, with the
+string returned by our `what-kind?` function.
+
+Make sure the REPL host page is visible while you type the folowing.
 
 ```clojure
 hello.cruel-world=> (def app-element (js/document.getElementById "app"))
@@ -527,9 +532,12 @@ hello.cruel-world=> (set! (.-innerHTML app-element) (what-kind?))
 "Brilliantly Cruel"
 ```
 
-Well that was just a brief tour of what you can do working from the
-REPL. This knowlegde should be enough to allow you to explore the
-ClojureScript language a bit. 
+After that, on the REPL host page, you should see the helper app
+dissappear and be replaced by the words `Brilliantly Cruel`.
+
+Well that was just a brief tour of a REPL driven workflow. This was a
+simple example but it starts to demonstrate that you could possibly
+get quite far into an application just using this simple setup.
 
 > **TIP**: There is a fantasic guide on
 > [Programming at the REPL](program-at-repl) on the official Clojure
@@ -544,9 +552,12 @@ ClojureScript language a bit.
 > to create and load Clojure files, everything is the same as above
 > except Clojure files end with `.clj`
 
-## Working with code more interactively
+## Starting the REPL already intialized with your code
 
-Sometimes you want to start the REPL with some code already compiled and loaded.
+While it is perfectly valid to `require` the code you need at the
+REPL, most of the time you will want to work on something specific. It
+is very valuable to start a REPL with the code you intend to use or
+work on already loaded.
 
 You can accomplish this by using the following command:
 
@@ -554,7 +565,7 @@ You can accomplish this by using the following command:
 $ clojure -m figwhee.main --compile hello.cruel-world --repl
 ```
 
-You will notice some differences in the output this time:
+You will notice some differences in the REPL startup output this time:
 
 ![compile terminal output](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile.png)
 
