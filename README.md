@@ -156,10 +156,10 @@ For example if you want to have `:watch-dirs` that are specific to the
 ```
 
 All the available configuration options are documented here:
-https://github.com/bhauman/lein-figwheel/blob/master/figwheel-main/doc/figwheel-main-options.md
+https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
 
 All the available configuration options specs are here:
-https://github.com/bhauman/lein-figwheel/blob/master/figwheel-main/src/figwheel/main/schema.clj
+https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj
 
 ## Classpaths, Classpaths, Classpaths
 
