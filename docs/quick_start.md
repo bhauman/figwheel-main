@@ -555,8 +555,8 @@ get quite far into an application just using this simple setup.
 ## Starting the REPL already intialized with your code
 
 While it is perfectly valid to `require` the code you need at the
-REPL, most of the time you will want to work on something specific. It
-is very valuable to start a REPL with the code you intend to use or
+REPL, most of the time you will want to work on something
+specific. We'll now start a REPL with the code you intend to use or
 work on already loaded.
 
 You can accomplish this by using the following command:
@@ -569,32 +569,33 @@ You will notice some differences in the REPL startup output this time:
 
 ![compile terminal output](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile.png)
 
-The output looks very similar to launching launching a REPL without
-compiling. There are some important differences that I'd like to
-address next.
+The output looks similar to launching `figwheel.main` without any
+arguments, but there are some important differences.
 
 The first thing of note is this warning:
 
 ![target classpath warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile-warning.png)
 
-This is absolutely expected and important. When started the
-`figwheel.main` REPL without any arguments, it used a temporary
-directory to host the compiled ClojureScript assets and added it to
-the classpath automatically.
+This is absolutely expected. When we started the `figwheel.main` REPL
+without any arguments, all the compiled ClojureScript files are output
+into a temporary directory. This directory is automatically added to
+the classpath so that the compiled assets can be served by the
+built-in figwheel server.
 
-The path to the compiled assets must be on the classpath so that they
-can be served by the built in figwheel server.
-
-Running `figwheel.main` normally indicates that you are just
+Running `figwheel.main` without arguments, indicates that you are just
 experimenting with some code and that you are not working on a project
-that you have a commitment to yet. Once you start compiling things
-this is an indication that we are commiting to a project of some kind
-and thus we have to start maintaining the classpath correctly if we
-want to be able to compile and run our code with `cljs.main` and other
-tools that don't automatically add paths to the classpath for you.
+that you have a commitment to. 
 
-We can fix the classpath warning by adding both `"src"` and `"target"`
-to the `:paths` key in our `deps.edn` file:
+When one starts compiling namespaces it indicates that we are likely
+commiting to a project, and thus we will want our compiled artifacts
+to be local to the project. It is also time to start being explicit
+about what is on your classpath. `figwheel.main` will try to be
+helpful and add these paths to the classpath for you, but it will warn
+you because it is best that you manage the classpath yourself so that
+things work properly when you are not using `figwheel.main`.
+
+We can fix this classpath warning by adding both `"src"` and
+`"target"` to the `:paths` key in our `deps.edn` file:
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}
@@ -602,9 +603,9 @@ to the `:paths` key in our `deps.edn` file:
  :paths ["src" "target"]}
 ```
 
-We have to explicitly include `"src"` as well as `"target"` as once
-you define a `:paths` key it becomes the definition and there are no
-other implicit paths added.
+We have to explicitly include `"src"` as well as `"target"` because
+when you add a `:paths` key to `deps.edn` the `src` path is no longer
+implicitly added.
 
 Now we will return to run our REPL again from the `hello-cljs`
 directory.
@@ -613,10 +614,12 @@ directory.
 $ clojure -m figwhee.main --compile hello.cruel-world --repl
 ```
 
-You should see the familiar output when starting a `figwheel.main` REPL.
+You should see the familiar output when starting a `figwheel.main`
+REPL minus the warning about `target`.
 
-You shold see that your ClojureScript is being compiled to the local
-"target" directory now and not to some temporary directory.
+You should also see that your ClojureScript source code is now being
+compiled to the local "target" directory now and not to a temporary
+directory.
 
 You should also notice this line:
 
@@ -686,4 +689,4 @@ focus to the "Figwheel Default Dev Page" that was launched.
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
 [rebel]: https://github.com/bhauman/rebel-readline
-[program-at-repl] https://clojure.org/guides/repl/introduction
+[program-at-repl]: https://clojure.org/guides/repl/introduction
