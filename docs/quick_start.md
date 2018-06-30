@@ -130,8 +130,7 @@ browser on our REPL host page.
 ## Amping up the REPL
 
 The REPL we just launched will do fine for trying simple expressions
-but if you are learning a new language it's nice to have a more fully
-featured REPL that can
+but we often to have a more fully featured REPL that can
 
 * syntax highlight the code as you type it
 * facilitate multi-line editing of expressions
@@ -154,17 +153,17 @@ To use Rebel Readline let's add `com.bhauman/rebel-readline-cljs
 ```
 
 Now when you launch `figwheel.main`, it will detect the presence of
-`com.bhauman/rebel-readline-cljs` and it will launch a REPL using
-this much more capable terminal line reader.
+`com.bhauman/rebel-readline-cljs` and use it when starting the
+ClojureScript REPL.
 
-Let's launch a REPL with `figwheel.main` again, from the `hello-cljs`
-directory:
+To see it in action launch a REPL with `figwheel.main` again, from the
+`hello-cljs` directory:
 
 ```shell
 $ clojure -m figwheel.main
 ```
 
-After launching, a Browser will open and a REPL will start just as
+After launching, a Browser will open and a REPL will start just like
 when we launched it before. However, you now will see the following
 line a few lines before the `cljs.user=>` prompt.
 
@@ -184,13 +183,13 @@ the REPL's capabilities displayed.
 ## Rebel Readline feature walkthrough
 
 Let's quickly walk through how to use some of the **Clojure Key
-Bindings** listed in the help.
+Bindings** listed in the help above.
 
 #### Autocomplete
 
-Type `(ra` at the prompt and don't hit enter but hit the TAB key.
+Type `(ra` at the prompt and don't hit ENTER but hit the TAB key.
 
-You will see a list of choices that you can TAB through and hit enter
+You will see a list of choices that you can TAB through and hit ENTER
 on your selection. You can also keep typing to narrow the selection
 down.
 
@@ -215,21 +214,20 @@ argument `n`.
 
 As for the type of `n` we can infer from the function name and
 documentation that `n` is most likely an integer. But there is another
-indication. The Clojure/Script core libraries, and many others, use the
-following conventions when naming arguments.
+indication. The Clojure/Script core libraries, and many others, use
+the following conventions when naming arguments.
 
-* `f`, `g`, `h` - function input
-* `n` - integer input usually a size
+* `f`, `g`, `h` - function
+* `n` - integer, usually a size
 * `index`, `i` - integer index
 * `x`, `y` - numbers
 * `xs` - sequence
 * `m` - map
-* `s` - string input
+* `s` - string
 * `re` - regular expression
 * `coll` - a collection
 * `pred` - a predicate closure
-* `& more` - variadic input
-* `xf` - xform, a transducer
+* `& more` - variable number of arguments
 
 And there we have it, we now know when we call `rand-int` we should
 supply one integer argument.
@@ -310,33 +308,35 @@ Okay, back from the brink? If not you can kill the REPL with
 There is one more Rebel Readline feature that I'd like to go over
 before moving on.
 
-Assuming that you have a running REPL and that you are back at the
+I'm assuming that you have a running REPL and that you are back at the
 `cljs.user=>` prompt.
 
 At the prompt enter the expression `(+ 1 2 3 4)`, and after that when
 your cursor is just after the last `)`, hit `Control-X Control-E`.
 
 You should see that the expression was evaluated and the result `#_=>
-10` displayed just under the line where your cursor is. Rebel readline
+10` displayed just under the line where your cursor is. Rebel Readline
 allows you to evaluate any expression or sub expression before hitting
 enter.
 
-Let's try that again, get back to an empty prompt and enter the
-expression `(+ (+ 1 2 3) (+ 4 5 6))` and now place the cursor after
-the last paren of the sub-expression `(+ 1 2 3)`. If you hit
-`Control-X Control-E` at this point you will see that you get the
+Let's try this again, hit ENTER to get back to an empty prompt and
+type the expression `(+ (+ 1 2 3) (+ 4 5 6))` and now place the
+cursor after the last paren of the sub-expression `(+ 1 2 3)`. If you
+hit `Control-X Control-E` at this point you will see that you get the
 value `6`. Experiment with evaluating in other parts of the expression
 on this line.
 
 What's the value of this feature? It allows you to work on larger
-multiline expressions while verifying that the sub expressions are
+multi-line expressions while verifying that the sub expressions are
 doing what you expect them to do.
 
 > Having easy to parse expressions is part of the magic of LISP. It
 > allows tools to understand delimited expressions without having to
 > implement a complete parser for the language.
 
-Also you may have noticed that you can create multi-line expressions
+#### Multi-line editing
+
+Also, you may have noticed that you can create multi-line expressions
 at the REPL prompt in a fairly straight forward way.
 
 Try enterinng the following expression at the prompt and make sure you
@@ -353,34 +353,47 @@ in your expression while the cursor was inside of an **open
 expression** and that once you closed the expression (by adding the
 last paren), when you hit enter it was submitted for evaluation.
 
-You can exit the Rebel Readline REPL by hitting `Control-C Control-D`.
+You can now exit the Rebel Readline REPL by hitting `Control-C Control-D`.
 
 ## Break Time
 
 Once you have made it this far you have learned how to add
 dependencies to `deps.edn` and how to start a `figwheel.main` REPL
-with Clojure's CLI tools. You have then learned how to include
-[Rebel Readline](rebel) and how to use it to intraspect your
-environment and evalute code.
-
-
+with Clojure's CLI tools. You have also, learned how to include
+[Rebel Readline](rebel) and how to use it to introspect your
+environment.
 
 This is more than enough to justify a break, may a suggest a nice walk
 or perhaps a chat with a co-worker nearby?
 
 ## Working at the REPL
 
-Now let's create a file that contains some ClojureScript source code
-and load it into the REPL.
+The Clojure/Script REPL is a fantastic tool. It will be very helpful
+to understand a basic REPL driven workflow, as it is an important
+skill that is complementary to the more automated hot-reloaded
+workflow.
+
+We are to start with a generic `figwheel.main` REPL and then start to
+compose, require and reload ClojureScript source files.
+
+Again, we will begin in our `hello-cljs` directory and start a REPL
+with `figwheel.main`.
+
+```shell
+$ clojure -m figwheel.main
+```
+
+Once the REPL has started we will turn our attention to creating a
+file that contains some ClojureScript source code.
 
 We'll have to create a file where it can be found, which means it will
-have to be on the classpath. It just so happens the the Clojure tool
-adds the local `src` directory to the classpath.
+have to be named properly and reside on the classpath. 
 
-Let's create a file there. 
+It just so happens the the Clojure tool adds the local `src` directory
+to the classpath.
 
-Leave the REPL running and create a file `src/hello/cruel_world.cljs`
-with the following contents:
+Create a file `src/hello/cruel_world.cljs` with the following
+contents:
 
 ```clojure
 (ns hello.cruel-world)
@@ -517,6 +530,12 @@ Well that was just a brief tour of what you can do working from the
 REPL. This knowlegde should be enough to allow you to explore the
 ClojureScript language a bit. 
 
+> **TIP**: There is a fantasic guide on
+> [Programming at the REPL](program-at-repl) on the official Clojure
+> website. Much of the guide is also directly applicable to
+> ClojureScript, when you are ready to learn more it is an excellent
+> resource.
+
 > **TIP**: Much of what you learned above applies equally well to
 > Clojure. So if you would like to try your hand at Clojure, as well,
 > you can get a working Rebel Readline Clojure REPL by typing `clojure
@@ -652,8 +671,7 @@ focus to the "Figwheel Default Dev Page" that was launched.
 
 
 
-
-
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
 [rebel]: https://github.com/bhauman/rebel-readline
+[program-at-repl] https://clojure.org/guides/repl/introduction
