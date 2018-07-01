@@ -576,23 +576,23 @@ The first thing of note is this warning:
 
 ![target classpath warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile-warning.png)
 
-This is absolutely expected. When we started the `figwheel.main` REPL
-without any arguments, all the compiled ClojureScript files are output
-into a temporary directory. This directory is automatically added to
-the classpath so that the compiled assets can be served by the
+This is expected. When we started the `figwheel.main` REPL without any
+arguments, all the compiled ClojureScript files are output into a
+temporary directory. This directory is automatically added to the
+classpath so that the compiled assets can be found and served by the
 built-in figwheel server.
 
-Running `figwheel.main` without arguments, indicates that you are just
-experimenting with some code and that you are not working on a project
-that you have a commitment to. 
+Running `figwheel.main` without arguments indicates that you are
+likely experimenting with some code, not working on a local project.
 
 When one starts compiling namespaces it indicates that we are likely
 commiting to a project, and thus we will want our compiled artifacts
-to be local to the project. It is also time to start being explicit
-about what is on your classpath. `figwheel.main` will try to be
-helpful and add these paths to the classpath for you, but it will warn
-you because it is best that you manage the classpath yourself so that
-things work properly when you are not using `figwheel.main`.
+to be local to the project (for later use). It is also time to start
+being explicit about what is on our classpath. `figwheel.main` will
+try to be helpful and append the classpath with paths that should
+likely be there. When id does add a classpath, Figwheel will print a
+warning because it is best that you manage the classpath explicitly so
+that things work properly when you are not using `figwheel.main`.
 
 We can fix this classpath warning by adding both `"src"` and
 `"target"` to the `:paths` key in our `deps.edn` file:
@@ -603,9 +603,9 @@ We can fix this classpath warning by adding both `"src"` and
  :paths ["src" "target"]}
 ```
 
-We have to explicitly include `"src"` as well as `"target"` because
-when you add a `:paths` key to `deps.edn` the `src` path is no longer
-implicitly added.
+We have to include `"src"` as well as `"target"` because when you add
+a `:paths` key to `deps.edn` the `src` path is no longer implicitly
+added.
 
 Now we will return to run our REPL again from the `hello-cljs`
 directory.
@@ -618,21 +618,17 @@ You should see the familiar output when starting a `figwheel.main`
 REPL minus the warning about `target`.
 
 You should also see that your ClojureScript source code is now being
-compiled to the local "target" directory now and not to a temporary
+compiled to the local "target" directory and not to a temporary
 directory.
 
-You should also notice this line:
+You will also notice this line:
 
 ![watching line in output](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/watching-line.png)
 
 This line indicates that Figwheel is now watching the ClojureScript
 files in the `src` directory for changes. When a change is detected
-Figwheel will now hot reload it into the JavaScript environment.
-
-This is a big difference from reloading the `hello.cruel-world`
-namespace by hand at the REPL, now when you change and save the
-`src/hello/cruel_world.cljs` file it will be automatically loaded for
-you.
+Figwheel will reload the changed code into the JavaScript environment,
+without us needing to use `(require 'hello.cruel-world :reload)`.
 
 Let's try this out.
 
@@ -647,8 +643,8 @@ Looks good! We successfully started the repl with our namespace
 already available so we don't have to explicitly require it.
 
 Now let's change the namespace. Go to the `src/hello/cruel_world.cljs`
-and change the `what-kind?` function so it returns `"Cruel No More"`
-and then save the file.
+source file and change the `what-kind?` function so it returns `"Cruel
+No More"` and then save the file. It should look like this:
 
 ```clojure
 (ns hello.cruel-world)
@@ -657,7 +653,7 @@ and then save the file.
   "Cruel No More")
 ```
 
-Once you save the file you should see a green `Successfully compiled`
+When you save the file, you should see a green `Successfully compiled`
 message appear in the REPL. You can now check the REPL to see that
 your code has indeed been reloaded automatically. (Don't forget that
 you can use TAB to help you enter the following)
@@ -667,16 +663,206 @@ cljs.user=> (hello.cruel-world/what-kind?)
 "Cruel No More"
 ```
 
-Our code has been loaded. Now, we don't have to explicitly reload a
-namespace as we work, we can simply save the file we are working on
-and it will be reloaded automatically.
+This verifies that our code has been loaded. Now, we don't have to
+explicitly reload a namespace as we work, we can simply save the file
+we are working on and it will be reloaded instantly.
+
+Automatically reloading code on save makes a significant impact on
+one's workflow.
+
+#### Feedback is King
 
 Now let's demonstrate how Figwheel provides feedback while you are
-working. 
+working.
 
-Normally when you are working on a Web Application your attention is
-on the web page you are working on in the Browser. So let's bring our
-focus to the "Figwheel Default Dev Page" that was launched.
+Now that your files are being watched and compiled as you work on
+them, we have an opportunity to detect syntax/compile errors at an
+earlier point than if we wait to reload by hand.
+
+Figwheel provides feedback for compile time errors and warnings in the
+REPL and in the browser.
+
+To experience this arrange your REPL terminal and editor windows so that
+they are side by side.
+
+![image of terminal next to editor]()
+
+Now in the editor edit the the `src/hello/cruel_world.cljs` file again
+by adding some bad code on a line at the end of the file that looks
+like this `defn hello`. When you are done the file should look like
+this:
+
+```clojure
+(ns hello.cruel-world)
+
+(defn what-kind? []
+  "Cruel No More")
+
+defn hello
+```
+
+Now when you save the file you should see some warnings that look like
+the following feedback in the REPL.
+
+![screen shot of defn hello warnings]()
+
+Getting feedback like this as you coding is more timely than waiting
+until the file get's compiled and loaded by hand.
+
+Now let's cause a compile error by adding parenthesis around `defn
+hello` so that it looks like this:
+
+```clojure
+(ns hello.cruel-world)
+
+(defn what-kind? []
+  "Cruel No More")
+
+(defn hello)
+```
+
+Upon saving the file you will see a compile error in the REPL.
+
+[image of compile error]
+
+So, we've demonstrated a workflow where you can edit your code and
+quickly get feedback from the REPL that informs you of any compile
+errors.
+
+You may have noticed this already but if you go back to the "Default
+Figwheel Dev Page" in the Browser you will also see the same error
+displayed in Figwheel's heads-up display.
+
+[image of error in heads up display]
+
+Display compile time errors and warnings important feature of Figwheel
+as we can only keep our attention in so many places as we work. It's
+far too easy to miss compile time error messages if they are tucked
+away in a terminal somewhere while you are focused on the front-end
+you are working on.
+
+Now, keeping the browser window visible, change the file and remove
+the parenthesis from around the `(defn hello)` and hit save. You will now
+see the compiler error replaced with a warning like this:
+
+[image of warning]
+
+And finally delete the remaining `defn hello` line and hit save once
+again.
+
+You will notice that the warning goes away.
+
+## The Build
+
+The previous examples demonstrated how to start productively working
+with ClojureScript with very little configuration. However, when we
+are working on a lerger project we will normally need to customize our
+environment beyond what is possible in the `deps.edn` file and the
+`figwheel.main` command line.
+
+There is also a need to **name** our *build* configurations so that we
+can identify them and help Figwheel keep their compiled artifacts
+separate.
+
+To meet these needs `figwheel.main` relies on a build file to specify
+ClojureScript compiler options, figwheel options, and a stable name
+for the configuration.
+
+To help explain what a build file is and how it works, we'll start
+with and example build file.
+
+First let's reset things a little bit. First quit the REPL and then
+delete the `target/public` directory to get rid of our compiled
+assets.
+
+> **TIP**: Many problems can be resolved by deleting stale compiled
+> ClojureScript artifacts.
+
+In the `hello-cljs` directory place a file called `cruel.cljs.edn`
+with the following contents:
+
+```clojure
+{:main hello.cruel-world}
+```
+
+The contents of the `cruel.cljs.edn` build file are specifying the
+[ClojureScript compiler options][compiler-options] for our cruel world
+project. These options will be passed to the ClojureScript compiler
+whenever some code needs compiling. There are quite a few
+[compiler options][compiler-options] but the above is all we'll need
+as `figwheel.main` provides intelligent choices for missing compiler
+options.
+
+The `hello-cljs` directory should now look like this:
+
+```shell
+hello-cljs/
+├── cruel.cljs.edn
+├── deps.edn
+└── src
+    └── hello
+        └── cruel_world.cljs
+```		
+
+It is easy to use a build file. From the `hello-cljs` directory, start
+`figwheel.main` like so:
+
+```shell
+$ clojure -m figwheel.main --build cruel --repl
+```
+
+This will create a working environment that is practically identical
+to when we previously called `clojure -m figwheel.main --compile
+hello.cruel-world --repl`.
+
+You will notice that if you edit the `src/hello/cruel_world.cljs` file
+you will see the same hot reloading and feedback behavior as before.
+
+There are some differences though in the startup output for the REPL
+you will notice a difference in the names of the compiled artifacts.
+
+[image of "cruel" compiled artifacts output lines]
+
+As your project grows it will more than likely have more than one
+build, and having a name to separate your builds compiled artifacts is
+very helpful.
+
+Also, as you progress with your project there is normally a need to
+add more spcific ClojureScript compiler options rather than rely the
+default ones that `figwheel.main` supplies.  With a build file like
+`cruel.cljs.edn` you will have a logical place to add these options as
+needed.
+
+You will also have a place to add [`figwheel.main` configuration
+options][figwheel-options].
+
+As an exercise, let's say we'll be mainly relying on the heads up
+display feedback and that we'd like to make figwheel print the
+compiler errors more concisely in the REPL.
+
+We have seen that compile drrors normally print out with some code
+context and a pointer to where the error was detected. 
+
+[image of verbose error]
+
+We can make errors print out with out the code context with the
+[`:log-syntax-error-style`][syntax-error-style] option.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -690,3 +876,6 @@ focus to the "Figwheel Default Dev Page" that was launched.
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
 [rebel]: https://github.com/bhauman/rebel-readline
 [program-at-repl]: https://clojure.org/guides/repl/introduction
+[compiler-options]: https://clojurescript.org/reference/compiler-options
+[figwheel-options]: https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
+[syntax-error-style]: https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md#log-syntax-error-style
