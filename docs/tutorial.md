@@ -746,19 +746,19 @@ You may have noticed this already but if you go back to the "Default
 Figwheel Dev Page" in the Browser you will also see the same error
 displayed in Figwheel's heads-up display.
 
-[image of error in heads up display]
+![image of error in heads up display](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/defn-hello-error-heads-up.png)
 
-Display compile time errors and warnings important feature of Figwheel
-as we can only keep our attention in so many places as we work. It's
-far too easy to miss compile time error messages if they are tucked
-away in a terminal somewhere while you are focused on the front-end
-you are working on.
+Displaying compile time errors and warnings in the browser is an
+important feature of Figwheel as we can only keep our attention in so
+many places as we work. It's far too easy to miss compile time error
+messages if they are tucked away in a terminal somewhere while you are
+focused on the front-end you are working on.
 
 Now, keeping the browser window visible, change the file and remove
 the parenthesis from around the `(defn hello)` and hit save. You will now
 see the compiler error replaced with a warning like this:
 
-[image of warning]
+![image of warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/defn-hello-warning-heads-up.png)
 
 And finally delete the remaining `defn hello` line and hit save once
 again.
