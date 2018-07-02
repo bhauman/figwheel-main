@@ -400,6 +400,8 @@ contents:
 
 (defn what-kind? []
   "Cruel")
+  
+(js/console.log (what-kind?))
 ```
 
 The file layout of your project should now be:
@@ -469,6 +471,8 @@ file should look like this:
 
 (defn what-kind? []
   "Brilliantly Cruel")
+  
+(js/console.log (what-kind?))
 ```
 
 Now we can head back to the REPL prompt and reload the
@@ -651,6 +655,8 @@ No More"` and then save the file. It should look like this:
 
 (defn what-kind? []
   "Cruel No More")
+  
+(js/console.log (what-kind?))
 ```
 
 When you save the file, you should see a green `Successfully compiled`
@@ -672,8 +678,8 @@ one's workflow.
 
 #### Feedback is King
 
-Now let's demonstrate how Figwheel provides feedback while you are
-working.
+Now we'll take a look at the ways in which Figwheel provides feedback
+while you are working.
 
 Now that your files are being watched and compiled as you work on
 them, we have an opportunity to detect syntax/compile errors at an
@@ -697,6 +703,8 @@ this:
 
 (defn what-kind? []
   "Cruel No More")
+  
+(js/console.log (what-kind?))
 
 defn hello
 ```
@@ -717,6 +725,8 @@ hello` so that it looks like this:
 
 (defn what-kind? []
   "Cruel No More")
+
+(js/console.log (what-kind?))
 
 (defn hello)
 ```
@@ -848,11 +858,165 @@ context and a pointer to where the error was detected.
 We can make errors print out with out the code context with the
 [`:log-syntax-error-style`][syntax-error-style] option.
 
+We'll configure this in our `cruel.cljs.edn` file. Go ahead and edit
+the build file to look like this:
 
+```clojure
+^{:log-syntax-error-style :concise}
+{:main hello.cruel-world}
+```
 
+The caret `^` symbol is very important and signifies that we are
+adding **metadata** to the map that follows it. 
 
+> Learn more about Metadata [here][learning-metadata] and see the
+> [official reference][metadata]
 
+Now when we start up the `cruel` build with `figwheel.main` again. 
 
+```shell
+$ clojure -m figwheel.main --build cruel --repl
+```
+
+If we type an error in our code we'll see a much more concise message
+like this:
+
+[concise message image]
+
+#### figwheel-main.edn
+
+Sometimes you will have several builds and you will want to share some
+or all of your `figwheel.main` configuration between them. You can do
+this by creating a `figwheel-main.edn` in your project directory.
+
+For our current example, we can move our `:log-syntax-error-style`
+configuration out of our `cruel.cljs.edn` file and place it in a
+`figwheel-main.edn` file. Like this:
+
+Example `hello-cljs/figwheel-main.edn`:
+```clojure
+{:log-syntax-error-style :concise}
+```
+
+If you try this you will notice that the `:log-syntax-error-style
+:concise` configuration still works. It is important to note that the
+**metadata** configuration that you add to your build files will
+override the configuration in `figwheel-main.edn`
+
+## Packaging up a single compiled artifact for production
+
+The ClojureScript compiler has four `:optimizations` modes `:none`,
+`:whitespace`, `:simple` and `:advanced`. These determine the type of
+output that the complier produces. For example, the default mode that
+we have been using so far is `:none`. This mode produces many
+individual files when we compile our ClojureScript.
+
+If you look at the `target/public/cljs-out/cruel` directory you will
+see these files.
+
+```shell
+target
+└── public
+    └── cljs-out
+        ├── cruel
+        │   ├── cljs
+        │   │   ├── core.cljs
+        │   │   ├── core.js
+        │   │   ├── core.js.map
+        │   │   ├── pprint.cljs
+        │   │   ├── pprint.cljs.cache.json
+        │   │   ├── pprint.js
+        │   │   ├── pprint.js.map
+        │   │   ├── stacktrace.cljc
+        │   │   ├── stacktrace.cljc.cache.json
+        │   │   ├── stacktrace.js
+        │   │   ├── stacktrace.js.map
+        │   │   ├── test.cljs
+        │   │   ├── test.cljs.cache.json
+        │   │   ├── test.js
+        │   │   └── test.js.map
+        │   ├── cljs_deps.js
+        │   ├── cljsc_opts.edn
+        │   ├── clojure
+        │   │   ├── data.cljs
+        │   │   ├── data.cljs.cache.json
+        │   │   ├── data.js
+        │   │   ├── data.js.map
+        │   │   ├── set.cljs
+        │   │   ├── set.cljs.cache.json
+        │   │   ├── set.js
+        │   │   ├── set.js.map
+        │   │   ├── string.cljs
+        │   │   ├── string.cljs.cache.json
+        │   │   ├── string.js
+        │   │   ├── string.js.map
+        │   │   ├── walk.cljs
+        │   │   ├── walk.cljs.cache.json
+        │   │   ├── walk.js
+        │   │   └── walk.js.map
+... and many more
+```
+
+When we want to deploy our final project we are normally going to want
+to produce a single JavaScript file, to made load times more efficient.
+
+All of the other `:optimizations` modes produce a single file as output.
+
+* `:whitespace` only optimizes whitespace
+* `:simple` only makes safe simple optimizations in addition to
+  optimizing whitespace
+* `:advanced` performs a state of the art JavaScript optimization
+
+The `:advanced` optimization level is normally what you will want when
+you are ready to deploy code.
+
+Let's first output a `:whitespace` optimized file.
+
+First lets delete the `target/public` directory.
+
+```shell
+$ rm -rf target/public
+```
+
+Because we just want to compile a file once and not start a watching
+process we are going to use the `--build-once` flag. We will also
+specify the `--optimizations` level as `whitespace`.
+
+Here's the long version of the command:
+
+```shell
+$ clojure -m figwheel.main --optimizations whitespace  --build-once cruel
+```
+
+and here's the command using abbreviated flags:
+
+```shell
+$ clojure -m figwheel.main -O whitespace -bo cruel
+```
+
+> **TIP**: you can use `clj -m figwheel.main --help` to learn all of
+> the `figwheel.main` CLI flags and their abbriviations
+
+If you execute the above command and then view
+`target/public/cljs-out/cruel-main.js` you will see that it is now a
+large file that bundles all the required code in it.
+
+You may think that this is a lot of code considering the size of our
+source file. Unfortunately we are getting all the code that is needed
+by the core ClojureScript library even though we are not using it.
+
+We can remedy this by using `advanced` compiliation which will perform
+a static code analysis and perform DCE(Dead code elimination) and
+remove any code that is not used.
+
+```shell
+$ clojure -m figwheel.main -O advanced -bo cruel
+```
+
+If you now view the contents of `target/public/cljs-out/cruel-main.js`
+and see that it is now significantly smaller.
+
+## Conclusion
 
 
 
@@ -879,3 +1043,5 @@ We can make errors print out with out the code context with the
 [compiler-options]: https://clojurescript.org/reference/compiler-options
 [figwheel-options]: https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
 [syntax-error-style]: https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md#log-syntax-error-style
+[learning-metadata]: https://en.wikibooks.org/wiki/Learning_Clojure/Meta_Data
+[metadata]: https://clojure.org/reference/metadata
