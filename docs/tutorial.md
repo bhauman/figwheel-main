@@ -769,7 +769,7 @@ You will notice that the warning goes away.
 
 The previous examples demonstrated how to start productively working
 with ClojureScript with very little configuration. However, when we
-are working on a lerger project we will normally need to customize our
+are working on a larger project we will normally need to customize our
 environment beyond what is possible in the `deps.edn` file and the
 `figwheel.main` command line.
 
@@ -777,21 +777,18 @@ There is also a need to **name** our *build* configurations so that we
 can identify them and help Figwheel keep their compiled artifacts
 separate.
 
-To meet these needs `figwheel.main` relies on a build file to specify
+To meet these needs `figwheel.main` relies on a **build file** to specify
 ClojureScript compiler options, figwheel options, and a stable name
 for the configuration.
 
 To help explain what a build file is and how it works, we'll start
-with and example build file.
+with and example.
 
-First let's reset things a little bit. First quit the REPL and then
+First let's reset things. Make sure you have quit the REPL and then
 delete the `target/public` directory to get rid of our compiled
 assets.
 
-> **TIP**: Many problems can be resolved by deleting stale compiled
-> ClojureScript artifacts.
-
-In the `hello-cljs` directory place a file called `cruel.cljs.edn`
+In the `hello-cljs` directory, place a file called `cruel.cljs.edn`
 with the following contents:
 
 ```clojure
@@ -801,10 +798,10 @@ with the following contents:
 The contents of the `cruel.cljs.edn` build file are specifying the
 [ClojureScript compiler options][compiler-options] for our cruel world
 project. These options will be passed to the ClojureScript compiler
-whenever some code needs compiling. There are quite a few
+whenever source code needs compiling. There are quite a few
 [compiler options][compiler-options] but the above is all we'll need
-as `figwheel.main` provides intelligent choices for missing compiler
-options.
+as `figwheel.main` provides enough default compiler options to allow
+you to get started working.
 
 The `hello-cljs` directory should now look like this:
 
@@ -831,8 +828,8 @@ hello.cruel-world --repl`.
 You will notice that if you edit the `src/hello/cruel_world.cljs` file
 you will see the same hot reloading and feedback behavior as before.
 
-There are some differences though in the startup output for the REPL
-you will notice a difference in the names of the compiled artifacts.
+In the startup output for the REPL, you will notice a difference in the
+names of the compiled artifacts.
 
 [image of "cruel" compiled artifacts output lines]
 
