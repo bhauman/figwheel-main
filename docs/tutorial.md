@@ -1,4 +1,4 @@
-# Quick Start
+# Tutorial
 
 This document is intended to get you aquainted with the features and
 workflow of Figwheel.
@@ -559,15 +559,18 @@ get quite far into an application just using this simple setup.
 ## Starting the REPL already intialized with your code
 
 While it is perfectly valid to `require` the code you need at the
-REPL, most of the time you will want to work on something
-specific. We'll now start a REPL with the code you intend to use or
-work on already loaded.
+REPL, most of the time you will want to initialize the REPL with
+something specific already loaded.
 
 You can accomplish this by using the following command:
 
 ```clojure
 $ clojure -m figwhee.main --compile hello.cruel-world --repl
 ```
+
+This will compile and load the `hello.cruel-world` namespace into the
+REPL environment. If `hello.cruel-world` required other namespaces
+they would get loaded as well.
 
 You will notice some differences in the REPL startup output this time:
 
@@ -581,20 +584,20 @@ The first thing of note is this warning:
 ![target classpath warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile-warning.png)
 
 This is expected. When we started the `figwheel.main` REPL without any
-arguments, all the compiled ClojureScript files are output into a
+arguments, the compiled ClojureScript files are output into a
 temporary directory. This directory is automatically added to the
 classpath so that the compiled assets can be found and served by the
-built-in figwheel server.
+built-in Figwheel server.
 
 Running `figwheel.main` without arguments indicates that you are
 likely experimenting with some code, not working on a local project.
 
-When one starts compiling namespaces it indicates that we are likely
+When one starts compiling namespaces it indicates that we are
 commiting to a project, and thus we will want our compiled artifacts
 to be local to the project (for later use). It is also time to start
 being explicit about what is on our classpath. `figwheel.main` will
 try to be helpful and append the classpath with paths that should
-likely be there. When id does add a classpath, Figwheel will print a
+likely be there. When it does add a classpath, Figwheel will print a
 warning because it is best that you manage the classpath explicitly so
 that things work properly when you are not using `figwheel.main`.
 
@@ -622,7 +625,7 @@ You should see the familiar output when starting a `figwheel.main`
 REPL minus the warning about `target`.
 
 You should also see that your ClojureScript source code is now being
-compiled to the local "target" directory and not to a temporary
+compiled to the local `target` directory and not to a temporary
 directory.
 
 You will also notice this line:
@@ -658,11 +661,11 @@ No More"` and then save the file. It should look like this:
   
 (js/console.log (what-kind?))
 ```
-
+ 
 When you save the file, you should see a green `Successfully compiled`
 message appear in the REPL. You can now check the REPL to see that
 your code has indeed been reloaded automatically. (Don't forget that
-you can use TAB to help you enter the following)
+you can use TAB to use autocomplete to help you enter the following)
 
 ```clojure
 cljs.user=> (hello.cruel-world/what-kind?)
@@ -678,20 +681,20 @@ one's workflow.
 
 #### Feedback is King
 
-Now we'll take a look at the ways in which Figwheel provides feedback
+We'll take a look at the ways in which Figwheel provides feedback
 while you are working.
 
-Now that your files are being watched and compiled as you work on
-them, we have an opportunity to detect syntax/compile errors at an
-earlier point than if we wait to reload by hand.
+Now we have a workflow where our files are being watched and compiled
+as we work on them, we have an opportunity to detect syntax/compile
+errors earlier than if we waited to reload by hand.
 
 Figwheel provides feedback for compile time errors and warnings in the
 REPL and in the browser.
 
-To experience this arrange your REPL terminal and editor windows so that
+To experience this, arrange your REPL terminal and editor windows so that
 they are side by side.
 
-![image of terminal next to editor]()
+![image of terminal next to editor](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/repl-editor-side-by-side.png)
 
 Now in the editor edit the the `src/hello/cruel_world.cljs` file again
 by adding some bad code on a line at the end of the file that looks
@@ -712,7 +715,7 @@ defn hello
 Now when you save the file you should see some warnings that look like
 the following feedback in the REPL.
 
-![screen shot of defn hello warnings]()
+![screen shot of defn hello warnings](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/terminal-defn-hello-warnings.png)
 
 Getting feedback like this as you coding is more timely than waiting
 until the file get's compiled and loaded by hand.
@@ -733,7 +736,7 @@ hello` so that it looks like this:
 
 Upon saving the file you will see a compile error in the REPL.
 
-[image of compile error]
+![image of compile error](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/def-hello-compile-error.png)
 
 So, we've demonstrated a workflow where you can edit your code and
 quickly get feedback from the REPL that informs you of any compile
