@@ -3,17 +3,14 @@
 This document is intended to get you aquainted with the features and
 workflow of Figwheel.
 
-This quick start is based on the Clojure CLI tools. If you are using the
-Windows Opersting System you will want to use the [Leiningen version of
+This tutorial is based on the Clojure CLI tools. If you are using the
+Windows Operating System you will want to use the [Leiningen version of
 this document](/quick_start_lein.html)
 
 ## Install the Clojure CLI tools
 
-You will want to install the Clojure CLI tools, they will install the
-Clojure language and install the `clj` and `clojure` command line
-utilities that will be very helpful when working with Clojure.
-
-Install the [Clojure CLI tools](CLI tools).
+First we will want to [install](CLI tools) the `clj` and `clojure` [command line
+tools][CLI tools].
 
 If you are on Mac OSX and you can quickly install the Clojure tools
 via [homebrew](brew).
@@ -39,7 +36,7 @@ the following:
 $ clj
 ```
 
-You should a `user=>` prompt where you can enter Clojure code. 
+You should see a `user=>` prompt where you can enter Clojure code.
 
 Try entering `(+ 1 2 3)` you should get a response of `6` along with
 the next prompt asking you for more code. Type `Control-C` to get out
@@ -47,8 +44,8 @@ of the Clojure REPL.
 
 If you were able to start a REPL, you have successfully installed Clojure!
 
-> We will use the acronym REPL frequently. It stands for Read Eval
-> Print Loop.
+> We will use the acronym REPL frequently. It stands for [Read Eval
+> Print Loop](REPL)
 
 ## Make a new directory to work in
 
@@ -61,17 +58,18 @@ workspace$ mkdir hello-cljs
 
 ## Specifying that you want to use Figwheel
 
-Figwheel is a library, or rather it is a Jar of Clojure code that you
-will use. If you are familiar Ruby's `bundler` and `Gemfile`, Python's
-`pip` and `requirements.txt`, or Javascript's `npm/yarn` and
+Figwheel is a Clojure library, or rather it is a Jar of Clojure code
+that you will use. If you are familiar Ruby's `bundler` and `Gemfile`,
+Python's `pip` and `requirements.txt`, or Javascript's `npm/yarn` and
 `package.json` then the concept of specifying a projects dependencies
 should be familiar to you.
 
-When using the Clojure CLI Tools, you will specify that you want to
-have certain libraries available to you is in the `deps.edn` file.
+When using the Clojure CLI Tools, the way that you specify that you
+want to have certain libraries available to you is in a `deps.edn`
+file.
 
-So in your `hello-cljs` directory, create a file `deps.edn` with the
-following contents:
+So our new `hello-cljs` directory, we'll create a `deps.edn` file with
+the following contents:
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}}}
@@ -79,14 +77,14 @@ following contents:
 
 ## Starting a ClojureScript REPL
 
-Now let's start a ClojureScript REPL. Make sure you are still in the
-`hello-cljs` directory and enter:
+Now let's use Figwheel to start a ClojureScript REPL. Make sure you
+are still in the `hello-cljs` directory and enter:
 
 ```clojure
 clojure -m figwheel.main
 ```
 
-This should first fetch all the needed dependencies, boot up a
+This command should fetch all the dependencies we need, boot up a
 ClojureScript REPL and finally pop open a Browser window with a page
 like that looks like this:
 
@@ -94,7 +92,7 @@ like that looks like this:
 
 If you see the green **Connected** next to the CLJS logo, it means
 that this page has successfully connected to the REPL that you just
-launched. This webpage provides the JavaScript environment for the
+launched. This webpage is the host JavaScript environment for the
 REPL, and is where all the ClojureScript expressions that you type
 into the REPL will be evaluated.
 
@@ -116,9 +114,9 @@ Hello World!
 nil
 cljs.user=> (range 5)
 (0 1 2 3 4)
-cljs.user=> (map (fn [x] (+ 1 x)) (range 5))
+cljs.user=> (map inc (range 5))
 (1 2 3 4 5)
-cljs.user=> (filter odd? (map (fn [x] (+ 1 x)) (range 5)))
+cljs.user=> (filter odd? (map inc (range 5)))
 (1 3 5)
 cljs.user=> (js/alert "ClojureScript!")
 nil
@@ -129,10 +127,13 @@ browser on our REPL host page.
 
 ## Amping up the REPL
 
-The REPL we just launched will do fine for trying simple expressions
-but we often to have a more fully featured REPL that can
+The REPL we just launched has a simple terminal readline support,
+meaning that it can handle editing a single line, and provide history
+by hitting the up arrow. This will do fine for trying simple
+expressions but we often to have a more fully featured terminal line
+reader that can:
 
-* syntax highlight the code as you type it
+* syntax highlight Clojure code as you type it
 * facilitate multi-line editing of expressions
 * autocomplete the current function name that you are typing
 * display function signatures as you type
@@ -141,8 +142,8 @@ but we often to have a more fully featured REPL that can
 * allows you to query for functions that are similar to the word under your cursor
 
 My library [Rebel Readline](rebel) provides these features for Clojure
-REPLs and it will be very helpful while exploring how to work with
-Figwheel and ClojureScript.
+REPLs. Let's install it now as it will be very helpful while exploring
+how to work with Figwheel and ClojureScript.
 
 To use Rebel Readline let's add `com.bhauman/rebel-readline-cljs
 0.1.4` as another dependency in the `deps.edn` file:
@@ -164,18 +165,18 @@ $ clojure -m figwheel.main
 ```
 
 After launching, a Browser will open and a REPL will start just like
-when we launched it before. However, you now will see the following
-line a few lines before the `cljs.user=>` prompt.
+before. However, you will now see the following line a few lines
+before the `cljs.user=>` prompt.
 
 ```shell
 [Rebel readline] Type :repl/help for online help info
 ```
 
-This notifies you that you are using Rebel Readline. 
+This confirms that we are using Rebel Readline. 
 
-If you type `:repl/help` command at the prompt, as you type you will
-notice that `:repl/help` itself is now has color syntax
-highlighting. Upon hitting enter, you will see a useful reference for
+If you type `:repl/help` command at the prompt, as you type you
+immediately notice that `:repl/help` character are syntax
+highlighted. Upon hitting enter, you will see a useful reference for
 the REPL's capabilities displayed.
 
 ![rebel readline help](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/rebel-readline-help.png)
@@ -770,8 +771,8 @@ You will notice that the warning goes away.
 The previous examples demonstrated how to start productively working
 with ClojureScript with very little configuration. However, when we
 are working on a larger project we will normally need to customize our
-environment beyond what is possible in the `deps.edn` file and the
-`figwheel.main` command line.
+environment beyond what is possible with the `deps.edn` file and the
+`figwheel.main` command line options.
 
 There is also a need to **name** our *build* configurations so that we
 can identify them and help Figwheel keep their compiled artifacts
@@ -784,12 +785,12 @@ for the configuration.
 To help explain what a build file is and how it works, we'll start
 with and example.
 
-First let's reset things. Make sure you have quit the REPL and then
+First let's reset things. Make sure you quit the REPL and then
 delete the `target/public` directory to get rid of our compiled
 assets.
 
-In the `hello-cljs` directory, place a file called `cruel.cljs.edn`
-with the following contents:
+After that, in the `hello-cljs` directory, place a new build file
+called `cruel.cljs.edn` with the following contents:
 
 ```clojure
 {:main hello.cruel-world}
@@ -1035,7 +1036,7 @@ and see that it is now significantly smaller.
 
 
 
-
+[REPL]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
 [brew]: https://brew.sh/
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
 [rebel]: https://github.com/bhauman/rebel-readline
