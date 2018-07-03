@@ -233,7 +233,7 @@ the following conventions when naming arguments.
 The argument name is `n` so we now know when we call `rand-int` we
 should supply one integer argument.
 
-If we want to undertand `rand-int` further, we can directly examine
+If we want to understand `rand-int` further, we can directly examine
 its source code.
 
 Now, with your cursor anywhere on the `rand-int` function hit
@@ -243,17 +243,20 @@ displayed.
 ![rand-int source in rebel](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/rand-int-source-in-terminal.png)
 
 Now that we know that `rand-int` takes a single integer argument let's
-call it. Complete the REPL line by typing `(rand-int 5)` and hit enter
-and you should indeed get a random number from 0 to 4.
+call it. 
+
+Let's see if `rand-int` works as we'd expect it to. Complete the REPL
+line by typing `(rand-int 5)` and hit enter and you should indeed get
+a random number from 0 to 4.
 
 If you hit the up arrow you can get `(rand-int 5)` back at the REPL
 prompt and you can hit enter again to get a different random result.
 
-Now let's inspect a function with a more complex argument signature.
+Let's inspect a function with a more complex argument signature.
 
 Enter `(range` at the prompt (use TAB completion if you like). Now
 look at it's documentation with `Control-X Control-D` you will notice
-that the argument signature is described differently. 
+that the argument signature is described differently.
 
 ```clojure
 ([] [end] [start end] [start end step])
@@ -263,7 +266,7 @@ This is showing us that `range` can be called with between 0 and 3
 arguments. You can call `range` with no arguments `[]` which will
 return an infinite sequence (not recommended at the REPL), you can
 call it with one argument `[end]` specifying where a range starting at
-`0` should end, you can call it with the other argument arities
+`0` should end, you can also call it with the other argument arities
 `[start end]` and `[start end step]`.
 
 Let's try this:
@@ -278,18 +281,18 @@ cljs.user=> (range 4 10 2)
 ```
 
 We intentionally didn't try to use `(range)` as it will cause the
-JavaScript environment to go into a tight loop and it will prevent
-further REPL use or interaction.
+JavaScript environment to go into a tight loop and prevent further
+REPL use or interaction.
 
 It is a good exercise to experience this, so if you're up for it, try
-entering `(range)` at the prompt. It should freeze the REPL and the
-browser because the browser is now stuck in a tight loop trying to
-iterate through all the integers up the maximum integer possible.
+entering `(range)` at the prompt. It should freeze the REPL because
+the browser is now stuck in a tight loop trying to iterate through all
+the integers up the maximum integer possible.
 
 We can recover from this.
 
 Sometimes it's easy to forget that the REPL is backed by a browser
-window, which is a very simple thing to reset. If your REPL gets stuck
+tab, which is a very simple thing to reset. If your REPL gets stuck
 in a tight loop, you can return to the REPL host page, take note of
 the URL (most likely `http://localhost:9500/` in our case) and then
 explicitly close the tab to kill the tight loop (a page reload often
@@ -313,13 +316,13 @@ before moving on.
 I'm assuming that you have a running REPL and that you are back at the
 `cljs.user=>` prompt.
 
-At the prompt enter the expression `(+ 1 2 3 4)`, and after that when
+At the prompt, enter the expression `(+ 1 2 3 4)`, and after that when
 your cursor is just after the last `)`, hit `Control-X Control-E`.
 
 You should see that the expression was evaluated and the result `#_=>
 10` displayed just under the line where your cursor is. Rebel Readline
 allows you to evaluate any expression or sub expression before hitting
-enter.
+ENTER.
 
 Let's try this again, hit ENTER to get back to an empty prompt and
 type the expression `(+ (+ 1 2 3) (+ 4 5 6))` and now place the
@@ -338,7 +341,7 @@ doing what you expect them to do.
 
 #### Multi-line editing
 
-Also, you may have noticed that you can create multi-line expressions
+By now, you may have noticed that you can create multi-line expressions
 at the REPL prompt in a fairly straight forward way.
 
 Try enterinng the following expression at the prompt and make sure you
@@ -350,10 +353,12 @@ cljs.user=> (+ 1
        #_=>    3)
 ```
 
-You should notice that you were able to hit enter to create newlines
+You should notice that you were able to hit ENTER to create newlines
 in your expression while the cursor was inside of an **open
 expression** and that once you closed the expression (by adding the
-last paren), when you hit enter it was submitted for evaluation.
+last paren), when you hit ENTER it was submitted for evaluation.
+
+This concludes our tour of the Rebel Readline REPL features.
 
 You can now exit the Rebel Readline REPL by hitting `Control-C Control-D`.
 
