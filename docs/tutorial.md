@@ -569,8 +569,8 @@ get quite far into an application just using this simple setup.
 
 ## Starting the REPL already intialized with your code
 
-While it is perfectly valid to `require` the code you need at the
-REPL, most of the time you will want to initialize the REPL with
+While it is perfectly workable to `require` all the code you need at
+the REPL, most of the time you will want to initialize the REPL with
 something specific already loaded.
 
 You can accomplish this by using the following command:
@@ -598,7 +598,7 @@ This is expected. When we started the `figwheel.main` REPL without any
 arguments, the compiled ClojureScript files are output into a
 temporary directory. This directory is automatically added to the
 classpath so that the compiled assets can be found and served by the
-built-in Figwheel server.
+built-in webserver.
 
 Running `figwheel.main` without arguments indicates that you are
 likely experimenting with some code, not working on a local project.
@@ -606,11 +606,12 @@ likely experimenting with some code, not working on a local project.
 When one starts compiling namespaces it indicates that we are
 commiting to a project, and thus we will want our compiled artifacts
 to be local to the project (for later use). It is also time to start
-being explicit about what is on our classpath. `figwheel.main` will
-try to be helpful and append the classpath with paths that should
-likely be there. When it does add a classpath, Figwheel will print a
-warning because it is best that you manage the classpath explicitly so
-that things work properly when you are not using `figwheel.main`.
+being explicit about what is on our classpath. In order to provide a
+smooth initial experience, `figwheel.main` will try to be helpful and
+append the classpath with paths that should likely be there. When it
+does add a classpath, Figwheel will print a warning because it is best
+that you manage the classpath explicitly so that things work properly
+when you are not using `figwheel.main`.
 
 We can fix this classpath warning by adding both `"src"` and
 `"target"` to the `:paths` key in our `deps.edn` file:
@@ -645,8 +646,9 @@ You will also notice this line:
 
 This line indicates that Figwheel is now watching the ClojureScript
 files in the `src` directory for changes. When a change is detected
-Figwheel will reload the changed code into the JavaScript environment,
-without us needing to use `(require 'hello.cruel-world :reload)`.
+Figwheel will compile and reload the changed code into the JavaScript
+environment, without us needing to use `(require 'hello.cruel-world
+:reload)`.
 
 Let's try this out.
 
@@ -690,17 +692,19 @@ we are working on and it will be reloaded instantly.
 Automatically reloading code on save makes a significant impact on
 one's workflow.
 
-#### Feedback is King
+## Feedback is King
 
 We'll take a look at the ways in which Figwheel provides feedback
 while you are working.
 
-Now we have a workflow where our files are being watched and compiled
+When we have a workflow where our files are being watched and compiled
 as we work on them, we have an opportunity to detect syntax/compile
 errors earlier than if we waited to reload by hand.
 
 Figwheel provides feedback for compile time errors and warnings in the
 REPL and in the browser.
+
+####  REPL Feedback
 
 To experience this, arrange your REPL terminal and editor windows so that
 they are side by side.
@@ -728,8 +732,10 @@ the following feedback in the REPL.
 
 ![screen shot of defn hello warnings](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/terminal-defn-hello-warnings.png)
 
-Getting feedback like this as you coding is more timely than waiting
-until the file get's compiled and loaded by hand.
+Getting feedback like this as you are coding is more timely than
+waiting until a file is compiled and loaded by hand and allows you to
+concentrate more on the problem with less interuptions from the
+process.
 
 Now let's cause a compile error by adding parenthesis around `defn
 hello` so that it looks like this:
@@ -753,9 +759,11 @@ So, we've demonstrated a workflow where you can edit your code and
 quickly get feedback from the REPL that informs you of any compile
 errors.
 
+#### Heads-up display feedback
+
 You may have noticed this already but if you go back to the "Default
 Figwheel Dev Page" in the Browser you will also see the same error
-displayed in Figwheel's heads-up display.
+above displayed in Figwheel's heads-up display.
 
 ![image of error in heads up display](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/defn-hello-error-heads-up.png)
 
@@ -771,8 +779,8 @@ see the compiler error replaced with a warning like this:
 
 ![image of warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/defn-hello-warning-heads-up.png)
 
-And finally delete the remaining `defn hello` line and hit save once
-again.
+And finally delete the remaining `defn hello` line and save the file
+once again.
 
 You will notice that the warning goes away.
 
@@ -826,7 +834,7 @@ hello-cljs/
 ```		
 
 It is easy to use a build file. From the `hello-cljs` directory, start
-`figwheel.main` like so:
+`figwheel.main` again, using our new build file:
 
 ```shell
 $ clojure -m figwheel.main --build cruel --repl
