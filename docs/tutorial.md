@@ -81,7 +81,7 @@ Now let's use Figwheel to start a ClojureScript REPL. Make sure you
 are still in the `hello-cljs` directory and enter:
 
 ```clojure
-clojure -m figwheel.main
+clj -m figwheel.main
 ```
 
 This command should fetch all the dependencies we need, boot up a
@@ -164,9 +164,13 @@ To see it in action launch a REPL with `figwheel.main` again, from the
 $ clojure -m figwheel.main
 ```
 
-After launching, a Browser will open and a REPL will start just like
-before. However, you will now see the following line a few lines
-before the `cljs.user=>` prompt.
+> Its its better to use the `clojure` command when using
+> rebel-readline because the `clj` command provides it's own terminal
+> line reader
+
+After entering the above command, a Browser will open and a REPL will
+start just like before. However, you will now see the following line a
+few lines before the `cljs.user=>` prompt.
 
 ```shell
 [Rebel readline] Type :repl/help for online help info
@@ -421,7 +425,7 @@ hello-cljs
         └── cruel_world.cljs
 ```
 
-Take note that in the file we are declaring a namespace
+Take note that in ClojureScript file we are declaring a namespace
 `hello.cruel-world` and that the path to our file mirrors this
 namespace and it is rooted in the `src` directory, which is on the
 classpath. This is what will allow the ClojureScript compiler to find
@@ -439,8 +443,8 @@ cljs.user=> (require 'hello.cruel-world)
 nil
 ```
 
-That `nil` response is exactly what we want, the REPL will let you now
-if it couldn't find the file or if there was a problem compiling it.
+That `nil` response is exactly what we want. If if there was a problem
+finding or compiling the file the REPL will let you know.
 
 Now we can call our `what-kind?` function defined in `hello.cruel-world`:
 
@@ -522,17 +526,17 @@ hello.cruel-world=> (what-kind?)
 ```
 
 Remember that you are working in a Browser environment so you can
-interact with it. 
+interact with the browser DOM as well.
 
 ```clojure
 hello.cruel-world=> (js/document.getElementById "app")
 #object[HTMLDivElement [object HTMLDivElement]]
 ```
 
-There is an HTML element with and id of "app" available on the REPL
-host page. This element contains all of the markup and style for the
-helper application. Let's override the helper app content, with the
-string returned by our `what-kind?` function.
+There is an HTML element with and `id` of `"app"` available on the
+REPL host page. This element contains all of the markup and style for
+the helper application. Let's override the helper app content, with
+the string returned by our `what-kind?` function.
 
 Make sure the REPL host page is visible while you type the folowing.
 
@@ -556,12 +560,12 @@ get quite far into an application just using this simple setup.
 > ClojureScript, when you are ready to learn more it is an excellent
 > resource.
 
-> **TIP**: Much of what you learned above applies equally well to
-> Clojure. So if you would like to try your hand at Clojure, as well,
-> you can get a working Rebel Readline Clojure REPL by typing `clojure
-> -m rebel-readline.main` in the `hello-cljs` directory. If you want
-> to create and load Clojure files, everything is the same as above
-> except Clojure files end with `.clj`
+> **TIP**: Much of what you learned above applies equally well to the
+> Clojure language. So if you would like to try your hand at Clojure,
+> as well, you can get a working Rebel Readline Clojure REPL by typing
+> `clojure -m rebel-readline.main` in the `hello-cljs` directory. If
+> you want to create and load Clojure files, everything is the same as
+> above except Clojure files end with `.clj`
 
 ## Starting the REPL already intialized with your code
 
