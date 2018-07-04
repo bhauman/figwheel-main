@@ -1125,23 +1125,9 @@ your `cruel.cljs.edn` file as follows:
 
 ## Conclusion
 
-Well,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+You made it! Thanks for taking the time to learn more about
+`figwheel.main`. I've hopefully provided you enough information to get
+started with your ClojureScript explorations.
 
 [REPL]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
 [brew]: https://brew.sh/
