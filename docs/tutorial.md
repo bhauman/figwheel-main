@@ -850,14 +850,18 @@ you will see the same hot reloading and feedback behavior as before.
 In the startup output for the REPL, you will notice a difference in the
 names of the compiled artifacts.
 
-[image of "cruel" compiled artifacts output lines]
+![image of compiled artifacts output lines](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/build-name-output-difference.png)
+
+Before the compiled output was getting compiled to
+`target/public/cljs-out/main.js` and now it's getting compiled to
+`target/public/cljs-out/cruel-main.js`.
 
 As your project grows it will more than likely have more than one
-build, and having a name to separate your builds compiled artifacts is
-very helpful.
+build, and having a name to identify and separate your build's
+compiled artifacts is very helpful.
 
 Also, as you progress with your project there is normally a need to
-add more spcific ClojureScript compiler options rather than rely the
+add more specific ClojureScript compiler options rather than rely the
 default ones that `figwheel.main` supplies.  With a build file like
 `cruel.cljs.edn` you will have a logical place to add these options as
 needed.
@@ -865,16 +869,17 @@ needed.
 You will also have a place to add [`figwheel.main` configuration
 options][figwheel-options].
 
-As an exercise, let's say we'll be mainly relying on the heads up
-display feedback and that we'd like to make figwheel print the
-compiler errors more concisely in the REPL.
+As an exercise, we'll add an option to modify `figwheel.main`'s
+behavior. Let's say we'll be mainly relying on the heads up display
+feedback and that we'd like to make figwheel print the compiler errors
+more concisely in the REPL.
 
-We have seen that compile drrors normally print out with some code
-context and a pointer to where the error was detected. 
+We have seen that compile errors normally print out with some code
+context and a pointer to where the error was detected.
 
-[image of verbose error]
+![image of verbose error](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/verbose-defn-error-message.png)
 
-We can make errors print out with out the code context with the
+We can make errors print out without the code context with the
 [`:log-syntax-error-style`][syntax-error-style] option.
 
 We'll configure this in our `cruel.cljs.edn` file. Go ahead and edit
@@ -885,13 +890,13 @@ the build file to look like this:
 {:main hello.cruel-world}
 ```
 
-The caret `^` symbol is very important and signifies that we are
+The caret `^` character is very important and signifies that we are
 adding **metadata** to the map that follows it. 
 
-> Learn more about Metadata [here][learning-metadata] and see the
+> Learn more about Clojure Metadata [here][learning-metadata] and see the
 > [official reference][metadata]
 
-Now when we start up the `cruel` build with `figwheel.main` again. 
+Now when we start up the `cruel` build with `figwheel.main` again:
 
 ```shell
 $ clojure -m figwheel.main --build cruel --repl
@@ -900,7 +905,11 @@ $ clojure -m figwheel.main --build cruel --repl
 If we type an error in our code we'll see a much more concise message
 like this:
 
-[concise message image]
+![concise message image](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/concise-defn-error.png)
+
+In summary, a build file is a useful way to specify compiler and
+Figwheel options and provide that configuration a useful name. I
+consider this the most useful way of working with `figwheel.main`.
 
 #### figwheel-main.edn
 
@@ -918,9 +927,12 @@ Example `hello-cljs/figwheel-main.edn`:
 ```
 
 If you try this you will notice that the `:log-syntax-error-style
-:concise` configuration still works. It is important to note that the
-**metadata** configuration that you add to your build files will
-override the configuration in `figwheel-main.edn`
+:concise` configuration still works. This configuration will now take
+effect without out the need to specify it in any build files. 
+
+It is important to note that the **metadata** configuration that you
+add to your build files will override the configuration in
+`figwheel-main.edn`
 
 ## Packaging up a single compiled artifact for production
 
@@ -977,7 +989,7 @@ target
 ```
 
 When we want to deploy our final project we are normally going to want
-to produce a single JavaScript file, to made load times more efficient.
+to produce a single JavaScript file, to make load times more efficient.
 
 All of the other `:optimizations` modes produce a single file as output.
 
@@ -998,8 +1010,9 @@ $ rm -rf target/public
 ```
 
 Because we just want to compile a file once and not start a watching
-process we are going to use the `--build-once` flag. We will also
-specify the `--optimizations` level as `whitespace`.
+process we are going to use the `figwheel.main` `--build-once`
+flag. We will also specify the `--optimizations` level as
+`whitespace`.
 
 Here's the long version of the command:
 
@@ -1025,7 +1038,7 @@ source file. Unfortunately we are getting all the code that is needed
 by the core ClojureScript library even though we are not using it.
 
 We can remedy this by using `advanced` compiliation which will perform
-a static code analysis and perform DCE(Dead code elimination) and
+a static code analysis and perform DCE (Dead code elimination) and
 remove any code that is not used.
 
 ```shell
@@ -1035,8 +1048,84 @@ $ clojure -m figwheel.main -O advanced -bo cruel
 If you now view the contents of `target/public/cljs-out/cruel-main.js`
 and see that it is now significantly smaller.
 
+## index.html
+
+In all of the examples above, we have used the host HTML page provided
+by the `figwheel.main` helper application. You will very quickly get
+to the point where you want to supply your HTML page to host your
+application.
+
+Let's look at how you can provide your own `index.html` to host your
+application.
+
+The webserver used by figwheel uses the classpath to find static
+files. Anything that is on the classpath in a `public` directory will
+be served as a static file.
+
+Add a `resources` directory to the classpath by adding `"resources"`
+to the `:paths` key in you `deps.edn` file. When you finish the file
+should look like this:
+
+```clojure
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+ :paths ["src" "target" "resources"]}
+```
+
+Now let's make a `resources/public` directory that we will use as a
+web-root directory for our web assets.
+
+```shell
+$ mkdir -p resources/public
+```
+
+Now, we'll add a CSS file, because let's face it we're gonna need it.
+
+Create a CSS file `resources/public/css/style.css` with the following
+content:
+
+```css
+/* style */
+body {
+	color: red;
+}
+```
+
+Then create an `resources/public/index.html` file with the following in it:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- this refers to resources/public/css/style.css -->
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="app"></div>
+	<!-- this refers to target/public/cljs-out/cruel-main.js -->
+    <script src="cljs-out/cruel-main.js"></script>
+  </body>
+</html>
+```
+
+Once this file is in place, when you start the `cruel` build with
+`figwheel.main` you will now see your `index.html` file rather than
+the default helper app host page.
+
+#### Live Reload CSS
+
+You can get `figwheel.main` to watch and reload the css file above by
+adding `:css-dirs ["resources/public/css"]` configuration to
+your `cruel.cljs.edn` file as follows:
+
+```clojure
+^{:css-dirs ["resources/public/css"]}
+{:main hello.cruel-world}
+```
+
 ## Conclusion
 
+Well,
 
 
 
