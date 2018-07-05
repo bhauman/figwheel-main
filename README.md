@@ -31,8 +31,6 @@ tools that can communicate from the server to your client.
 
 > Currently ONLY works for a browser and Node environments
 
-> Currently still undergoing heavy development. Stuff will most certainly change.
-
 > This documentation is incomplete and intended to help you take the new figwheel
 > for a spin before its official release.
 
