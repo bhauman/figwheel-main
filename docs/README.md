@@ -383,6 +383,29 @@ The compiler by default compiles artifacts to `target` for easy cleaning.
 It is custmary to put your `index.html`, CSS files, and other
 web artifacts in the `resources/public` directory.
 
+## Live CSS Reloading
+
+As mentioned above you configure `figwheel.main` to live reload your
+CSS files as you edit them.
+
+Just add a `:css-dirs` key that lists the CSS directories to watch in
+your figwheel configuration.
+
+For example in your `figwheel-main.edn` file:
+
+```clojure
+{:css-dirs ["resources/public"]}
+```
+
+#### Using CSS Precompilers
+
+Using SASS or LESS and still want to have the benefits of live CSS reloading?
+
+Simply run your sass or less watcher/compiler on the command line and
+make sure the final output CSS files land in one of the directories
+that you have listed in your `:css-dirs` configuration option (mentioned
+above).
+
 ## Working with Node.js
 
 Unlike `cljs.main`, with `figwheel.main` you will not specify a
@@ -437,11 +460,11 @@ metadata. You can see and example of providing callbacks below:
 
 The reload hooks will be called before and after every hot code reload.
 
-## Quick way for experienced devs to understand the command line options
+## Quick way to understand the command line options
 
-You can supply a `-pc` or `--pprint-config` flag to `figwheel.main`
-and it will print out the computed configuration instead of running
-the command.
+If you supply a `-pc` or `--pprint-config` flag to `figwheel.main`, it
+will not execute the command. It will instead print out the computed
+configuration.
 
 For example:
 
