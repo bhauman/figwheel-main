@@ -340,13 +340,10 @@ For example if you want to have `:watch-dirs` that are specific to the
 {:main example.core}
 ```
 
-All the available configuration options are documented here:
-[https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md][https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md]
+All the available configuration options are documented here:[https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md](https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md)
 
 All the available configuration options specs are here:
-[https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj][https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj]
-
-
+[https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj](https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj)
 
 {::comment}
 
