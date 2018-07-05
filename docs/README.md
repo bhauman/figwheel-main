@@ -4,7 +4,7 @@
 
 Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
-![Figwheel heads up example]](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-demo-image.png)
+![Figwheel heads up example](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-demo-image.png)
 
 Get a quick idea of what figwheel does by watching the 6 minute
 [flappy bird demo of figwheel][figwheel-demo-video].
@@ -172,7 +172,7 @@ tools you will have much more fun actually using the language itself.
 
 [tutorial button here]
 
-There is an extensive getting started [tutorial][tutorial] I highly
+There is an [extensive getting started tutorial][tutorial] I highly
 reccomend reading it if you are new to Clojure, ClojureScript and or
 the new Clojure CLI tools.
 
