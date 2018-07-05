@@ -4,7 +4,7 @@
 
 Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
-![Figwheel heads up example](https://s3.amazonaws.com/bhauman-blog-images/figwheel_image.png)
+![Figwheel heads up example](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-demo-image.png)
 
 Get a quick idea of what figwheel does by watching the
 6 minute [flappy bird demo of figwheel](https://www.youtube.com/watch?v=KZjFVdU8VLI).
@@ -27,7 +27,7 @@ making a contribution.
 <img src="https://s3.amazonaws.com/bhauman-blog-images/Smaller%2BDonate%2BButton%402x.png" width="200">
 </a>
 
-## Features 
+## Features
 
 #### Live code reloading
 
@@ -71,7 +71,7 @@ as the heads up display.
 #### First Class Configuration Error Reporting
 
 It can be quite daunting, when you are configuring a tool for the
-first time.  Figwheel currently offers best-of-class configuration
+first time.  Figwheel currently offers excellent configuration
 error reporting that will help you if you happen to misconfigure
 something.
 
@@ -80,10 +80,10 @@ something.
 When you launch Figwheel it not only starts a live building/reloading
 process but it also optionally launches a CLJS REPL into your running
 application. This REPL shares compilation information with the
-figwheel builder, so as you change your code the REPL is also aware of
-the code changes. The REPL also has some special built-in control
-functions that allow you to control the auto-building process and
-execute various build tasks without having to stop and rerun lein-figwheel.
+ClojureScript compiler, allowing the REPL is to be aware of the code
+changes as well. The REPL also has some special built-in control functions
+that allow you to control the auto-building process and execute
+various build tasks without having to stop and rerun `figwheel.main`.
 
 #### Robust connection
 
@@ -103,17 +103,16 @@ in your laptop browser simultaneously.
 Figwheel will not load a file that has not been required. It will also
 respond well to new requirements and dependency tree changes.
 
-#### Calculates minimal reload set
-
-Figwheel does its best to only reload what needs to be reloaded. This
-minimizes the surface area of dynamically reloaded code, which in turn
-should increase the stability of the client environment.
-
-#### Doesn't load code that is generating warnings
+#### Won't load code that is generating warnings
 
 If your ClojureScript code is generating compiler warnings Figwheel
 won't load it. This, again, is very helpful in keeping the client
 environment stable. This behavior is optional and can be turned off.
+
+
+
+
+
 
 ## Figwheel Innovations
 
