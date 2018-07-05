@@ -90,9 +90,7 @@ various build tasks without having to stop and rerun `figwheel.main`.
 #### Robust connection
 
 Figwheel's connection is fairly robust. I have experienced figwheel
-sessions that have lasted for days through multiple OS sleeps. You can
-also use figwheel like a REPL if you are OK with using `print` to output
-the evaluation results to the browser console.
+sessions that have lasted for days through multiple OS sleeps.
 
 #### Message broadcast
 
@@ -340,10 +338,139 @@ For example if you want to have `:watch-dirs` that are specific to the
 {:main example.core}
 ```
 
-All the available configuration options are documented here:[https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md](https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md)
+All the available configuration options are documented here: [https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md](https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md)
 
 All the available configuration options specs are here:
 [https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj](https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj)
+
+## Classpaths, Classpaths, Classpaths
+
+Understanding of the Java Classpath can be very helpful when working
+with ClojureScript. 
+
+ClojureScript searches for source files on the Classpath. When you add
+a `re-frame` dependency like so:
+
+```clojure
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+        ;; adding re-frame
+        re-frame {:mvn/version "1.10.5"}}
+ :paths ["src" "target" "resources"]}
+```
+
+The source files in `re-frame` are on the Classpath and the
+ClojureScript compiler can find `re-frame.core` when you require it.
+
+Your sources will need to be on the Classpath so that the Compiler can
+find them. For example, if you have a file
+`cljs-src/example/core.cljs` you should add `cljs-src` to the `:paths`
+key so that the ClojureScript compiler can find your `example.core`
+namespace. It is important to note that the `src` directory is on your
+Classpath by default.
+
+In Figwheel, the embedded HTTP server serves its files from the Java
+Classpath.
+
+It actually serves any file it finds on the Classpath in a `public`
+sub-directory. This is why we added `target` and `resources` to the
+`:paths` key in the `deps.edn` file above. With `target` and
+`resources` both on the Classpath the server will be able to serve
+anyfile in `target/public` and `resources/public`.
+
+The compiler by default compiles artifacts to `target` for easy cleaning.
+
+It is custmary to put your `index.html`, CSS files, and other
+web artifacts in the `resources/public` directory.
+
+## Working with Node.js
+
+Unlike `cljs.main`, with `figwheel.main` you will not specify a
+`--repl-env node` because the `figwheel.repl` handles Node.js REPL
+connections in addition to others.
+
+You can launch a Node REPL like so:
+
+    clojure -m figwheel.main -t node -r
+    
+You can quickly get a hot reloading CLJS node build up an running using the
+`deps.edn`, `example.core` and `dev.cljs.edn` above. Simply add a `--target node`
+or `-t node` to the compile command.
+
+    clojure -m figwheel.main -t node -b dev -r
+
+This will launch a CLJS Node REPL initialized with `example.core` you
+can now edit `example/core.cljs` and it will be hot reloaded.
+    
+Of course if you add `:target :nodejs` to `dev.cljs.edn` like so:
+
+```clojure
+{:main example.core
+ :target :nodejs}
+```
+
+You be able to run the build more simply:
+
+    clojure -m figwheel.main -b dev -r
+
+## Reload hooks
+
+It is common to want to provide callbacks to do some housekeeping
+before or after a hot reload has occurred.
+
+You can conveniently configure hot reload callbacks at runtime with
+metadata. You can see and example of providing callbacks below:
+
+```clojure
+;; first notify figwheel that this ns has callback defined in it
+(ns ^:figwheel-hooks example.core)
+
+;; mark the hook functions with ^:before-load and ^:after-load 
+;; metadata
+
+(defn ^:before-load my-before-reload-callback []
+    (println "BEFORE reload!!!"))
+
+(defn ^:after-load my-after-reload-callback []
+    (println "AFTER reload!!!"))
+```
+
+The reload hooks will be called before and after every hot code reload.
+
+## Quick way for experienced devs to understand the command line options
+
+You can supply a `-pc` or `--pprint-config` flag to `figwheel.main`
+and it will print out the computed configuration instead of running
+the command.
+
+For example:
+
+```
+clojure -m figwheel.main -pc -b dev -r
+```
+
+Will output:
+
+```clojure
+---------------------- Figwheel options ----------------------
+{:ring-server-options {:port 9550},
+ :client-print-to [:repl :console],
+ :pprint-config true,
+ :watch-dirs ("src"),
+ :mode :repl}
+---------------------- Compiler options ----------------------
+{:main exproj.core,
+ :preloads [figwheel.core figwheel.main figwheel.repl.preload],
+ :output-to "target/public/cljs-out/dev-main.js",
+ :output-dir "target/public/cljs-out/dev",
+ :asset-path "cljs-out/dev",
+ :aot-cache false,
+ :closure-defines
+ #:figwheel.repl{connect-url
+                 "ws://localhost:9550/figwheel-connect?fwprocess=c8712b&fwbuild=dev",
+                 print-output "repl,console"}}
+```
+
 
 {::comment}
 
