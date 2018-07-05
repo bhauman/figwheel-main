@@ -183,9 +183,11 @@ You can get help at both the
 and on the **#clojurescript**, **#figwheel-main** and **#beginners**
 [Clojurians Slack Channels](http://clojurians.net)
 
-## Usage
-
 ## Quick Usage
+
+This is abbreviated usage documentation intended for experienced
+Clojure/Script developers. I highly reccomend the [tutorial][tutorial]
+if you are new to Figwheel and ClojureScript.
 
 #### Clojure CLI Tools
 
@@ -339,10 +341,10 @@ For example if you want to have `:watch-dirs` that are specific to the
 ```
 
 All the available configuration options are documented here:
-https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
+[https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md][https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md]
 
 All the available configuration options specs are here:
-https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj
+[https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj][https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj]
 
 
 
