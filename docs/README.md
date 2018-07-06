@@ -6,7 +6,7 @@ Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
 ![Figwheel heads up example](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-demo-image.png)
 
-Get a quick idea of what figwheel does by watching the 6 minute
+Get a quick idea of what Figwheel does by watching the 6 minute
 [flappy bird demo of figwheel][figwheel-demo-video].
 
 Learn even more by watching a 45 minute
