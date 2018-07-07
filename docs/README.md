@@ -31,16 +31,6 @@ making a contribution.
 
 ## Features
 
-* **Live code reloading**
-* **Supports Node.js**
-* **Static file server**
-* **Easy to embed a ring handler**
-* **Live CSS reloading**
-* **Displays compile errors in Heads-Up display**
-* **Parses and augments errors with code context**
-* **Excellent configuration error detection and reporting**
-* **Excellent ClojureScript REPL
-
 #### Live code reloading
 
 If you write
