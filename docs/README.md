@@ -31,14 +31,21 @@ making a contribution.
 
 ## Features
 
+* **Live code reloading**
+* **Supports Node.js**
+* **Static file server**
+* **Easy to embed a ring handler**
+* **Live CSS reloading**
+* **Displays compile errors in Heads-Up display**
+* **Parses and augments errors with code context**
+* **Excellent configuration error detection and reporting**
+* **Excellent ClojureScript REPL
+
 #### Live code reloading
 
 If you write
 [**reloadable code**](http://rigsomelight.com/figwheel-main/reloadable_code)
-figwheel can facilitate automated live interactive programming. Every
-time you save your ClojureScript source file, the changes are sent to
-the browser so that you can see the effects of modifying your code in
-real time.
+figwheel can facilitate automated live interactive programming.
 
 #### Supports Node.js
 
@@ -46,7 +53,7 @@ real time.
 
 The inclusion of a **static file server** allows you to get a decent
 ClojureScript development environment up and running quickly. For
-convenience there is a `:ring-handler` option so you can load a ring
+convenience there is a `:ring-handler` option so you can embed a ring
 handler into the figwheel server.
 
 #### Live CSS reloading
@@ -61,7 +68,7 @@ Figwheel can live reload your JavaScript source files.
 
 Figwheel has a non-intrusive heads up display that gives you feedback
 on how well your project is compiling. By writing a shell script you
-can click on files in the heads up display and they will open in your
+can click on errors in the heads up display and they will open in your
 editor!
 
 #### Descriptive Errors with Code Context
@@ -70,14 +77,14 @@ Figwheel provides descriptive compiler errors that point to where
 the error is in your code.  These errors appear in the REPL as well
 as the heads up display.
 
-#### First Class Configuration Error Reporting
+#### Excellent Configuration Error Reporting
 
 It can be quite daunting, when you are configuring a tool for the
 first time.  Figwheel currently offers excellent configuration
 error reporting that will help you if you happen to misconfigure
 something.
 
-#### Built-in ClojureScript REPL
+#### ClojureScript REPL
 
 When you launch Figwheel it not only starts a live building/reloading
 process but it also optionally launches a CLJS REPL into your running
