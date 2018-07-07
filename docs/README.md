@@ -34,7 +34,7 @@ making a contribution.
 #### Live code reloading
 
 If you write
-[**reloadable code**](https://github.com/bhauman/lein-figwheel#writing-reloadable-code),
+[**reloadable code**](http://rigsomelight.com/figwheel-main/reloadable_code)
 figwheel can facilitate automated live interactive programming. Every
 time you save your ClojureScript source file, the changes are sent to
 the browser so that you can see the effects of modifying your code in
