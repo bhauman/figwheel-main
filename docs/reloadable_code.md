@@ -12,19 +12,17 @@ is just the way stuff gets done.
 ## Load Time Side Effects
 
 Load time side-effects are the side-effects that change the state of
-our JavaScript environment when a file is loaded. As an example if we
-defined a bunch of functions in a file, when the file is reloaded, it
-will be changing the state by re-defining all of the functions that
-are already present in the same namespace in the JavaScript
-environment. That is a side-effect of loading the file but it is
-benign, as this is a state change that we want.
+our JavaScript environment when a file is loaded. As an illustration:
+when a file with code in it is loaded, it will be changing the state
+by importing that code into the environment. That is a side-effect of
+loading the file but it is exactly the side effect we want when we
+load a file.
 
 If you are mutating the [DOM][DOM] or your program state at the
 top-level of your file so that these state changes will occur when the
 file is loaded, we are going to have to put some thought into how we
-can safely make these things happen so that we can preserve the state
-of our running program. We want the state of our program to survive
-the reloading our files.
+can safely make these things happen so that we can protect the state
+of our running program.
 
 Reloadable code is code who's **load time side-effects** will not
 interact with our running program in a destructive way.
@@ -55,12 +53,9 @@ state.
 ```
 
 The `state` definition above is holding program state in an atom.
-Every time the file that holds this definition gets reloaded, the
-state definition will be redefined and the state it holds will be
-reset back to the original state (the empty map `{}`). This is
-normally not desirable. We are wanting to change our code, and
-redefine its behavior while maintaining the state of the running
-program.
+Every time this definition gets reloaded, the definition will be
+redefined and reset back to the empty map `{}`.  This is normally not
+desirable. 
 
 The way to fix this is to use `defonce`
 
@@ -68,20 +63,18 @@ The way to fix this is to use `defonce`
 (defonce state (atom {}))
 ```
 
-This will fix most situations where you have code that is relying on a
-definition that has local state. It is important to remember that if
-you change the code that is wrapped in a `defonce` you won't see the
-changes, because the identifier won't be redefined.
+This will fix most situations where you have a top level
+definition. It is important to remember that if you change code that
+in a `defonce` you won't see the changes after a reload because it
+won't be evaluated after the first load.
 
 #### Page initialization
 
-Often you will want to initialize several things and kick off your
-program when you load the the root file of your program. 
+It is not uncommon to initialize and launch your program from top
+level of a file. However, you normally won't want to run this
+initialization every time this file gets reloaded.
 
-You normally won't want to run this initialization every time the file
-that holds the initialization code gets reloaded.
-
-This problem can also be solved with a `defonce`.
+We can solve this problem by using `defonce` again. For example:
 
 ```clojure
 (defonce initialize-block
@@ -92,18 +85,15 @@ This problem can also be solved with a `defonce`.
 ```
 
 Above we use the name `initialize-block` but you can use any name
-because it will probably never be used in your program. We use a `do`
-block because a `defonce` can only take one form as a definition. At
-the end of the `do` block we provide a value `true` so that the
-`defonce` is only invoked the first time it is evaluated. If
-`add-body-listeners` returns a value we don't have to provide the
-`true` at the end. However, it is good practice to keep the `true`
-value there as a reminder, because as the block grows someone may add
-an initializer that returns `nil` and then the `defonce` will be
-invoked every time the file gets reloaded.
+because it will probably never be referenced in your program. We use a
+`do` block because `defonce` can only take one form besides the
+name. At the end of the `do` block we provide a value `true` so that
+the `defonce` is only invoked the first time it is evaluated. If
+`add-body-listeners` returns a truthy value we don't have to provide
+the `true` at the end.
 
 Running your initialization code the first time the a page loads can
-also be accomplished by registering an `load` handle on window.
+also be accomplished by registering a `load` handler on window.
 
 ```clojure
 (ns example.core
