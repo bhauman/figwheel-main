@@ -135,29 +135,21 @@ A trivial example is to add a listener in `setup` and remove it in
    (dom/getElementByTagNameAndClass "a" "submit-btn"))
    
 ;; and we'll want to call setup on the first initial load as well.
-(defonce init-block
-  (do (setup)
-      true))
+(defonce init-block (setup))
 ```
 
 The above is taking advantage of Figwheel's metadata markers to
 specify functions to call before and after a reload. The
-`^:figwheel-hooks` marker is required to let figwheel know that there
+`^:figwheel-hooks` marker is required to let Figwheel know that there
 are reload hooks in the namespace.
 
 ## Use Reactjs
 
-When you use Reactjs, state is mediated and managed for you. You just
-describe what should be there and then React takes care of making the
-appropriate changes. For this reason React is a prime candidate for
-writing reloadable code. React components already have a lifecycle
-protocol that embeds a `setup` and `teardown` pattern in each
-component and invokes them when necessary.
-
-It is worth repeating that React components don't have local state, it
-just looks like they do. You have to ask for the local state and React in
-turn looks this state up in a larger state context and returns it,
-very similar to a State Monad.
+When you use Reactjs, state is mediated and managed for you. Your code
+describes what should be there and then React takes care of all the
+state changes needed to bring the DOM inline with your
+description. For this reason React is a prime candidate for writing
+reloadable code.
 
 ## Conclusion
 
