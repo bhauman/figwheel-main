@@ -109,8 +109,20 @@
 (defn warn [& msg]
   (fwlog! *logger* :warn (string/join " " msg) nil))
 
+(defn simple-error [e]
+  (let [{:keys [cause via] :as tm} (Throwable->map e)
+        typ (-> via last :type)
+        message (cond-> ""
+                  typ (str typ ": ")
+                  cause (str cause))]
+    (if (string/blank? message)
+      (fwlog! *logger* :error "Error: " e)
+      (fwlog! *logger* :error message nil))))
+
 (defn error [msg & [e]]
-  (fwlog! *logger* :error msg e))
+  (if (instance? Throwable msg)
+    (simple-error msg)
+    (fwlog! *logger* :error msg e)))
 
 (defn debug [& msg]
   (fwlog! *logger* :debug (string/join " " msg) nil))

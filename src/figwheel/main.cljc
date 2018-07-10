@@ -1481,7 +1481,10 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                                                 :reload-dependents])]
             (try
               (let [fw-mode? (figwheel-mode? b-cfg)]
-                (build config options cenv)
+                (try
+                  (build config options cenv)
+                  (catch Throwable t
+                    (log/error t)))
                 (when-not (= mode :build-once)
                   (start-background-builds (assoc cfg
                                                   ::start-figwheel-options
