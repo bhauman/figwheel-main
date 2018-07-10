@@ -1,48 +1,192 @@
-# figwheel-main
+# Figwheel Main
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main)
 
-Figwheel Main is intended to provide a `cljs.main` like command line
-experience for ClojureScript that also provides the many features that
-were first developed in `lein-figwheel` but better.
+Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
-* Hot Code Reloading
-* Stable multiplexing REPL connection
-* CSS reloading
-* Heads-up display for compile time errors
-* Pop to editor from heads-up display
-* Built in ring development server
+![Figwheel heads up example](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/figwheel-main-demo-image.png)
 
-`figwheel-main` is a **complete rewrite** of original figwheel. All of the
-above features have been improved significantly.
+Get a quick idea of what Figwheel does by watching the 6 minute
+[flappy bird demo of figwheel][figwheel-demo-video].
 
-* Hot code reloading has been significantly revamped.
-* The REPL now only evals on one client and allows you to choose which one at runtime.
-* The built-in ring server is now the ring-jetty-adapter which will
-  allow the use of HTTPS, and extensive configuration of the server itself
-* the built-in ring server now uses `ring-defaults` and allows
-  extensive configuration of the middleware
-* the amount of config needed to get started has been significantly
-  reduced
-* the configuration options have been simplified
+Learn even more by watching a 45 minute
+[talk on Figwheel][clojure-west-figwheel-video] given at ClojureWest
+2015.
 
-The new architecture also makes it trivial to add your own development
-tools that can communicate from the server to your client.
+Read the [introductory blog post][flappy-bird-blog-post].
 
-> Currently ONLY works for a browser and Node environments
+## Support Work on Figwheel and other Clojure tools
 
-> This documentation is incomplete and intended to help you take the new figwheel
-> for a spin before its official release.
+I contribute a significant amount of time writing tools and libraries
+for Clojure and ClojureScript. If you enjoy using figwheel,
+[rebel-readline](https://github.com/bhauman/rebel-readline),
+[spell-spec](https://github.com/bhauman/spell-spec),
+[cljs-test-display](https://github.com/bhauman/cljs-test-display) or
+[piggieback](https://github.com/nrepl/piggieback) please consider
+making a contribution.
 
-## Get started with the template
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B8B3LKTXKV69C">
+<img src="https://s3.amazonaws.com/bhauman-blog-images/Smaller%2BDonate%2BButton%402x.png" width="200">
+</a>
 
-Get a working example up and running quickly with the [figwheel.main template](http://rigsomelight.com/figwheel-main-template/)
+## Features
+
+#### Live code reloading
+
+If you write
+[**reloadable code**](http://rigsomelight.com/figwheel-main/reloadable_code)
+figwheel can facilitate automated live interactive programming.
+
+#### Supports Node.js
+
+#### Static file server
+
+The inclusion of a **static file server** allows you to get a decent
+ClojureScript development environment up and running quickly. For
+convenience there is a `:ring-handler` option so you can embed a ring
+handler into the figwheel server.
+
+#### Live CSS reloading
+
+Figwheel will reload your CSS live as well.
+
+#### Live JavaScript reloading
+
+Figwheel can live reload your JavaScript source files.
+
+#### Heads up display
+
+Figwheel has a non-intrusive heads up display that gives you feedback
+on how well your project is compiling. By writing a shell script you
+can click on errors in the heads up display and they will open in your
+editor!
+
+#### Descriptive Errors with Code Context
+
+Figwheel provides descriptive compiler errors that point to where
+the error is in your code.  These errors appear in the REPL as well
+as the heads up display.
+
+#### Excellent Configuration Error Reporting
+
+It can be quite daunting, when you are configuring a tool for the
+first time.  Figwheel currently offers excellent configuration
+error reporting that will help you if you happen to misconfigure
+something.
+
+#### ClojureScript REPL
+
+When you launch Figwheel it not only starts a live building/reloading
+process but it also optionally launches a CLJS REPL into your running
+application. This REPL shares compilation information with the
+ClojureScript compiler, allowing the REPL is to be aware of the code
+changes as well. The REPL also has some special built-in control functions
+that allow you to control the auto-building process and execute
+various build tasks without having to stop and rerun `figwheel.main`.
+
+#### Robust connection
+
+Figwheel's connection is fairly robust. I have experienced figwheel
+sessions that have lasted for days through multiple OS sleeps.
+
+#### Message broadcast
+
+Figwheel **broadcasts** changes to all connected clients. This means you
+can see code and CSS changes take place in real time on your phone and
+in your laptop browser simultaneously.
+
+#### Respects dependencies
+
+Figwheel will not load a file that has not been required. It will also
+respond well to new requirements and dependency tree changes.
+
+#### Won't load code that is generating warnings
+
+If your ClojureScript code is generating compiler warnings Figwheel
+won't load it. This, again, is very helpful in keeping the client
+environment stable. This behavior is optional and can be turned off.
+
+## Try Figwheel with Flappy Bird
+
+#### Via Leiningen
+
+Make sure you have the [latest version of leiningen installed](https://github.com/technomancy/leiningen#installation).
+
+Clone this repo:
+
+```shell
+$ git clone https://github.com/bhauman/flappy-bird-demo-new.git
+```
+
+Change into the flappy-bird-demo-new directory and run:
+
+```shell
+$ lein fig:build
+```
+
+### Via Clojure Tools
+
+First we will want to [install][CLI tools] the `clj` and `clojure` [command line
+tools][CLI tools].
+
+Clone this repo:
+
+```shell
+$ git clone https://github.com/bhauman/flappy-bird-demo-new.git
+```
+
+Change into the flappy-bird-demo-new directory and run:
+
+```shell
+$ clj -A:build
+```
+
+## Get started quickly with the template!
+
+You can get a quick greenfield project with the [Figwheel Template][figwheel-main-template]
+
+## Learning ClojureScript
+
+If you are brand new to ClojureScript it is highly recommended that
+you do the [ClojureScript Quick
+Start](https://clojurescript.org/guides/quick-start)
+first. If you skip this you will probably suffer.
+
+There is a **lot to learn** when you are first learning ClojureScript,
+I recommend that you bite off very small pieces at first. Smaller bites than
+you would take when learning other languages like JavaScript and Ruby.
+
+Please don't invest too much time trying to set up a sweet development
+environment, there is a diverse set of tools that is constantly in
+flux and it's very difficult to suss out which ones will actually help
+you. If you spend a lot of time evaluating all these options it can
+become very frustrating. If you wait a while, and use simple
+tools you will have much more fun actually using the language itself.
+
+## Read the Tutorial
+
+There is an [extensive getting started tutorial][tutorial] I highly
+reccomend reading it if you are new to Clojure, ClojureScript and or
+the new Clojure CLI tools.
+
+<a href="http://rigsomelight.com/figwheel-main/tutorial"><img width="216" alt="tutorial-button" src="https://user-images.githubusercontent.com/2624/42537600-5c61f57a-8463-11e8-9d87-604b1b61247e.png"></a>
+
+## Getting Help
+
+You can get help at both the
+[ClojureScript Google Group](https://groups.google.com/forum/#!forum/clojurescript)
+and on the **#clojurescript**, **#figwheel-main** and **#beginners**
+[Clojurians Slack Channels](http://clojurians.net)
 
 ## Quick Usage
 
-> It is assumed that you have perused https://clojurescript.org/guides/quick-start
+This is abbreviated usage documentation intended for experienced
+Clojure/Script developers. I highly reccomend the [tutorial][tutorial]
+if you are new to Figwheel and ClojureScript.
 
-First, make sure you have the [Clojure CLI Tools](https://clojure.org/guides/getting_started) 
+#### Clojure CLI Tools
+
+First, make sure you have the [Clojure CLI Tools][CLI Tools]
 installed.
 
 On Mac OSX with brew:
@@ -60,6 +204,8 @@ then a browser will open and a `cljs.user=>` prompt will appear.
 
 From here you can do REPL driven development of ClojureScript.
 
+#### With Leiningen
+
 You can also use `leiningen` by adding it to `:dependencies` in your
 `project.clj` and launching it like so:
 
@@ -69,15 +215,15 @@ lein run -m figwheel.main
 
 **With Rebel Readline for much better REPL experience**
 
-Figwheel main will automatically use `rebel-readline-cljs` it is
-available. So you can get Rebel Readline behavior by simply adding it
+Figwheel main will automatically use `rebel-readline-cljs` if it is
+available. So, you can get Rebel Readline behavior by simply adding it
 to your dependencies.
 
 ```
 clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.1.4\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -m figwheel.main
 ```
 
-As of right now Rebel readline does create some startup overhead
+As of right now using Rebel readline does create some startup overhead
 (hoping to correct this in the near future), so you may want to choose
 use it only when you are going to interact at the REPL.
 
@@ -131,33 +277,68 @@ Interesting to note that the above command is equivalent to:
 clojure -m figwheel.main -co dev.cljs.edn -c -r
 ```
 
-Note: that if you want to add your own `index.html` file to host your
-application, if you have added `resources` to your "deps.edn" `:paths`
-key, as demonstrated above, you can place the `index.html` in
-`resources/public/index.html`
+If would prefer to use your own HTML page to host your application
+instead of the default page served by `figwheel.main`, you will first
+need to ensure that you have added `resources` to the `:paths` key in
+`deps.edn`, as demonstrated above. After that, you can place the
+`index.html` in `resources/public/index.html` so that it will mask the
+one served by the `figwheel.main` helper application.
+
+The following is some example HTML to help you get started. The
+trickly part is the path to the ClojureScript bootstrap file. The
+default output path is available at `cljs-out/[build-id]-main.js`. So
+in this case it will be: `cljs-out/dev-main.js`
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="cljs-out/dev-main.js"></script>
+  </body>
+</html>
+```
+
+You can place CSS and other static assets in the `resources/public` directory.
 
 ## Configuring Figwheel Main
 
-If you need to configure figwheel.main, place a `figwheel-main.edn`
-in the same directory that you will be executing it from.
+If you need to configure `figwheel.main`, you will use a
+`figwheel-main.edn` file in the root of your project directory.
 
-If you need to override some of the figwheel configuration options for a
-particular build, simply add those options as meta data on the build edn.
+For example let's explicitly set our watch directory.
 
-For example if you want to have `:watch-dirs` that are specific to the
-"dev" build then in `dev.cljs.edn`
+Create a `figwheel-main.edn` file in the root of your project
+folder with these contents:
 
 ```clojure
-^{:watch-dirs ["cljs-src"]
-  :css-dirs ["resources/public/css"]}
+{:watch-dirs ["cljs-src"]
+ :css-dirs ["resources/public/css"]}
+```
+
+`:watch-dirs` instructs `figwheel.main` to watch and compile the
+sources in the `cljs-src` directory.
+
+`:css-dirs` instructs `figwheel.main` to watch and reload the CSS
+files in the `resources/public/css` directory.
+
+If you need to override some of the figwheel configuration options for a
+particular build, simply add those options as metadata on the build edn.
+
+For example if you want to have `:watch-dirs` that are specific to the
+**dev** build then in your `dev.cljs.edn` file:
+
+```clojure
+^{:watch-dirs ["cljs-src" "dev"]}
 {:main example.core}
 ```
 
-All the available configuration options are documented here:
-https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
+All the available configuration options are documented here: [https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md](https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md)
 
 All the available configuration options specs are here:
-https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj
+[https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj](https://github.com/bhauman/figwheel-main/blob/master/src/figwheel/main/schema/config.clj)
 
 ## Classpaths, Classpaths, Classpaths
 
@@ -188,7 +369,7 @@ Classpath by default.
 In Figwheel, the embedded HTTP server serves its files from the Java
 Classpath.
 
-It actually serves any file it finds in on a Classpath in a `public`
+It actually serves any file it finds on the Classpath in a `public`
 sub-directory. This is why we added `target` and `resources` to the
 `:paths` key in the `deps.edn` file above. With `target` and
 `resources` both on the Classpath the server will be able to serve
@@ -198,6 +379,29 @@ The compiler by default compiles artifacts to `target` for easy cleaning.
 
 It is custmary to put your `index.html`, CSS files, and other
 web artifacts in the `resources/public` directory.
+
+## Live CSS Reloading
+
+As mentioned above you configure `figwheel.main` to live reload your
+CSS files as you edit them.
+
+Just add a `:css-dirs` key that lists the CSS directories to watch in
+your figwheel configuration.
+
+For example in your `figwheel-main.edn` file:
+
+```clojure
+{:css-dirs ["resources/public"]}
+```
+
+#### Using CSS Precompilers
+
+Using SASS or LESS and still want to have the benefits of live CSS reloading?
+
+Simply run your sass or less watcher/compiler on the command line and
+make sure the final output CSS files land in one of the directories
+that you have listed in your `:css-dirs` configuration option (mentioned
+above).
 
 ## Working with Node.js
 
@@ -253,11 +457,11 @@ metadata. You can see and example of providing callbacks below:
 
 The reload hooks will be called before and after every hot code reload.
 
-## Quick way for experienced devs to understand the command line options
+## Quick way to understand the command line options
 
-You can supply a `-pc` or `--pprint-config` flag to `figwheel.main`
-and it will print out the computed configuration instead of running
-the command.
+If you supply a `-pc` or `--pprint-config` flag to `figwheel.main`, it
+will not execute the command. It will instead print out the computed
+configuration.
 
 For example:
 
@@ -298,8 +502,8 @@ is no other html page to host the REPL JavaScript env.
 
 If you are interested in contributing to this app:
 
-First hit me up in #figwheel-main channel on the clojurians Slack so
-that we can coordinate a bit.
+First hit me up in the #figwheel-main channel on the clojurians Slack
+so that we can co-ordinate a bit.
 
 To work on the helper app:
 
@@ -344,14 +548,20 @@ add more dependencies and slow the startup time of `figwheel.main`,
 and we also do not want to do anything that will interfere with the
 users running code.
 
-## More to come ...
-
-Figwheel Main aims to honor all the flags provided by `cljs.main`, as
-of right now, your mileage may vary.
-
 ## License
 
 Copyright © 2018 Bruce Hauman
 
 Distributed under the Eclipse Public License either version 1.0 or any
 later version.
+
+
+[tutorial]: http://rigsomelight.com/figwheel-main/tutorial
+[figwheel-main-template]: http://rigsomelight.com/figwheel-main-template
+[clojure-west-figwheel-video]: https://www.youtube.com/watch?v=j-kj2qwJa_E
+[figwheel-demo-video]: https://www.youtube.com/watch?v=KZjFVdU8VLI 
+[flappy-bird-blog-post]: http://rigsomelight.com/2014/05/01/interactive-programming-flappy-bird-clojurescript.html
+[figwheel-main]: https://github.com/bhauman/figwheel-main
+[install-lein]: https://github.com/technomancy/leiningen#installation
+[CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code
+
