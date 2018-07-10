@@ -491,29 +491,70 @@ Will output:
                  print-output "repl,console"}}
 ```
 
+## Using figwheel.main from a script
 
-{::comment}
+See the `figwheel.main/start` function and the `figwheel.main/start-join` functions.
 
-[Under Construction]
+## Contributing to the Helper App
 
-## Figwheel Innovations
+Figwheel main comes with a helper Ring app that is served when there
+is no other html page to host the REPL JavaScript env.
 
-When it was first released, Figwheel represented an relatively new
-front end development experience. It introduced a hot code reloading
-workflow that was very fast and worked well, and combined that with a
-heads up display which presented compile time messages like exceptions
-and warnings in the same browser window where you were working. By
-eliminating the code and reload cycle, figwheel had greatly increased
-the amount of time that I spent in a productive coding state.
+If you are interested in contributing to this app:
 
-It also introduced a more complete configuration validation that
-attempted to go the extra mile and really help the person who made the
-mistake. It offered visual feedback on where the mistake was make and
-did its best to offer a solution along with relative documentation. I
-feel like this was very helpful because the number of questions that I
-received about how to use figwheel dropped significantly.
+First hit me up in the #figwheel-main channel on the clojurians Slack
+so that we can co-ordinate a bit.
 
-{:/comment}
+To work on the helper app:
+
+Checkout this repository and change directory to the `figwheel-main`
+directory where this README is located.
+
+Then the command 
+
+```shell
+clj -m figwheel.main -b helper -r 
+```
+
+should launch a live development workflow for the Helper application. 
+
+**tweaking the CSS**
+
+The **CSS** files for the helper app are located at
+`helper-resources/public/com/bhauman/figwheel/helper/css` and you
+should be able to edit them live.
+
+**working on the app itself**
+
+Both the server-side and client side code are located in
+`src/figwheel/main/helper.cljc` and you should be able to work on them
+live.
+
+If you change the behavior of the CLJS in
+`src/figwheel/main/helper.cljc` it will not be reflected in the actual
+helper app until you compile with `make helper`
+
+**editing helper content**
+
+The helper app content is generated from the Markdown files in the
+`helper-content` directory. You must compile the markdown with `make
+helper-docs` this currently requires `ruby` and **kramdown** (`gem
+install kramdown`)
+
+**keep it simple**
+
+The helper app is intended to be very simple in structure. We do not want to
+add more dependencies and slow the startup time of `figwheel.main`,
+and we also do not want to do anything that will interfere with the
+users running code.
+
+## License
+
+Copyright © 2018 Bruce Hauman
+
+Distributed under the Eclipse Public License either version 1.0 or any
+later version.
+
 
 [tutorial]: http://rigsomelight.com/figwheel-main/tutorial
 [figwheel-main-template]: http://rigsomelight.com/figwheel-main-template
