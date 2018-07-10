@@ -165,11 +165,11 @@ tools you will have much more fun actually using the language itself.
 
 ## Read the Tutorial
 
-[tutorial button here]
-
 There is an [extensive getting started tutorial][tutorial] I highly
 reccomend reading it if you are new to Clojure, ClojureScript and or
 the new Clojure CLI tools.
+
+<a href="http://rigsomelight.com/figwheel-main/tutorial"><img width="216" alt="tutorial-button" src="https://user-images.githubusercontent.com/2624/42537600-5c61f57a-8463-11e8-9d87-604b1b61247e.png"></a>
 
 ## Getting Help
 
