@@ -206,11 +206,34 @@
     (format-exception-warning-concise data)
     (format-exception-warning data)))
 
+(defn format-trace-line [[cls method file-name line]]
+  (let [cls-method (str cls "/" method)
+        pad-len (max 0 (- 43 (count cls-method)))]
+    [:line
+     (apply str (repeat pad-len \space))
+     [:cyan cls-method]
+     " at " file-name "("line ")\n"]))
+
+(defn format-stacktrace-ex [e]
+  (when-let [tm (-> e meta :figwheel.tools.exceptions/orig-throwable)]
+    (let [{:keys [type at]} (-> tm :via last)]
+      [:lines
+       [:line [:yellow (str type)] "\n"]
+       (vec (cons
+             :lines
+                  (map
+                   format-trace-line
+                   (take 30
+                         (:trace tm)))))])))
+
 (defn syntax-exception [e]
-  (-> (exception-with-excerpt e)
-      format-ex
-      format-str
-      info))
+  (let [ex (exception-with-excerpt e)]
+    (info
+     (format-str
+      (if (and (nil? (:message ex))
+               (nil? (:file-excerpt ex)))
+        (format-stacktrace-ex ex)
+        (format-ex ex))))))
 
 (defn cljs-syntax-warning [warning]
   (-> (figwheel.core/warning-info warning)
