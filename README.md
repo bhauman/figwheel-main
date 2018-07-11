@@ -229,8 +229,14 @@ use it only when you are going to interact at the REPL.
 
 ## Setting up a build with Tools CLI
 
-Set up a build which will allow you work on a set of local
-ClojureScript source files and hot reload them.
+Set up a build which will allow you to start a watch/build/reload
+process on a set of local ClojureScript source files.
+
+> If the following doesn't work for you please see the
+> (tutorial)[tutorial].
+
+The following assumes the current working directory is the root
+directory of your project.
 
 Ensure your `deps.edn` file has the `figwheel.main` dependencies:
 
@@ -243,21 +249,23 @@ Ensure your `deps.edn` file has the `figwheel.main` dependencies:
  :aliases {:build-dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}}}
 ```
 
-Create a file `dev.cljs.edn` build file:
+Create a `dev.cljs.edn` build file:
 
 ```clojure
 {:main example.core}
 ```
 
-And in `src/example/core.cljs`
+In `src/example/core.cljs`, place the following ClojureScript code:
 
 ```clojure
 (ns example.core)
+
 (enable-console-print!)
+
 (prn "hello world!")
 ```
 
-and run the command
+Then run the command:
 
 ```
 clojure -m figwheel.main -b dev -r
@@ -265,10 +273,10 @@ clojure -m figwheel.main -b dev -r
 
 This will launch a REPL and start autobuilding and reloading the `src`
 directory so that any files you add or change in that directory will
-be automatically hot reloaded into the browser.
+automatically be hot reloaded into the browser.
 
-The `-b dev` or `--build dev` flag option is indicating that we should
-read `dev.cljs.edn` for configuration.
+The `-b dev` or `--build dev` flag option is indicating that Figwheel
+should read `dev.cljs.edn` for build configuration.
 
 The `-r` or `--repl` flag indicates that a repl should be launched.
 
@@ -279,7 +287,7 @@ clojure -m figwheel.main -co dev.cljs.edn -c -r
 ```
 
 You can also start your build running with the `build-dev` alias we
-defined in the `deps.edn` to save some typing"
+defined in the `deps.edn` to save some typing:
 
 ```
 clojure -A:build-dev
@@ -287,8 +295,14 @@ clojure -A:build-dev
 
 ## Setting up a build with Leiningen
 
-Set up a build which will allow you work on a set of local
-ClojureScript source files and hot reload them.
+Set up a build which will allow you to start a watch/build/reload
+process on a set of local ClojureScript source files.
+
+> If the following doesn't work for you please see the
+> (tutorial)[tutorial].
+
+The following assumes the current working directory is the root
+directory of your project.
 
 Ensure your `project.clj` file has `figwheel.main` dependencies:
 
@@ -302,21 +316,23 @@ Ensure your `project.clj` file has `figwheel.main` dependencies:
           "build-dev" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]}
 ```
 
-Create a file `dev.cljs.edn` build file:
+Create a `dev.cljs.edn` build file:
 
 ```clojure
 {:main example.core}
 ```
 
-And in `src/example/core.cljs`
+In `src/example/core.cljs`, place the following ClojureScript code:
 
 ```clojure
 (ns example.core)
+
 (enable-console-print!)
+
 (prn "hello world!")
 ```
 
-and run the command
+Then run the command:
 
 ```
 lein trampoline run -m figwheel.main -- -b dev -r
@@ -324,10 +340,10 @@ lein trampoline run -m figwheel.main -- -b dev -r
 
 This will launch a REPL and start autobuilding and reloading the `src`
 directory so that any files you add or change in that directory will
-be automatically hot reloaded into the browser.
+automatically be hot reloaded into the browser.
 
-The `-b dev` or `--build dev` flag option is indicating that we should
-read `dev.cljs.edn` for configuration.
+The `-b dev` or `--build dev` flag option is indicating that Figwheel
+should read `dev.cljs.edn` for build configuration.
 
 The `-r` or `--repl` flag indicates that a repl should be launched.
 
@@ -342,18 +358,18 @@ You can invoke the above command using the `fig` alias like so:
 lein fig -- -b dev -r
 ```
 
-You can also just use the `build-dev` alias to get the samex result:
+You can also just use the `build-dev` alias to get the same result:
 
 ```
 lein build-dev
 ```
 
-> Why not use a lein plugin? Why use an alias? The first reason I'm
-> not using a plugin here is that Leiningen boots a lot faster when it
-> doesn't have to dynamically load/compile plugin code. Quite frankly
-> this is reason enough, but in addition figwheel.main's command line
-> options are much more expressive than `lein-figwheel`'s and aliases
-> are better positioned to leverage that expressiveness.
+> Why use an alias here? Why not use a lein plugin? The first reason
+> I'm not using a plugin here is that Leiningen boots a lot faster
+> when it doesn't have to dynamically load/compile plugin
+> code. Another reason is that `figwheel.main`'s command line options
+> are much more expressive than `lein-figwheel`'s and lein aliases are
+> better positioned to leverage that expressiveness.
 
 #### Using your own HTML to host your app
 
