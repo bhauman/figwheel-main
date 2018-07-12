@@ -65,7 +65,7 @@ will need is the above.</p>
 (<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">hello</span> [] <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">hello There</span><span style="color:#710">&quot;</span></span>)
 
 <span style="color:#777">;; uncomment this to alter the provided &quot;app&quot; DOM element</span>
-<span style="color:#777">;; (set! (.-innerHTML (js/document.getElementById &quot;app&quot;) (hello)))</span>
+<span style="color:#777">;; (set! (.-innerHTML (js/document.getElementById &quot;app&quot;)) (hello))</span>
 
 (<span style="color:#080;font-weight:bold">println</span> (hello))
 </pre></div>
