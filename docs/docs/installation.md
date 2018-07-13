@@ -128,7 +128,7 @@ Adding `org.clojure/clojurescript` as a dependency will allow to
 ensure that you are getting the latest version of ClojureScript not
 just the base version that Figwheel will work with.
 
-Adding a `com.bhauman/rebel-readline-clj` dependency will make the
+Adding a `com.bhauman/rebel-readline-cljs` dependency will make the
 terminal REPL Figwheel launches much more capable. It is optional but
 highly recommended.
 
