@@ -3,4 +3,5 @@
             [figwheel.main.schema.config]))
 
 (defn build-option-docs []
-  (figwheel.main.schema.core/output-docs "doc/figwheel-main-options.md"))
+  (doseq [dir ["doc/figwheel-main-options.md" "docs/config-options.md"]]
+    (figwheel.main.schema.core/output-docs dir)))

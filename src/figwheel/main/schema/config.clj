@@ -542,7 +542,9 @@ be useful for certain docker environments.
      ::validate-config
      ::validate-cli
      ::target-dir
-
+     
+     ::helpful-classpaths
+     
      ::launch-node
      ::inspect-node
      ::node-command

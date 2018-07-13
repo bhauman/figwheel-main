@@ -158,6 +158,7 @@
 
 #_(validate-config! :figwheel.main.schema.config/edn (read-string (slurp "figwheel-main.edn")) "")
 
-#_(output-docs "doc/figwheel-main-options.md")
+#_(doseq [dir ["doc/figwheel-main-options.md" "docs/config-options.md"]]
+    (output-docs dir))
 
 #_(markdown-docs)
