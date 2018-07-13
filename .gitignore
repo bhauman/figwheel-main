@@ -24,3 +24,7 @@ figwheel-main.edn
 pom.xml
 pom.xml.asc
 .rebel_readline_history
+_site
+.sass-cache
+Gemfile.lock
+

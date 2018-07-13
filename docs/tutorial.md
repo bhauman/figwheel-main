@@ -1,11 +1,19 @@
+---
+layout: docs
+---
+
 # Tutorial
 
 This document is intended to get you aquainted with the features and
 workflow of Figwheel.
 
-This tutorial is based on the Clojure CLI tools. If you are using the
+This tutorial is based on the Clojure CLI tools. 
+
+{::comment}
+If you are using the
 Windows Operating System you will want to use the [Leiningen version of
 this document](/quick_start_lein.html)
+{:/comment}
 
 ## Install the Clojure CLI tools
 

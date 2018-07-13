@@ -233,7 +233,7 @@ Set up a build which will allow you to start a watch/build/reload
 process on a set of local ClojureScript source files.
 
 > If the following doesn't work for you please see the
-> (tutorial)[tutorial].
+> [tutorial][tutorial].
 
 The following assumes the current working directory is the root
 directory of your project.
@@ -299,7 +299,7 @@ Set up a build which will allow you to start a watch/build/reload
 process on a set of local ClojureScript source files.
 
 > If the following doesn't work for you please see the
-> (tutorial)[tutorial].
+> [tutorial][tutorial].
 
 The following assumes the current working directory is the root
 directory of your project.

@@ -1,1 +1,12 @@
 theme: jekyll-theme-minimal
+plugins:
+- jekyll-coffeescript
+- jekyll-gist
+- jekyll-paginate
+- jekyll-relative-links
+- jekyll-optional-front-matter
+- jekyll-readme-index
+- jekyll-default-layout
+- jekyll-titles-from-headings
+- jekyll-seo-tag
+- jekyll-sitemap
