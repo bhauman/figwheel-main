@@ -20,7 +20,7 @@
     <div class="container">
       <nav>
 	<div class="major-nav">
-	  <a href="tutorial"
+	  <a href="{{"/tutorial" | relative_url }}">Tutorial</a>
 	</div>  
 	
 {% assign my-pages = site.pages | where: "category","docs" | sort:"order"%}

@@ -84,6 +84,19 @@ nav {
     border-bottom: 1px solid rgba(0,0,0,0.1);		      
 }
 
+.major-nav a {
+    margin: 1rem;
+    border-radius: 3px;
+    color: white;
+    color: #cbbde2;
+    background-color: #563d7c;
+}
+
+.major-nav a:hover {
+    text-decoration: none;
+    color: white;
+}
+
 nav a {
     display: block;
     padding: .25rem 1.5rem;
