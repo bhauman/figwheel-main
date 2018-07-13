@@ -25,6 +25,16 @@
   :doc
   "A list of ClojureScript source directories to be watched and compiled on change.
 
+The directories in `:watch-dirs` are passed to the compiler as source
+directories. For this reason, any entry in watch directories must be
+on the classpath and must point to the root directory of a
+ClojureScript namespace source tree.
+
+I.E. If your `example.core` namespace is located at
+`src/cljs/example/core.cljs` you cannot use `src` as an element of
+`:watch-dirs`, you must use the path to the root directory of the
+namespace tree `src/cljs`.
+
     :watch-dirs [\"cljs-src\"]"
   :group :common)
 
@@ -128,7 +138,7 @@ and Figwheel will call emacsclient with the correct args."
 (s/def ::figwheel-core boolean?)
 (def-spec-meta ::figwheel-core
   :doc
- "Wether to include the figwheel.core library in the build. This
+ "Whether to include the figwheel.core library in the build. This
  enables hot reloading and client notification of compile time errors.
  Default: true
 
@@ -333,14 +343,14 @@ The default value of `:target-dir` is \"target\"
 (s/def ::launch-node boolean?)
 (def-spec-meta ::launch-node
   :doc
-  "A boolean that indicates wether you want figwheel to automatically
+  "A boolean that indicates whether you want figwheel to automatically
 launch Node. Defaults to true."
   :group :common)
 
 (s/def ::inspect-node boolean?)
 (def-spec-meta ::inspect-node
   :doc
-  "A boolean that indicates wether you want figwheel to enable remote
+  "A boolean that indicates whether you want figwheel to enable remote
 inspection by adding \"--inspect\" when it launches Node.
 Defaults to true."
   :group :common)
@@ -356,11 +366,23 @@ Defaults to \"node\""
 
 (def-spec-meta ::cljs-devtools
   :doc
-  "A boolean that indicates wether to include binaryage/devtools into
+  "A boolean that indicates whether to include binaryage/devtools into
 the your clojurescript build. Defaults to true when the target is a
 browser and the :optimizations level is :none, otherwise it is false.
 
     :cljs-devtools false"
+  :group :common)
+
+(s/def ::helpful-classpaths boolean?)
+
+(def-spec-meta ::helpful-classpaths
+  :doc
+  "A boolean that indicates whether figwheel should try and be helpful
+by adding classpaths to help you get started, or whether you want to
+have complete control over classpaths. Advanced users will want to
+disable this option.
+
+    :helpful-classpaths false"
   :group :common)
 
 ;; -------------------------------XXXXXXXXXXXX
@@ -490,6 +512,7 @@ be useful for certain docker environments.
 
     :hawk-options {:watcher :polling}"
   :group :un-common)
+
 
 
 (s/def ::edn

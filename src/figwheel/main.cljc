@@ -806,8 +806,15 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (when-not (fw-util/safe-ns->location main)
       (when-let [src-dir (fw-util/find-source-dir-for-cljs-ns main)]
         (when-not (fw-util/dir-on-classpath? src-dir)
-          (add-classpath! src-dir)
-          (warn-that-dir-not-on-classpath :source src-dir)))))
+          (if (get-in cfg [::config :helpful-classpaths] true)
+            (do
+              (add-classpath! src-dir)
+              (warn-that-dir-not-on-classpath :source src-dir))
+            (log/warn (ansip/format-str
+                       [:yellow
+                        "The source directory for the main ns "
+                        (pr-str (str src-dir))
+                        " is not the classpath!"])))))))
   cfg)
 
 ;; targets local config
@@ -848,9 +855,16 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 (defn- config-ensure-watch-dirs-on-classpath [{:keys [::config] :as cfg}]
   (doseq [src-dir (:watch-dirs config)]
     (when-not (fw-util/dir-on-current-classpath? src-dir)
-      (add-classpath! src-dir)
-      (warn-that-dir-not-on-classpath :source src-dir)))
-  cfg)
+      (log/warn (ansip/format-str
+                 [:yellow
+                  "The watch directory "
+                  (pr-str (str src-dir))
+                  " is not the classpath! A watch directory is must "
+                  "on the classpath and point to the root directory of your namespace "
+                  "source tree. A general all encompassing watch directory will not work."]))
+      (when (get config :helpful-classpaths true)
+        (add-classpath! src-dir)
+        (warn-that-dir-not-on-classpath :source src-dir)))) cfg)
 
 ;; needs local config
 (defn figwheel-mode? [{:keys [::config options]}]
@@ -1044,7 +1058,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (-> cfg
         (update ::initializers (fnil conj []) #(setup))
         (update-in [:options :preloads]
-                   (fn [p] (vec (distinct (concat p '[figwheel.main.evalback figwheel.main.testing]))))))
+                   (fn [p] (vec (distinct (concat p '[figwheel.main.evalback #_figwheel.main.testing]))))))
     cfg))
 
 (defn watch-css [css-dirs]
@@ -1369,7 +1383,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defn validate-fix-target-classpath! [{:keys [::config ::build options]}]
   (when (nil? (:target options)) ;; browsers need the target classpath to load files
     (when-not (contains? (:ring-stack-options config) :static)
-      (when-let [output-to (:output-to options)]
+      (when-let [output-to (:output-dir options (:output-to options))]
         (when-not (.isAbsolute (io/file output-to))
           (let [parts (fw-util/path-parts output-to)
                 target-dir (first (split-with (complement #{"public"}) parts))]
@@ -1378,21 +1392,37 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                 (let [target-dir (apply io/file target-dir)]
                   (if (and (fw-util/dir-on-classpath? target-dir)
                            (not (.exists target-dir)))
+                    (if (get config :helpful-classpaths true)
+                      (do
+                        (log/warn
+                         (ansip/format-str
+                          [:yellow
+                           "Making target directory "
+                           (pr-str (str target-dir))
+                           " and re-adding it to the classpath"
+                           " (this only needs to be done when the target directory doesn't exist)"]))
+                        (.mkdirs target-dir)
+                        (fw-util/add-classpath! (.toURL target-dir)))
+                      (log/warn (ansip/format-str
+                                 [:yellow
+                                  "Target directory "
+                                  (pr-str (str target-dir))
+                                  " is on the classpath but doesn't exist. The figwheel "
+                                  "server will not be able to find compiled assets."])))
                     ;; quietly fix this situation??
-                    (do
-                      (log/warn
-                       (ansip/format-str
-                        [:yellow
-                         "Making target directory "
-                         (pr-str (str target-dir))
-                         " and re-adding it to the classpath"
-                         " (this only needs to be done when the target directory doesn't exist)"]))
-                      (.mkdirs target-dir)
-                      (fw-util/add-classpath! (.toURL target-dir)))
+                    
                     (when-not (fw-util/dir-on-classpath? target-dir)
-                      (.mkdirs target-dir)
-                      (add-classpath! target-dir)
-                      (warn-that-dir-not-on-classpath :target target-dir))))))))))))
+                      (if (get config :helpful-classpaths true)
+                        (do
+                          (.mkdirs target-dir)
+                          (add-classpath! target-dir)
+                          (warn-that-dir-not-on-classpath :target target-dir))
+                        (log/warn (ansip/format-str
+                                   [:yellow
+                                    "Target directory "
+                                    (pr-str (str target-dir))
+                                    " is not on the classpath! The figwheel "
+                                    "server will not be able to find compiled assets."]))))))))))))))
 
 ;; build-id situations
 ;; - temp-dir build id doesn't matter
