@@ -576,7 +576,7 @@ something specific already loaded.
 You can accomplish this by using the following command:
 
 ```clojure
-$ clojure -m figwhee.main --compile hello.cruel-world --repl
+$ clojure -m figwheel.main --compile hello.cruel-world --repl
 ```
 
 This will compile and load the `hello.cruel-world` namespace into the
@@ -630,7 +630,7 @@ Now we will return to run our REPL again from the `hello-cljs`
 directory.
 
 ```clojure
-$ clojure -m figwhee.main --compile hello.cruel-world --repl
+$ clojure -m figwheel.main --compile hello.cruel-world --repl
 ```
 
 You should see the familiar output when starting a `figwheel.main`
