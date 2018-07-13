@@ -27,7 +27,7 @@
 
 {% for p in my-pages %}
   {% if p.title %}
-  <a href="{{p.url}}">{{p.title}}</a>
+  <a href="{{p.url | relative_url}}">{{p.title}}</a>
   {% endif %}
 {% endfor %}
     </nav>
