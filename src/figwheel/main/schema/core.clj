@@ -141,8 +141,37 @@
                                                      (= "figwheel.main.schema.config")))
                                         (sort-by :position)
                                         (group-by :group))]
-    (str "# Figwheel Main Configuration Options\n\n"
-         "The following options can be supplied to `figwheel.main` via the `figwheel-main.edn` file.\n\n"
+    (str "# Figwheel Main Configuration Options
+
+This page is a reference for all of the Figwheel configuration options.
+
+You can enter these options in a `figwheel-main.edn` file that is in the root
+of your project directory.
+
+Example `figwheel-main.edn` file:
+
+```clojure
+{:watch-dirs [\"src\" \"admin-src\"]
+ :css-dirs [\"resources/public/css\"]}
+```
+
+The options can also be entered as metadata in a Figwheel build file
+in your project's root directory. The name of a build file has the form
+`[build-id].cljs.edn` where `[build-id]` is an identifier of your
+choice.
+
+An example `dev.cljs.edn` build file that supplies figwheel config options.
+
+```clojure
+^{:watch-dirs [\"src\" \"admin-src\"]
+  :css-dirs [\"resources/public/css\"]}
+{:main example.core}
+```
+
+Any options provided in the metadata of build file will override the
+options in the `figwheel-main.edn` file.
+
+"
          "# Commonly used options (in order of importance)\n\n"
          (markdown-option-docs common)
          "\n\n"
