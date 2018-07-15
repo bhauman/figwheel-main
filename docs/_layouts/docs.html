@@ -33,7 +33,22 @@
     </nav>
     <section class="main">
       {{ content }}
+      <div class="sibling-nav">
+{% assign prev-page-number = page.order | minus: 1 %}
+{% assign prev-page = site.pages | where: "order", prev-page-number | first %}
+{% if prev-page %}
+  <a class="back-btn" href="{{prev-page.url | relative_url}}"> <span>{{prev-page.title}}</span>← Back</a>
+{% endif %}
+
+{% assign next-page-number = page.order | plus: 1 %}
+{% assign next-page = site.pages | where: "order", next-page-number | first %}
+{% if next-page %}
+  <a class="next-btn" href="{{next-page.url | relative_url}}">Next →<span>{{next-page.title}}</span></a>
+{% endif %}
+
+      </div>	
     </section>
+    
     </div>
     <footer>
     </footer>

@@ -188,3 +188,39 @@ footer {
     min-height: 5em;
 }
 
+.sibling-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.sibling-nav a {
+    display: block;
+    margin: 1rem;
+    background-color: #563d7c;
+    padding: 10px 30px;
+    color: white;
+}
+
+.sibling-nav a:hover {
+    background-color: #876daf;
+    text-decoration: none;
+}
+    
+.sibling-nav a:hover > span {
+    color: white;
+}
+
+.sibling-nav a > span {
+    display: inline-block;
+    font-size: 0.8em;
+    color: #cbbde2;
+    
+}
+
+.sibling-nav a.back-btn > span {
+    margin-right: 1rem;
+}
+
+.sibling-nav a.next-btn > span {
+    margin-left: 1rem;
+}
