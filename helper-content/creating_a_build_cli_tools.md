@@ -30,7 +30,7 @@ create a configuration file for a build named `dev`.
 In `dev.cljs.edn`:
 
 ```clojure
-{:main hello.core}
+{:main hello-world.core}
 ```
 
 At the very least you will need to define the entry point to your
@@ -41,14 +41,14 @@ There are many other
 that you can configure in this file. For most cases however all you
 will need is the above.
 
-### src/hello/core.cljs
+### src/hello_world/core.cljs
 
 Next let's create an initial ClojureScript file for our project.
 
-In `src/hello/core.cljs` put:
+In `src/hello_world/core.cljs` put:
 
 ```clojure
-(ns hello.core)
+(ns hello-world.core)
 
 (enable-console-print!)
 
@@ -112,34 +112,3 @@ is attached to the browser.
 
 From here you will be able to edit the ClojureScript file and have it
 hot loaded into the browser on save. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
