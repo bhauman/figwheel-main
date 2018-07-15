@@ -142,7 +142,7 @@ Figwheel.
 > contains all the code and other file assets for the program you are
 > working on.
 
-### with Leiningen
+### Dependencies with Leiningen
 
 Leiningen requires `project.clj` file in the root of your project. In
 your `project.clj` file you will need to add
@@ -183,7 +183,7 @@ ClojureScript code.
 
 You can quit the REPL with `Control-C Control-D`.
 
-### with CLI Tools
+### Dependencies with CLI Tools
 
 In order to work with Clojure CLI tools you will need a `deps.edn`
 file in the root directory of your project.
@@ -212,6 +212,102 @@ ClojureScript code.
 You can quit the REPL with `Control-C Control-D`.
 
 ## Aliases
+
+Both Leiningen and Clojure CLI tools supply ways that you can provide
+command line options to start your Clojure processes.
+
+Aliases will play a helpful role when working with
+`figwheel.main`. You will use them as abbreviations to start build
+processes runnning, to run your tests, and to build your final
+minimized production build.
+
+### Aliases with Leiningen
+
+As we noticed above to get a plain `figwheel.main` REPL we have to use
+the following command in the shell:
+
+```shell
+$ lein trampoline run -m figwheel.main
+```
+
+That's a bit long considering how often we are going to want to use
+`figwheel.main`.
+
+You can create a shorter `fig` alias for these command line options by
+configuring an `:aliases` key like so:
+
+```clojure
+(defproject example-project "0.1.0-SNAPSHOT"
+  ...
+  :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]}
+  ...
+  )
+```
+
+With that configuration you can now start a Figwheel REPL by invoking:
+
+```shell
+$ lein fig
+```
+
+One thing that is very important to remember is that if you want to
+pass additional options to the `lein fig` command above you will have
+to add a `--` before the additional arguments.
+
+Let's display the Figwheel help documentation with the `-h` (or `--help`) option:
+
+```shell
+$ lein fig -- -h
+```
+
+That should display the help documentation while the `lein fig -h`
+command will not.
+
+> Why am I using using aliases here instead of creating a lein plugin?
+> The first reason I'm not using a plugin here is that Leiningen boots
+> a lot faster when it doesn't have to dynamically load/compile plugin
+> code. Another reason is that `figwheel.main`'s command line options
+> are much more expressive than `lein-figwheel`'s and lein aliases are
+> better positioned to leverage that expressiveness.
+
+### Aliases with CLI tools
+
+Let's look at how to add aliases with Clojure CLI tools. As an example
+let's use the `deps.edn` configuration we started above and add a way
+to launch a REPL with `figwheel.main`.
+
+```clojure
+{:deps {org.clojure/clojure {:mvn/version "0.1.9"}
+        com.bhauman/figwheel-main {:mvn/version "0.1.4"}
+        ;; optional but recommended		
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+ :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}
+```
+
+You can use this alias from the project root directory like so:
+
+```shell
+$ clj -A:fig
+```
+
+You can also add additional flags as you wish. Let's look at the help
+documentation with the `-h` (or `--help`) option:
+
+```shell
+$ clj -A:fig -h
+```
+
+> These are brief instructions to help you to start being productive
+> with these tools. You will benefit greatly by learning more about
+> the tools you are using. Please take time to explore the
+> documentation and features for [Leiningen][lein] and/or
+> [CLI Tools][cli-tools]. It will pay off tremendously.
+
+
+
+
+
+
 
 
 
