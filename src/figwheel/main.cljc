@@ -923,7 +923,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                           last
                           rest
                           not-empty)]
-            (str (apply io/file asset-path))))))))
+            (string/join "/" asset-path)))))))
 
 ;; targets options
 (defn- config-default-asset-path [{:keys [options] :as cfg}]
