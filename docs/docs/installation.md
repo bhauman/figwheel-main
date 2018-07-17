@@ -2,7 +2,7 @@
 title: Installation
 layout: docs
 category: docs
-order: 2
+order: 3
 ---
 
 # Installing Figwheel
@@ -192,9 +192,10 @@ As an example, in the root directory place a `deps.edn` file with the
 following contents:
 
 ```clojure
-{:deps {org.clojure/clojure {:mvn/version "0.1.9"}
+{:deps {org.clojure/clojure {:mvn/version "1.9.0"}
+        org.clojure/clojurescript {:mvn/version "1.10.339"}
         com.bhauman/figwheel-main {:mvn/version "0.1.4"}
-        ;; optional but recommended		
+        ;; optional but recommended
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
 ```
 
@@ -277,7 +278,8 @@ let's use the `deps.edn` configuration we started above and add a way
 to launch a REPL with `figwheel.main`.
 
 ```clojure
-{:deps {org.clojure/clojure {:mvn/version "0.1.9"}
+{:deps {org.clojure/clojure {:mvn/version "1.9.0"}
+        org.clojure/clojurescript {:mvn/version "1.10.339"}
         com.bhauman/figwheel-main {:mvn/version "0.1.4"}
         ;; optional but recommended		
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}

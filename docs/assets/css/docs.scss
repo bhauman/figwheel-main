@@ -24,7 +24,6 @@ header > a {
     display: block;
     font-size: 21px;
     color: #cbbde2;
-    
 }
 
 header > a {
@@ -109,7 +108,7 @@ nav a {
 .main {
     flex-basis: 66%;
     padding-left: 3rem;
-    padding-right: 1rem;    
+    padding-right: 1rem;
 }
 
 h1 {
@@ -144,7 +143,8 @@ h3 {
 }
 
 
-p code {
+p code,
+li code {
     font-size: 1.2rem;
     color: #e83e8c;
     word-break: break-word;
@@ -224,4 +224,14 @@ footer {
 
 .sibling-nav a.next-btn > span {
     margin-left: 1rem;
+}
+
+.classpath {
+    background-color: #f8f9fa;
+    padding: 0.5rem 0.5rem;
+    font-family: monospace;
+    overflow: scroll;
+    word-break: break-all;
+    max-height: 200px;
+
 }

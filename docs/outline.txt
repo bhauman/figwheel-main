@@ -2,9 +2,11 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
-* creating a build
-* project layout and the classpath
 * getting help
+* project layout and the classpath
+* creating a build
+* usage
+
 * quickish start
 
 
