@@ -410,7 +410,7 @@ with `figwheel.main`:
 * `resources` - so the webserver can serve static assets
 * `target` - so the webserver can serve our compiled ClojureScript
 
-Thus our general project layout will look like this:
+Thus, our general project layout will look like this:
 
 ```
 ./
