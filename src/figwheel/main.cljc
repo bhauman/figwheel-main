@@ -100,7 +100,16 @@
           ;; the build-fn needs to be passed in before here?
           build-fn (if (some #{'figwheel.core} (:preloads opts))
                      #(fig-core-build id build-inputs opts cenv %)
-                     (fn [files] (build-cljs id build-inputs opts cenv)))]
+                     (fn [files] (build-cljs id build-inputs opts cenv)))
+          reload-clj-suffixes (cond
+                                (map? (:reload-clj-files reload-config))
+                                (->> (:reload-clj-files reload-config)
+                                     (filter val)
+                                     (mapv (comp name key)))
+                                (coll? (:reload-clj-files reload-config))
+                                (mapv name (:reload-clj-files reload-config))
+                                (false? (:reload-clj-files reload-config)) []
+                                :else ["clj" "cljc"])]
       (log/info "Watching and compiling paths:" (pr-str inputs) "for build -" id)
       (binding [fww/*hawk-options* (:hawk-options reload-config nil)]
         (fww/add-watch!
@@ -114,12 +123,7 @@
                           :compiler-env cenv
                           :reload-config reload-config})}
           {:paths inputs
-           :filter (fww/suffix-filter (into #{"cljs" "js"}
-                                            (cond
-                                              (coll? (:reload-clj-files reload-config))
-                                              (mapv name (:reload-clj-files reload-config))
-                                              (false? (:reload-clj-files reload-config)) []
-                                              :else ["clj" "cljc"])))
+           :filter (fww/suffix-filter (into #{"cljs" "js" "cljc"} reload-clj-suffixes))
            :handler (fww/throttle
                      (:wait-time-ms reload-config 50)
                      (bound-fn [evts]
@@ -129,8 +133,8 @@
                              (when-let [clj-files
                                         (not-empty
                                          (filter
-                                          #(or (.endsWith % ".clj")
-                                               (.endsWith % ".cljc"))
+                                          (fn [file]
+                                            (some #(.endsWith file (str "." %)) reload-clj-suffixes))
                                           files))]
                                (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
                                (try
