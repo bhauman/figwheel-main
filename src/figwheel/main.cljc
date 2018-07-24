@@ -114,12 +114,7 @@
                           :compiler-env cenv
                           :reload-config reload-config})}
           {:paths inputs
-           :filter (fww/suffix-filter (into #{"cljs" "js"}
-                                            (cond
-                                              (coll? (:reload-clj-files reload-config))
-                                              (mapv name (:reload-clj-files reload-config))
-                                              (false? (:reload-clj-files reload-config)) []
-                                              :else ["clj" "cljc"])))
+           :filter (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
            :handler (fww/throttle
                      (:wait-time-ms reload-config 50)
                      (bound-fn [evts]
@@ -127,11 +122,18 @@
                          (let [files (mapv (comp #(.getCanonicalPath %) :file) evts)]
                            (try
                              (when-let [clj-files
-                                        (not-empty
-                                         (filter
-                                          #(or (.endsWith % ".clj")
-                                               (.endsWith % ".cljc"))
-                                          files))]
+                                        (->> evts
+                                             (filter
+                                              (partial
+                                               (fww/suffix-filter
+                                                (set
+                                                 (cond 
+                                                   (coll? (:reload-clj-files reload-config))
+                                                   (mapv name (:reload-clj-files reload-config))
+                                                   (false? (:reload-clj-files reload-config)) []
+                                                   :else ["clj" "cljc"]))) nil))
+                                             (mapv (comp #(.getCanonicalPath %) :file))
+                                             not-empty)]
                                (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
                                (try
                                  (figwheel.core/reload-clj-files clj-files)
@@ -141,8 +143,10 @@
                                    (throw t))))
                              (log/debug "Detected changed cljs files: " (pr-str (map str files)))
                              (build-fn files)
-                             ;; exceptions are reported by the time they get to here
-                             (catch Throwable t false))))))}))))))
+                             (catch Throwable t
+                               (log/error t)
+                               false))))))}))))))
+
 
 (declare read-edn-file)
 
