@@ -148,8 +148,8 @@ Let's add the `cljs-src` path to our classpath with CLI Tools. In your
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.339"}
         com.bhauman/figwheel-main {:mvn/version "0.1.4"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
- :aliases {:fig {:main-opts ["-m" "figwheel.main"]}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+ :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}
  ;; define paths here
  :paths ["src" "cljs-src"]}
 ```

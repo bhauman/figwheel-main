@@ -196,7 +196,7 @@ following contents:
         org.clojure/clojurescript {:mvn/version "1.10.339"}
         com.bhauman/figwheel-main {:mvn/version "0.1.4"}
         ;; optional but recommended
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
 ```
 
 You can verify this worked by launching a generic `figwheel.main`
@@ -282,8 +282,8 @@ to launch a REPL with `figwheel.main`.
         org.clojure/clojurescript {:mvn/version "1.10.339"}
         com.bhauman/figwheel-main {:mvn/version "0.1.4"}
         ;; optional but recommended		
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
- :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+ :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}}
 ```
 
 You can use this alias from the project root directory like so:
@@ -300,26 +300,10 @@ $ clj -A:fig -h
 ```
 
 > These are brief instructions to help you to start being productive
-> with these tools. You will benefit greatly by learning more about
-> the tools you are using. Please take time to explore the
+> with these Clojure tools. You will benefit greatly by learning more
+> about the tools you are using. Please take time to explore the
 > documentation and features for [Leiningen][lein] and/or
 > [CLI Tools][cli-tools]. It will pay off tremendously.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 [clojurescript]: https://clojurescript.org
