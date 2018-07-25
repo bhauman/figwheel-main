@@ -102,10 +102,6 @@
                      #(fig-core-build id build-inputs opts cenv %)
                      (fn [files] (build-cljs id build-inputs opts cenv)))
           reload-clj-suffixes (cond
-                                (map? (:reload-clj-files reload-config))
-                                (->> (:reload-clj-files reload-config)
-                                     (filter val)
-                                     (mapv (comp name key)))
                                 (coll? (:reload-clj-files reload-config))
                                 (mapv name (:reload-clj-files reload-config))
                                 (false? (:reload-clj-files reload-config)) []
