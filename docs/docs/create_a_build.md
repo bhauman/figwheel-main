@@ -183,8 +183,23 @@ as well.
 You have successfully set up a Figwheel hot-reloading compile process
 for a ClojureScript project.
 
+If you have never built an application with ClojureScript this is a
+good place to start building from.
+
+If you are building an application that works with the DOM there is a
+`<div id="app"></div>` already on the Figwheel Default Dev Page that
+you can override. If you clear it's contents all of the CSS and HTML
+for the content of the Dev Page will removed.
+
+## Adding Figwheel configuration to the build
+
+Figwheel Main has [several options][fig-main-config] to configure how
+your build process works.
 
 
+
+
+[fig-main-config]: ../config-options
 [cljs-options]: https://clojurescript.org/reference/compiler-options
 [cljs-main-opt]: https://clojurescript.org/reference/compiler-options#main
 
