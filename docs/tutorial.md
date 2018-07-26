@@ -17,11 +17,11 @@ this document](/quick_start_lein.html)
 
 ## Install the Clojure CLI tools
 
-First we will want to [install](CLI tools) the `clj` and `clojure` [command line
+First we will want to install the `clj` and `clojure` [command line
 tools][CLI tools].
 
 If you are on Mac OSX and you can quickly install the Clojure tools
-via [homebrew](brew).
+via [homebrew][brew].
 
 In the terminal at the shell prompt enter:
 
@@ -53,7 +53,7 @@ of the Clojure REPL.
 If you were able to start a REPL, you have successfully installed Clojure!
 
 > We will use the acronym REPL frequently. It stands for [Read Eval
-> Print Loop](REPL)
+> Print Loop][REPL]
 
 ## Make a new directory to work in
 
@@ -149,7 +149,7 @@ reader that can:
 * display the source code of the function where your cursor is
 * allows you to query for functions that are similar to the word under your cursor
 
-My library [Rebel Readline](rebel) provides these features for Clojure
+My library [Rebel Readline][rebel] provides these features for Clojure
 REPLs. Let's install it now as it will be very helpful while exploring
 how to work with Figwheel and ClojureScript.
 
@@ -379,7 +379,7 @@ You can now exit the Rebel Readline REPL by hitting `Control-C Control-D`.
 Once you have made it this far you have learned how to add
 dependencies to `deps.edn` and how to start a `figwheel.main` REPL
 with Clojure's CLI tools. You have also, learned how to include
-[Rebel Readline](rebel) and how to use it to introspect your
+[Rebel Readline][rebel] and how to use it to introspect your
 environment.
 
 This is more than enough to justify a break, may a suggest a nice walk
@@ -563,7 +563,7 @@ simple example but it starts to demonstrate that you could possibly
 get quite far into an application just using this simple setup.
 
 > **TIP**: There is a fantasic guide on
-> [Programming at the REPL](program-at-repl) on the official Clojure
+> [Programming at the REPL][program-at-repl] on the official Clojure
 > website. Much of the guide is also directly applicable to
 > ClojureScript, when you are ready to learn more it is an excellent
 > resource.
