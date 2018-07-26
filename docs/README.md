@@ -2,7 +2,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main)
 
-![Documentation](https://img.shields.io/badge/documentation-incomplete-yellow.svg?link=https://google.com?link=http://rigsomelight.com/figwheel-main/docs/)
+![Documentation](https://img.shields.io/badge/documentation-incomplete-yellow.svg?link=http://rigsomelight.com/figwheel-main/docs/)
 
 Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
