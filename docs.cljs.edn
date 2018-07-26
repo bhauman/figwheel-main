@@ -1,0 +1,6 @@
+^{:open-url "http://127.0.0.1:4000/docs"
+  :css-dirs ["docs/assets/css"]}
+{:main figwheel-main-docs.main
+ :output-to "docs/assets/compiled/js/main.js"
+ :output-dir "docs/assets/compiled/js/out"
+ :asset-path "/assets/compiled/js/out"}

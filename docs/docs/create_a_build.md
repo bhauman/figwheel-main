@@ -196,12 +196,29 @@ for the content of the Dev Page will removed.
 Figwheel Main has [several options][fig-main-config] to configure how
 your build process works.
 
+You can add these configuration options straight to your
+`dev.cljs.edn` build file. As an example you can turn off hot
+reloading by adding `:hot-reload-cljs false` to your build file like
+this:
 
+```clojure
+^{:hot-reload-cljs false}
+{:main hello-world.core}
+```
+
+The `^` character is not a typo it's a
+[reader macro][reader-macro-meta] that in this case is adding meta
+data to the map that follows it. Figwheel examines the metadata of
+your build config for its own configuration options.
+
+You can also specify a map of Figwheel configuration in a
+`figwheel-main.edn` file in your project root directory. See the
+[configuration][fig-main-config] for more details.
 
 
 [fig-main-config]: ../config-options
 [cljs-options]: https://clojurescript.org/reference/compiler-options
 [cljs-main-opt]: https://clojurescript.org/reference/compiler-options#main
-
+[reader-macro-meta]: https://clojure.org/reference/reader#macrochars
 
 

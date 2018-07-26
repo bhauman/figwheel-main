@@ -33,6 +33,11 @@
                         "advanced"
                         "-c"
                         "figwheel.main.helper"]}
+           :build-docs-app
+           {:main-opts ["-m"
+                        "figwheel.main"
+                        "-O" "advanced"
+                        "-bo" "docs"]}
            :docs
            {:extra-paths ["dev"]
             :main-opts ["-e" (build-option-docs)]}

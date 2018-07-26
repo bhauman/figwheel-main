@@ -32,13 +32,18 @@ opt-docs:
 readme:
 	cp docs/README.md ./
 
-docs: helper-docs opt-docs readme
+docs-app:
+	clojure -Abuild-docs-app
+
+docs: helper-docs opt-docs readme docs-app
+
 
 helper:
 	clojure -Abuild-helper
 
 clean:
 	rm -rf target
+	rm -rf docs/assets/compiled/js/out
 
 clean-m2:
 	rm -rf ~/.m2/repository/com/bhauman
@@ -57,5 +62,7 @@ testit: clean
 
 testall: testit test10
 
-deploy: clean install docs helper testall
+deploy: clean install docs helper testall # really needs to clean again before deploy
+	rm -rf target
+	rm -rf docs/assets/compiled/js/out
 	pushd ../figwheel-core; lein deploy clojars; popd; pushd ../figwheel-repl; lein deploy clojars; popd; lein deploy clojars

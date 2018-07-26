@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: config-options
 ---
 
 # Tutorial

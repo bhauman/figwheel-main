@@ -72,11 +72,10 @@ header > * {
     padding: 1rem;
 }
 
-
-
 nav {
-    display: flex;
-    flex-direction: column;
+    /*display: flex; */
+    width: 250px;
+    /*flex-direction: column;*/
     padding-top: 1em;
     padding-bottom: 3rem;
     border-right: 1px solid rgba(0,0,0,0.1);
@@ -106,7 +105,8 @@ nav a {
 }
 
 .main {
-    flex-basis: 66%;
+    min-width: 0;
+    flex-basis: 75%;
     padding-left: 3rem;
     padding-right: 1rem;
 }
@@ -233,9 +233,57 @@ footer {
     overflow: scroll;
     word-break: break-all;
     max-height: 200px;
-
 }
 
 .white-img-border {
     border: 1px solid #c7c7c7;
+}
+
+.toc {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    overflow-y: hidden;
+    background-color: #f8f8f8;    
+}
+
+.toc a {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.slide-in {
+    transition-property: all;
+    transition-duration: .8s;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+/*
+.slide-in-closed {
+    height: 0px;
+}*/
+
+.hidden-scrollable {
+    overflow:auto;
+}
+
+.config-options-nav a {
+    padding-left: 2.5rem;
+    color: #0056b3;
+    font-size: 0.9rem;
+}
+
+.config-options-nav a:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+    text-decoration: none;
+}
+
+.toc-category {
+    display: block;
+    padding: .5rem 1.5rem;
+    padding-right: 1rem;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    margin: 1px 0px;
 }

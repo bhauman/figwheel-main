@@ -1,3 +1,7 @@
+---
+layout: config-options
+---
+
 # Figwheel Main Configuration Options
 
 This page is a reference for all of the Figwheel configuration options.
@@ -28,7 +32,9 @@ An example `dev.cljs.edn` build file that supplies figwheel config options.
 Any options provided in the metadata of build file will override the
 options in the `figwheel-main.edn` file.
 
-# Commonly used options (in order of importance)
+# Commonly used options
+
+*The options below are listed in order of importance*
 
 ## :watch-dirs
 

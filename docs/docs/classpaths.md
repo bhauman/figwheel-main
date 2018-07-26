@@ -82,7 +82,7 @@ If we format the classpath that [CLI tools][cli-tools] generated we
 can see that it starts with a single local `src` directory.
 
 ```shell
-$ clj -Spaths |  sed -e 's/:/\'$'\n/g' | head
+$ clj -Spath |  sed -e 's/:/\'$'\n/g' | head
 src
 /Users/bhauman/.m2/repository/com/cognitect/transit-java/0.8.332/transit-java-0.8.332.jar
 /Users/bhauman/.m2/repository/org/clojure/data.json/0.2.6/data.json-0.2.6.jar

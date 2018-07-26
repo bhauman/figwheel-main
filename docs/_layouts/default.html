@@ -19,13 +19,9 @@
       <a href="{{"/docs" | relative_url }}">Documentation</a>
       <a href="{{"/config-options" | relative_url }}">Configuration</a>
     </header>
-    <div class="home-container">
-      <section>
-      {{ content }}
-      </section>
-    </div>
+    {{ content }}
     <footer>
     </footer>
-    </div>
+    <script src="{{ "/assets/compiled/js/main.js?v=" | append: site.github.build_revision | relative_url }}"></script>
   </body>
 </html>

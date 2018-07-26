@@ -27,4 +27,4 @@ pom.xml.asc
 _site
 .sass-cache
 Gemfile.lock
-
+docs/assets/compiled/js/out
