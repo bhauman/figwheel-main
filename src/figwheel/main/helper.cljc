@@ -104,7 +104,7 @@
           <div class=\"logo-text\">%s</div>
         </div>
         <div class=\"container top-level-nav\">
-             <a href=\"https://github.com/bhauman/lein-figwheel/tree/master/figwheel-main\" target=\"_blank\">Figwheel Main</a>
+             <a href=\"http://rigsomelight.com/figwheel-main\" target=\"_blank\">Figwheel Main</a>
              <a href=\"https://clojurescript.org\" target=\"_blank\">CLJS</a>
              <a href=\"https://cljs.info\" target=\"_blank\">Cheatsheet</a>
              <a href=\"https://kanaka.github.io/clojurescript/web/synonym.html\" target=\"_blank\">Synonyms</a>

@@ -60,9 +60,62 @@ There are several ways to do this:
 When you supply HTML content for a host page the most important thing
 you will need to do is include your compiled CLJS code.
 
+When you are working with the defaults the Figwheel will direct the
+compiler to ouput put your compiled CLJS to
+`target/public/cljs-out/[build]-main.js`. Where you will substitute
+the name of your build (i.e `dev`).
 
-[ring-handler]: config-options#ring-handler
-[open-url]: config-options#ring-handler
+Figwheel will also print the output file when it starts up.
+
+<img width="718" alt="showing output file" src="https://user-images.githubusercontent.com/2624/43284699-a17b215c-90ea-11e8-81c8-3f40c9f1e61c.png">
+
+As you can see from the above Figwheel is compiling our project to
+`target/public/cljs-out/dev-main.js`.
+
+In order to include this file on our host page we will include use the
+above path **minus** the classpath based webroot `target/public`. This
+leaves us with `/cljs-out/dev-main.js` as the path to our compiled
+ClojureScript file.
+
+> You should take a moment to look at the content of this file. You
+> will see that it is a bootstrap script which itself requires all of
+> the necessary files for program.  This is not the case when you use
+> a different `:optimizations` setting such `:simple`, `:whitespace`
+> or `:advanced`. In that case the output file will be a single file.
+> You may be tempted to use these settings for development, but for
+> the REPL and Figwheel to work the default `:optimizations` setting
+> of `:none` is required.
+
+When you include the output file on your HTML page you will want place
+the `<script>` tag as the last tag in your `<body>` content. This is
+the convention for Google Closure compiled projects.
+
+For example:
+
+```html
+<html>
+  <head></head>
+  <body>
+    <div id="app">
+    </div>
+    <!-- include your ClojureScript at the bootom of body like this -->
+    <script src="/cljs-out/dev-main.js"></script>
+  <body>
+</html>
+```
+
+## Using a page other than server root
+
+A very simple solution is to provide a static HTML page other than the
+root path.
+
+By default Figwheel opens up `http://localhost:9500`
+
+
+
+
+[ring-handler]: ../config-options#ring-handler
+[open-url]: ../config-options#ring-handler
 [classpaths-web-assets]: classpaths#using-the-classpath-to-find-web-assets
 
 
