@@ -13,7 +13,7 @@ timely manner. The ultimate goal of Figwheel is to <i>get out of your
 way</i> so that you can just write code. </div>
 
 Figwheel was a pioneer in hot-reloading and provides remarkably fast
-workflow for a compile-to-JavaScript language, several of it's
+workflow for a compile-to-JavaScript language, several of its
 features are now common in other tools.
 
 ## Features

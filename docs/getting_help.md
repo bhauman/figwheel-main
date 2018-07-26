@@ -38,8 +38,8 @@ I recommend that you bite off very small pieces at first. Smaller
 bites than you would take when learning other languages like
 JavaScript and Ruby. 
 
-There are a couple of common pitfals that happen to folks when they
-come to ClojureScript.
+There are a couple of common pitfalls that happen to folks when they
+try to learn ClojureScript.
 
 ### Trying to learn to much
 
@@ -75,16 +75,19 @@ site. Then start exploring Clojure and create a simple webserver with
 ### Trying to create a sweet dev environment
 
 Another thing that folks do, is they try to duplicate their current
-development environment.
+development environment. As developers, we become very accustomed to
+having tools set up just the way we like them. I'm very sympathetic to
+this.
 
-I would advise that you not invest too much time trying to set up a
-sweet development environment. The Clojure landscape currently has a
-diverse set of tools that is constantly in flux. As a result, it's
-very difficult to suss out which ones will actually help you. If you
-spend a lot of time evaluating all these options it can become very
-frustrating. If you wait a while, and use simple tools you will have
-much more fun actually using the language itself and this experience
-will provide a foundation to make better tooling choices.
+I however strongly advise that you not invest too much time trying to
+set up a sweet development environment, and rather invest that time
+into learning the ClojureScript language with a simple set of tools. The Clojure landscape
+currently has a diverse set of tools that is constantly in flux. As a
+result, it's very difficult to suss out which ones will actually help
+you. If you spend a lot of time evaluating all these options it can
+become very frustrating. If you wait a while, and use simple tools you
+will have much more fun actually using the language itself and this
+experience will provide a foundation to make better tooling choices.
 
 If you are new Clojure and ClojureScript I'd advise that you start
 with a terminal REPL and a decent editor.

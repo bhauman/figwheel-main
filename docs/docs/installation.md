@@ -7,16 +7,14 @@ order: 3
 
 # Installing Figwheel
 
-<div class="lead-in">
-Figwheel is just a Clojure library and can be used with many different
-tools. This page will show how to include Figwheel as a dependency
-with both <a href="">Leiningen</a> and <a href="">Clojure CLI tools</a>.
-</div>
+<div class="lead-in"> Figwheel is just a Clojure library and can be
+used with several different command line tools. This page will show
+how to include Figwheel as a dependency with both <a href="https://leiningen.org/">Leiningen</a> and <a href="https://clojure.org/guides/deps_and_cli">Clojure CLI tools</a>.</div>
 
-<div class="lead-in"> There are two parts to installing Figwheel:
-First, you will <strong>install your tools</strong> to work with
-Clojure. Second, you will <strong>create a project</strong> that
-explicitly requires Figwheel.</div>
+<div class="lead-in"> There are two parts to installing Figwheel.
+First, you will <strong>install your Clojure tool of
+choice</strong>. Second, you will <strong>create a project</strong>
+that explicitly requires Figwheel.</div>
 
 ## Choosing Leiningen vs. CLI Tools
 
@@ -29,12 +27,13 @@ As of the writing of this document [Leiningen][lein] is still the
 dominant Clojure dependency/task tool in the Clojure Ecosystem. Most
 of the tutorials you find online will be using Leiningen. It has been
 around for quite a while and there are innumerable plugins to assist
-you with your workflow. It is very stable and it works very well. That
-being said it Leiningen takes a *batteries included* view on tooling,
-it has a lot of features, and it runs through a bunch of logic to
-prepare a running Clojure environment for you. This complexity
-requires more investment to understand how and why Leiningen is doing
-what it is doing.
+you with your workflow. It is **very stable**, it works **very well**,
+and has a vast array of **plugins** to help you get your work
+done. That being said it Leiningen takes a *batteries included* view
+on tooling, it has a lot of features, and it runs through a bunch of
+logic to prepare a running Clojure environment for you. This
+complexity requires more investment to understand how and why
+Leiningen is doing what it is doing.
 
 [Clojure CLI Tools][cli-tools] takes the opposite approach. It is
 minimal and it requires you to add functionality with different
@@ -91,7 +90,7 @@ First we will want to [install][cli-tools] the `clj` and `clojure` [command line
 tools][cli-tools].
 
 If you are on Mac OSX and you can quickly install the Clojure tools
-via [homebrew](brew).
+via [homebrew][brew].
 
 In the terminal at the shell prompt enter:
 
@@ -181,7 +180,7 @@ A browser window should pop open and back in the terminal you should
 see a REPL with a `cljs.user=>` prompt waiting to evaluate
 ClojureScript code.
 
-You can quit the REPL with `Control-C Control-D`.
+You can quit the REPL by entering `:cljs/quit` or with `Control-D`.
 
 ### Dependencies with CLI Tools
 
@@ -210,7 +209,7 @@ A browser window should pop open and back in the terminal you should
 see a REPL with a `cljs.user=>` prompt waiting to evaluate
 ClojureScript code.
 
-You can quit the REPL with `Control-C Control-D`.
+You can quit the REPL by entering `:cljs/quit` or with `Control-D`.
 
 ## Aliases
 
@@ -219,8 +218,8 @@ command line options to start your Clojure processes.
 
 Aliases will play a helpful role when working with
 `figwheel.main`. You will use them as abbreviations to start build
-processes runnning, to run your tests, and to build your final
-minimized production build.
+processes, to run tests, and to build a final minimized production
+build.
 
 ### Aliases with Leiningen
 
@@ -252,8 +251,8 @@ $ lein fig
 ```
 
 One thing that is very important to remember is that if you want to
-pass additional options to the `lein fig` command above you will have
-to add a `--` before the additional arguments.
+pass additional figwheel CLI options to the `lein fig` command above
+you will have to add a `--` before the additional arguments.
 
 Let's display the Figwheel help documentation with the `-h` (or `--help`) option:
 
@@ -266,7 +265,7 @@ command will not.
 
 > Why am I using using aliases here instead of creating a lein plugin?
 > The first reason I'm not using a plugin here is that Leiningen boots
-> a lot faster when it doesn't have to dynamically load/compile plugin
+> much faster when it doesn't have to dynamically load/compile plugin
 > code. Another reason is that `figwheel.main`'s command line options
 > are much more expressive than `lein-figwheel`'s and lein aliases are
 > better positioned to leverage that expressiveness.
@@ -305,6 +304,9 @@ $ clj -A:fig -h
 > documentation and features for [Leiningen][lein] and/or
 > [CLI Tools][cli-tools]. It will pay off tremendously.
 
+> It is also important to note that you can also use `Maven` and
+> just plain `java` to work with Figwheel.
+
 
 [clojurescript]: https://clojurescript.org
 [cli-tools]: https://clojure.org/guides/deps_and_cli
@@ -313,3 +315,4 @@ $ clj -A:fig -h
 [re-frame]: https://github.com/Day8/re-frame
 [reagent]: http://reagent-project.github.io
 [sablono]: https://github.com/r0man/sablono
+[brew]: https://brew.sh/
