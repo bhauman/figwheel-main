@@ -42,18 +42,6 @@ of the server (usually `http://locahost:9500`). In response, the
 Figwheel server provides a **default dev page** if the root route
 (`/`) fails and no `public/index.html` file is found on the classpath.
 
-## Providing your own page
-
-There are several ways to override the default dev page and provide
-your own page:
-
-* supply a static `index.html` file in a `public` directory on the
-  classpath
-* use a page other than `index.html` and change the [`:open-url` config
-  option][open-url] to point to it  
-* create a Ring handler that handles the root route `/` and supply it
-  to the [`:ring-handler` config option][ring-handler]
-
 ## Including your compiled ClojureScript
 
 When you supply HTML content for a host page, it is important to
@@ -63,33 +51,33 @@ By default, Figwheel will direct the compiler to output put your
 compiled CLJS to `target/public/cljs-out/[build]-main.js`
 (substituting your build name for `[build]`).
 
-If you have doubts about where the compiler is placing your output file
-you can just examine Figwheel's start up messages.
+If you have doubts about where the compiler is placing your output file,
+you can examine Figwheel's start-up messages.
 
 <img width="718" alt="showing output file" src="https://user-images.githubusercontent.com/2624/43284699-a17b215c-90ea-11e8-81c8-3f40c9f1e61c.png">
 
-As you can see from the above Figwheel is compiling our project to
-`target/public/cljs-out/dev-main.js`.
+As you can see in the above start-up messages, Figwheel is compiling
+the build to `target/public/cljs-out/dev-main.js`.
 
-In order to include this file on our host page we will include use the
-above path **minus** the classpath based webroot `target/public`. This
-leaves us with `/cljs-out/dev-main.js` as the path to our compiled
-ClojureScript file.
+In order to include this file in our host page, we will include
+utilize the path to the output file **minus** the classpath based
+webroot `target/public`. This leaves us with `/cljs-out/dev-main.js`
+as the path to our compiled ClojureScript.
 
 > You should take a moment to look at the content of this file. You
-> will see that it is a bootstrap script which itself requires all of
-> the necessary files for program.  This is not the case when you use
-> a different `:optimizations` setting such `:simple`, `:whitespace`
-> or `:advanced`. In that case the output file will be a single file.
-> You may be tempted to use these settings for development, but for
-> the REPL and Figwheel to work the default `:optimizations` setting
-> of `:none` is required.
+> will see that it is actually a bootstrap script which itself
+> requires all of the necessary files for the program.  This is not
+> the case when you use a different `:optimizations` setting such
+> `:simple`, `:whitespace` or `:advanced`. When these settings are
+> used the output file will be a single file. You may be tempted to
+> use these settings for development, but for the REPL and Figwheel to
+> work the default `:optimizations` setting of `:none` is required.
 
 When you include the output file on your HTML page you will want place
 the `<script>` tag as the last tag in your `<body>` content. This is
 the convention for Google Closure compiled projects.
 
-For example:
+An example host page:
 
 ```html
 <!DOCTYPE html>
@@ -112,6 +100,18 @@ For example:
 > classpath. In our running example, a good place for this file would
 > be at `resources/public/css/style.css`.
 
+## Providing your own page
+
+There are several ways to override the default dev page and provide
+your own page:
+
+* supply a static `index.html` file in a `public` directory on the
+  classpath
+* use a page other than `index.html` and change the [`:open-url` config
+  option][open-url] to point to it  
+* create a Ring handler that handles the root route `/` and supply it
+  to the [`:ring-handler` config option][ring-handler]
+
 ## Supply a static index.html 
 
 The most common way to use your HTML content to host your app is to
@@ -121,13 +121,14 @@ classpath. The most common place for this is
 
 ## Using a page other than server root
 
-A very simple solution is to provide a static HTML page other than the
-`index.html` root page. This is pattern is very helpful if you need to
+Another way is to provide a static HTML page other than the
+`index.html` root page. This pattern is very helpful if you need to
 have several different host pages.
 
-For example let's we want our build to use an `admin.html` as the host
-page. First we will create a `resources/public/admin.html` file and
-ensure that we are requiring our compiled ClojureScript correctly.
+As an example, let's say we want our build to use an `admin.html` as
+the host page. First, we will create a `resources/public/admin.html`
+file and ensure that we are requiring our compiled ClojureScript
+correctly.
 
 Once that is done we will want to make our build pop open the
 `admin.html` url in our browser. We can use the

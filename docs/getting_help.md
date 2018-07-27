@@ -7,9 +7,8 @@ order: 2
 
 # Getting Help
 
-<div class="lead-in"> It is likely that you will run into trouble when
-you first start using Figwheel and ClojureScript. Here are some
-resources you can turn to for help.</div>
+<div class="lead-in">Here are some resources you can turn to when you
+need help.</div>
 
 The is an active community on the
 [Clojurians Slack](http://clojurians.net). There are many Slack
@@ -81,13 +80,15 @@ this.
 
 I however strongly advise that you not invest too much time trying to
 set up a sweet development environment, and rather invest that time
-into learning the ClojureScript language with a simple set of tools. The Clojure landscape
-currently has a diverse set of tools that is constantly in flux. As a
-result, it's very difficult to suss out which ones will actually help
-you. If you spend a lot of time evaluating all these options it can
-become very frustrating. If you wait a while, and use simple tools you
-will have much more fun actually using the language itself and this
-experience will provide a foundation to make better tooling choices.
+into learning the ClojureScript language with a simple set of tools. 
+
+The Clojure landscape currently has a diverse set of tools that is
+constantly in flux. As a result, it's very difficult to suss out which
+ones will actually help you. If you spend a lot of time evaluating all
+these options it can become very frustrating. If you wait a while, and
+use simple tools you will have much more fun actually using the
+language itself and this experience will provide a foundation to make
+better tooling choices.
 
 If you are new Clojure and ClojureScript I'd advise that you start
 with a terminal REPL and a decent editor.
