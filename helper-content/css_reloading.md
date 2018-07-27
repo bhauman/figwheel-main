@@ -1,28 +1,19 @@
 # Live Reloading CSS
 
-> **TLDR**: add a `:css-dirs ["resources/public/css"]` entry to the
-> meta-data of your build `.cljs.edn` file or
-> `figwheel-main.edn`
+# Live CSS reloading
 
-Figwheel will hot reload your CSS while you work on it. Figwheel just
-needs to know where your CSS files are so it can watch and reload
-them.
+<div class="lead-in">Figwheel will hot reload your CSS files as you edit them.</div>
 
-This will only work if the HTML file that is hosting your CLJS project
-has included valid links to your CSS files.
+You need to do four things for this to work:
 
-You can normally place your CSS files anywhere below the
-`resources/public` directory. For clarity we will place them at
-`resources/public/css`.
+* ensure that you are providing your own [HTML host page][host-page]
+* include a link to your CSS in your host page HTML
+* ensure your CSS is in a `public` directory on the classpath
+* configure the [`:css-dirs` config option][css-dirs]
 
-Example CSS file at `resources/public/css/style.css`:
-```css
-/* hot stuff */
-h1 { color: red; }
-```
+## Including link to CSS file
 
-And as an example we can include it on the
-`resources/public/index.html` page like so:
+Include a link tag to your CSS on your [HTML host page][host-page].
 
 ```html
 <!DOCTYPE html>
@@ -40,17 +31,23 @@ And as an example we can include it on the
 </html>
 ```
 
-# Tell Figwheel to watch and reload CSS
+## Ensuring your CSS file can be served
 
-You will use the `:css-dirs` config key to tell figwheel to which
-directories to watch for CSS file changes.
+The above example will work if you place your CSS file in a
+`public/css` directory on the classpath. Since the `resources`
+directory is normally on the classpath by convention we can place our
+CSS files `resources/public/css`.
 
-You can do this one of two ways in the **build file** or in the
+## Tell Figwheel to watch and reload CSS
+
+You will use the [`:css-dirs` config key][css-dirs] to tell Figwheel
+to which directories to watch for CSS file changes.
+
+You can do this one of two ways: in the **build file** or in the
 `figwheel-main.edn` file.
 
-In the current example we are assuming a `dev.cljs.edn` build
-file. You can add `:css-dirs` config to the meta-data in the build
-file like so:
+As and example let's assuming a `dev.cljs.edn` build file. You can add
+`:css-dirs` config to the metadata in the build file like so:
 
 ```clojure
 ^{:css-dirs ["resources/public/css"]}
@@ -68,8 +65,12 @@ Or you can set it for all builds and compiles in the `figwheel-main.edn`:
 Then you restart your build:
 
 ```shell
-cljs -m figwheel.main -b dev -r
+clojure -m figwheel.main -b dev -r
 ```
 
-Now you should be able to change the `style.css` file and see the changes
-rendered live in your application.
+Now you should be able to edit and save the
+`resources/public/css/style.css` file and see the changes rendered
+live in your application.
+
+[css-dirs]: //rigsomelight.com/figwheel-main/config-options#css-dirs
+[host-page]: //rigsomelight.com/figwheel-main/docs/your_host_page

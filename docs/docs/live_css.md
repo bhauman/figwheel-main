@@ -11,13 +11,14 @@ order: 7
 
 You need to do three things for this to work:
 
+* ensure that you are providing your own [HTML host page][host-page]
 * include a link to your CSS in your host page HTML
 * ensure your CSS is in a `public` directory on the classpath
 * configure the [`:css-dirs` config option][css-dirs]
 
 ## Including link to CSS file
 
-Include a link tag to your CSS on your [HTML host page](your_host_page).
+Include a link tag to your CSS on your [HTML host page][host-page].
 
 ```html
 <!DOCTYPE html>
@@ -77,3 +78,4 @@ Now you should be able to edit and save the
 live in your application.
 
 [css-dirs]: ../config-options#css-dirs
+[host-page]: your_host_page
