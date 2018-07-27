@@ -72,5 +72,5 @@ Now you should be able to edit and save the
 `resources/public/css/style.css` file and see the changes rendered
 live in your application.
 
-[css-dirs]: //rigsomelight.com/figwheel-main/config-options#css-dirs
-[host-page]: //rigsomelight.com/figwheel-main/docs/your_host_page
+[css-dirs]: //figwheel.org/config-options#css-dirs
+[host-page]: //figwheel.org/docs/your_host_page
