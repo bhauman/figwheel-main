@@ -8,13 +8,12 @@ order: 6
 # Host Page
 
 <div class="lead-in">A <strong>host page</strong> is the HTML page
-that you ClojureScript program will run in. Figwheel provides a
-default host page to make easy to start working with
-ClojureScript. Let's explore how to supply your own.</div>
+that includes your ClojureScript program. Figwheel provides a default
+host page, but sooner or later you will want to supply your own.</div>
 
 ## The Figwheel server
 
-Figwheel starts a server when it launches a build and or a REPL. The
+Figwheel starts a server when it launches a build and/or a REPL. The
 primary purpose of this server is to provide websocket communication
 between the REPL and the client environment. Figwheel not only uses
 this connection to evalute compiled REPL expressions, it also uses it
@@ -27,44 +26,45 @@ classpath (this is described in
 handler** (via [`:ring-handler` config option][ring-handler])
 to embed your own HTTP endpoints in the server.
 
+*The instructions on this page only apply if you are using the Figwheel
+server to serve your application.*
+
 > Its important to note that you can and most likely should supply
-> your own server at some point during the development of your
-> project. Figwheel will still work well when you use your own
-> server. Figwheel is designed to handle the cross-origin
-> communication, and you do not have to proxy to the Figwheel server.
+> your own server to run alongside of Figwheel's server as the needs
+> of your project outgrow what the dev server provides. Figwheel is
+> designed to handle the cross-origin communication necessary to make
+> a connection to a page served by your own server.
 
 ## Default Host Page
 
 By default when Figwheel launches it navigates a browser to the root
-of the server (normally `http://locahost:9500`). In response, the
-Figwheel server provides a **default index page** if the root route
-`/` fails and no static `index.html` is found. 
-
-While this page is helpful there will quickly be a point when will
-want to supply your own page.
+of the server (usually `http://locahost:9500`). In response, the
+Figwheel server provides a **default dev page** if the root route
+(`/`) fails and no `public/index.html` file is found on the classpath.
 
 ## Providing your own page
 
-There are several ways to do this:
+There are several ways to override the default dev page and provide
+your own page:
 
-* use a page other than `index.html` and change the [`:open-url` config
-  option][open-url] to point to it
 * supply a static `index.html` file in a `public` directory on the
   classpath
+* use a page other than `index.html` and change the [`:open-url` config
+  option][open-url] to point to it  
 * create a Ring handler that handles the root route `/` and supply it
   to the [`:ring-handler` config option][ring-handler]
 
 ## Including your compiled ClojureScript
 
-When you supply HTML content for a host page the most important thing
-you will need to do is include your compiled CLJS code.
+When you supply HTML content for a host page, it is important to
+correctly include your compiled CLJS code.
 
-When you are working with the defaults the Figwheel will direct the
-compiler to ouput put your compiled CLJS to
-`target/public/cljs-out/[build]-main.js`. Where you will substitute
-the name of your build (i.e `dev`).
+By default, Figwheel will direct the compiler to output put your
+compiled CLJS to `target/public/cljs-out/[build]-main.js`
+(substituting your build name for `[build]`).
 
-Figwheel will also print the output file when it starts up.
+If you have doubts about where the compiler is placing your output file
+you can just examine Figwheel's start up messages.
 
 <img width="718" alt="showing output file" src="https://user-images.githubusercontent.com/2624/43284699-a17b215c-90ea-11e8-81c8-3f40c9f1e61c.png">
 
@@ -92,16 +92,25 @@ the convention for Google Closure compiled projects.
 For example:
 
 ```html
+<!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link rel="icon" href="https://clojurescript.org/images/cljs-logo-icon-32.png">
+  </head>
   <body>
-    <div id="app">
-    </div>
-    <!-- include your ClojureScript at the bottom of body like this -->
-    <script src="/cljs-out/dev-main.js"></script>
-  <body>
+    <div id="app"></div>
+    <!-- include your ClojureScript at the bottom of body like this -->	
+    <script src="/cljs-out/dev-main.js" type="text/javascript"></script>
+  </body>
 </html>
 ```
+
+> The `css/style.css` file will need to be available on the
+> classpath. In our running example, a good place for this file would
+> be at `resources/public/css/style.css`.
 
 ## Supply a static index.html 
 
@@ -152,12 +161,17 @@ page.
 
 ;; define index content
 (def home
-  "<html>
-  <head></head>
+  "<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+    <link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\">
+    <link rel=\"icon\" href=\"https://clojurescript.org/images/cljs-logo-icon-32.png\">
+  </head>
   <body>
-    <h2>Hi from the handler</h2>
     <div id=\"app\"></div>
-    <script src=\"/cljs-out/dev-main.js\"></script>
+    <script src=\"/cljs-out/dev-main.js\" type=\"text/javascript\"></script>
   </body>
 </html>")
 
@@ -187,13 +201,10 @@ Let's configure the ring handler in our example `dev.cljs.edn`:
 Now when you start Figwheel and the browser opens up to display the
 root server route it will be served from your handler.
 
-If you are creating an SPA wish `pushState` routing you may want every
+If you are creating an SPA with `pushState` routing you may want every
 route or a small subset of routes to return the `home` page. As you can
 see it would be pretty straight forward to modify the above handler to
 return the `home` page when needed.
-
-
-
 
 [ring-handler]: ../config-options#ring-handler
 [open-url]: ../config-options#open-url
