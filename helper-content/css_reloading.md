@@ -1,5 +1,3 @@
-# Live Reloading CSS
-
 # Live CSS reloading
 
 <div class="lead-in">Figwheel will hot reload your CSS files as you edit them.</div>

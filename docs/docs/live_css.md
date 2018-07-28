@@ -1,15 +1,8 @@
----
-title: Live CSS
-layout: docs
-category: docs
-order: 7
----
-
 # Live CSS reloading
 
 <div class="lead-in">Figwheel will hot reload your CSS files as you edit them.</div>
 
-You need to do three things for this to work:
+You need to do four things for this to work:
 
 * ensure that you are providing your own [HTML host page][host-page]
 * include a link to your CSS in your host page HTML
