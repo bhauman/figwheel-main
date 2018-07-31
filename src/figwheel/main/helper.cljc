@@ -126,8 +126,8 @@
         <div class=\"container flex-column\">
           <div class=\"off-site-resources\">
              <h6>Figwheel Main</h6>
-             <a href=\"https://github.com/bhauman/lein-figwheel/tree/master/figwheel-main\" target=\"_blank\">Figwheel Main Home / Readme</a>
-             <a href=\"https://github.com/bhauman/lein-figwheel/blob/master/figwheel-main/doc/figwheel-main-options.md\" target=\"_blank\">Config Options</a>
+             <a href=\"https://github.com/bhauman/figwheel-main/tree/master\" target=\"_blank\">Figwheel Main Home / Readme</a>
+             <a href=\"https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md\" target=\"_blank\">Config Options</a>
 
           </div>
           <div class=\"off-site-resources\">

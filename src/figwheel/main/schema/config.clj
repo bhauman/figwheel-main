@@ -455,14 +455,14 @@ Default: 50
  "The `:mode` indicates the behavior that occurs after a compile.
 Options: `:repl` `:serve` or `:build-once`
 
-* `:repl` indicates that repl sill be started
+* `:repl` indicates that a REPL will be started
 * `:serve` indicates that a server will be started
 * `:build-once` indicates that a compile will not be follwed by any action
 
 This is mainly intended for use when you are launching figwheel.main from a script.
 
 Normally defaults to `:repl`"
-:group :un-common)
+ :group :un-common)
 
 (s/def ::broadcast-reload boolean?)
 (def-spec-meta ::broadcast-reload
