@@ -115,7 +115,7 @@ target/public/cljs-out/[build-name]-main.js
 
 If you don't use a build file then the `:output-to` path may look like
 
-```
+```shell
 target/public/cljs-out/main.js
 ```
 
@@ -173,10 +173,10 @@ contents are available via the classpath. The reason for this is
 because when we use the default `:optimizations` level `:none` many of
 these "temporary files" are directly loaded into our client
 environment. For example, in a web environment when we load our
-`:output-to` file the Google Clojure base code will caculate a the
+`:output-to` file the Google Clojure base code will calculate the
 files that need loading and then load them in order. Hence the browser
-needs to serve these files and this is why they need to be on
-available on the classpath.
+needs to serve these files and this is why they need to be available on
+the classpath.
 
 So if you choose to customize the `:output-dir` path keep in mind that
 they will need to be found by the client environment if you are using
@@ -206,13 +206,13 @@ The Figwheel `--build` option and the ClojureScript REPL both require
 `:optimizations` to be set to `:none`. `:none` is the default so it
 does not need to be specified in the configuration options map.
 
-As we noted before the `:none` level does not produce a single self
-contained compiled artifact, but rather creates an artifact that loads
-all of the seperately compiled namespaces.
+As we noted before the `:none` level does not produce a single
+self-contained compiled artifact, but rather creates an artifact that
+loads all of the seperately compiled namespaces.
 
 All the other levels (`:whitespace`, `:simple`, and `:advanced`)
 produce a single compiled artifact to the `:output-to` file. These are
-often used for producing your final deployable asset. When you use
+often used for producing your final deployable asset when you use
 these optimizations settings.
 
 The `:advanced` level provides absolutely amazing compression and
@@ -245,7 +245,7 @@ The example we have been using in this documentation has been:
 ```
 ## The `:asset-path` option
 
-Only affects the build if you are using a `:main` option with
+Only affects the build if you are using the `:main` option with
 `:optimizations :none`. The generated bootstrap script in the
 `:output-to` file needs to know the path to your temporary files in
 `:output-dir`. This path is relative to your webroot.
@@ -272,14 +272,15 @@ normally means you have a missconfigured `:asset-path`.
 
 ## The `:target` option
 
-There values for the `:target` option. Actually there are two values
-and the abense of a `:target` option. If you don't specify a `:target`
-then it will be assumed that our client environment is the Browser.
+There are three values for the `:target` option. Actually there are two
+values and the abense of a `:target` option. If you don't specify a
+`:target` then it will be assumed that our client environment is the
+Browser.
 
 The other valid targets are `:nodejs` and `:webworker`.
 
 The `:target` option will change the output of the `:main` bootstrap
-script which get's output to the `:ouput-to` file. The script will
+script which gets output to the `:ouput-to` file. The script will
 handle the environmental needs of loading your ClojureScript code for
 that particular environment.
 
@@ -300,7 +301,7 @@ The `:preloads` option allows you to inject namespaces into your
 runtime environment.
 
 Figwheel takes advantage of this to inject its code into your
-environment. You can see this in the `hello-world.core` exmample
+environment. You can see this in the `hello-world.core` example
 project above. Fighweel appended several `:preloads` to the
 configuration:
 
@@ -326,7 +327,8 @@ The `:closure-defines` option is especially powerful. It allows us to
 define namespaced constants with `goog-define` and configure their
 values in the `:closure-defines` map.
 
-Let's say we want to have a `DEBUG` and `LOCALE` variables that we set at compile time.
+Let's say we want to have `DEBUG` and `LOCALE` variables that we set at
+compile time.
 
 ```clojure
 (ns hello-world.core)
@@ -349,7 +351,7 @@ can override these default values in our configuration with the
 Figwheel uses `:closure-defines` to supply the connection url to the
 `figwheel.repl` connection code.
 
-You can see in our example above that its value is:
+You can see in our example above that it's value is:
 
 ```clojure
 :closure-defines 
