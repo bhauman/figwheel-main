@@ -28,7 +28,7 @@ Here are the compiler options we'll cover:
 * `:main`
 * `:asset-path`
 * `:preloads`
-* `:clojure-defines`
+* `:closure-defines`
 
 ## The `--print-config` option
 
@@ -70,8 +70,8 @@ The above command should print out something like the following:
   figwheel.main.evalback],
  :aot-cache false,
  :closure-defines
- #:figwheel.repl{connect-url
-                 "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"},
+ {figwheel.repl/connect-url
+  "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"},
  :repl-requires
  ([figwheel.repl :refer-macros [conns focus]]
   [figwheel.main
@@ -223,6 +223,151 @@ optimization but it is also the most finicky. This
 
 The `:main` option specifies a entry point (root namespace) for your
 compiled artifact. When `:optimizations` is `:none` the `:main` option
+will cause the compiler to generate a file that will in turn load all
+the files that are needed by the `:main` namespace. Actually, it does
+more than this. It adds all the `:closure-defines` that we have
+specified in our configuration, and requires all of the `:preloads`.
+
+The `:main` option bootstraps your client environment and as such it
+behaves differently depending on the `:target` option.
+
+Figwheel does not have a default for the `:main` option and requires
+that you provide a namespace value.
+
+You can provide a symbol or a string, and it needs to be a namespace
+that is available in your source path directories that are on the
+classpath.
+
+The example we have been using in this documentation has been:
+
+```clojure
+:main hello-world.core
+```
+## The `:asset-path` option
+
+Only affects the build if you are using a `:main` option with
+`:optimizations :none`. The generated bootstrap script in the
+`:output-to` file needs to know the path to your temporary files in
+`:output-dir`. This path is relative to your webroot.
+
+As you can see above in the compile options for our example
+`hello-world.core` project our `:asset-path` is this:
+
+```clojure
+:asset-path "cljs-out/dev"
+```
+
+Basically you can think of the `:asset-path` as your `:output-dir`
+**minus** your webroot directory.
+
+So in our case:
+
+```c
+"target/public/cljs-out/dev" - "target/public/" => "cljs-out/dev"
+```
+
+If your application can't seem to find the files it needs to load, it
+normally means you have a missconfigured `:asset-path`.
+
+
+## The `:target` option
+
+There values for the `:target` option. Actually there are two values
+and the abense of a `:target` option. If you don't specify a `:target`
+then it will be assumed that our client environment is the Browser.
+
+The other valid targets are `:nodejs` and `:webworker`.
+
+The `:target` option will change the output of the `:main` bootstrap
+script which get's output to the `:ouput-to` file. The script will
+handle the environmental needs of loading your ClojureScript code for
+that particular environment.
+
+The `:target` option will also change the output code based on what
+the environment needs.
+
+Figwheel does not add or change the `:target` option. It will respond
+to it and ensure that it starts a `Node` backed REPL if it needs to.
+
+## The `:preloads` option
+
+When we load a ClojureScript application we start at the `:main`
+namespace to find all the files that need to be loaded. Sometimes we
+want to inject functionality (like REPL support) into our
+applications.
+
+The `:preloads` option allows you to inject namespaces into your
+runtime environment.
+
+Figwheel takes advantage of this to inject its code into your
+environment. You can see this in the `hello-world.core` exmample
+project above. Fighweel appended several `:preloads` to the
+configuration:
+
+```clojure
+:preloads
+ [figwheel.core
+  figwheel.main
+  figwheel.repl.preload
+  devtools.preload
+  figwheel.main.evalback]
+```
+
+All of these namespaces add additional functionality to your
+application. Notice that this is how we add `devtools` and the
+`figwheel.repl` connection to your build.
+
+You can add preloads as well to add behavior to your development or
+production builds.
+
+## The `:closure-defines` option
+
+The `:closure-defines` option is especially powerful. It allows us to
+define namespaced constants with `goog-define` and configure their
+values in the `:closure-defines` map.
+
+Let's say we want to have a `DEBUG` and `LOCALE` variables that we set at compile time.
+
+```clojure
+(ns hello-world.core)
+
+(goog-define DEBUG false)
+(goog-define LOCALE "en")
+```
+
+> Important: `goog-define` only works with String, Booolean, and Number values.
+
+So we've defined these constants along with their default values. We
+can override these default values in our configuration with the
+`:closure-defines` option like so:
+
+```
+:closure-defines {hello-world.core/DEBUG true
+                  hello-world.core/LOCALE "fr"}
+```
+
+Figwheel uses `:closure-defines` to supply the connection url to the
+`figwheel.repl` connection code.
+
+You can see in our example above that its value is:
+
+```clojure
+:closure-defines 
+  {figwheel.repl/connect-url
+   "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"}
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

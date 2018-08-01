@@ -1,3 +1,10 @@
+---
+title: Live CSS
+layout: docs
+category: docs
+order: 7
+---
+
 # Live CSS reloading
 
 <div class="lead-in">Figwheel will hot reload your CSS files as you edit them.</div>
