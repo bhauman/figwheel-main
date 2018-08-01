@@ -357,24 +357,6 @@ You can see in our example above that its value is:
    "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"}
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 [advanced-guide]: https://clojurescript.org/reference/advanced-compilation
 [cljs-opts]: https://clojurescript.org/reference/compiler-options
 
