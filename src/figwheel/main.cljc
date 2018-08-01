@@ -231,7 +231,7 @@ figwheel.main will also look for a figwheel-main.edn file in the
 current directory as well.
 
 A list of all the config options can be found here:
-https://github.com/bhauman/lein-figwheel/blob/master/figwheel-main/doc/figwheel-main-options.md
+https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md
 
 A list of ClojureScript compile options can be found here:
 https://clojurescript.org/reference/compiler-options

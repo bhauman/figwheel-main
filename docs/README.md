@@ -282,7 +282,7 @@ automatically be hot reloaded into the browser.
 The `-b dev` or `--build dev` flag option is indicating that Figwheel
 should read `dev.cljs.edn` for build configuration.
 
-The `-r` or `--repl` flag indicates that a repl should be launched.
+The `-r` or `--repl` flag indicates that a REPL should be launched.
 
 Interesting to note that the above command is equivalent to:
 
@@ -349,7 +349,7 @@ automatically be hot reloaded into the browser.
 The `-b dev` or `--build dev` flag option is indicating that Figwheel
 should read `dev.cljs.edn` for build configuration.
 
-The `-r` or `--repl` flag indicates that a repl should be launched.
+The `-r` or `--repl` flag indicates that a REPL should be launched.
 
 **using the aliases**
 

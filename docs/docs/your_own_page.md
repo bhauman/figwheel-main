@@ -29,7 +29,7 @@ to embed your own HTTP endpoints in the server.
 *The instructions on this page only apply if you are using the Figwheel
 server to serve your application.*
 
-> Its important to note that you can and most likely should supply
+> It is important to note that you can and most likely should supply
 > your own server to run alongside of Figwheel's server as the needs
 > of your project outgrow what the dev server provides. Figwheel is
 > designed to handle the cross-origin communication necessary to make
@@ -47,8 +47,8 @@ Figwheel server provides a **default dev page** if the root route
 When you supply HTML content for a host page, it is important to
 correctly include your compiled CLJS code.
 
-By default, Figwheel will direct the compiler to output put your
-compiled CLJS to `target/public/cljs-out/[build]-main.js`
+By default, Figwheel will direct the compiler to output your compiled
+CLJS to `target/public/cljs-out/[build]-main.js`
 (substituting your build name for `[build]`).
 
 If you have doubts about where the compiler is placing your output file,

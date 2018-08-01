@@ -76,7 +76,7 @@ When using the Clojure CLI Tools, the way that you specify that you
 want to have certain libraries available to you is in a `deps.edn`
 file.
 
-So our new `hello-cljs` directory, we'll create a `deps.edn` file with
+So in our new `hello-cljs` directory, we'll create a `deps.edn` file with
 the following contents:
 
 ```clojure
@@ -172,7 +172,7 @@ To see it in action launch a REPL with `figwheel.main` again, from the
 $ clojure -m figwheel.main
 ```
 
-> Its its better to use the `clojure` command when using
+> Its better to use the `clojure` command when using
 > rebel-readline because the `clj` command provides it's own terminal
 > line reader
 
@@ -356,7 +356,7 @@ doing what you expect them to do.
 By now, you may have noticed that you can create multi-line expressions
 at the REPL prompt in a fairly straight forward way.
 
-Try enterinng the following expression at the prompt and make sure you
+Try entering the following expression at the prompt and make sure you
 format it so that it spans multiple lines.
 
 ```clojure
@@ -382,7 +382,7 @@ with Clojure's CLI tools. You have also, learned how to include
 [Rebel Readline][rebel] and how to use it to introspect your
 environment.
 
-This is more than enough to justify a break, may a suggest a nice walk
+This is more than enough to justify a break, may I suggest a nice walk
 or perhaps a chat with a co-worker nearby?
 
 ## Working at the REPL
@@ -433,15 +433,15 @@ hello-cljs
         └── cruel_world.cljs
 ```
 
-Take note that in ClojureScript file we are declaring a namespace
+Take note that in the ClojureScript file we are declaring a namespace
 `hello.cruel-world` and that the path to our file mirrors this
 namespace and it is rooted in the `src` directory, which is on the
 classpath. This is what will allow the ClojureScript compiler to find
 and compile our code.
 
-> **TIP**: an extremely common mistake is to forget to use replace
-> hyphens `-` with underscores `_` when creating a namespace file path
-> for a source file.
+> **TIP**: an extremely common mistake is to forget to replace hypens
+> `-` with underscores `_` when creating a namespace file path for a
+> source file.
 
 Now that we have created the file with the `hello.cruel-world`
 namespace let's require it into our running REPL.
@@ -541,7 +541,7 @@ hello.cruel-world=> (js/document.getElementById "app")
 #object[HTMLDivElement [object HTMLDivElement]]
 ```
 
-There is an HTML element with and `id` of `"app"` available on the
+There is an HTML element with an `id` of `"app"` available on the
 REPL host page. This element contains all of the markup and style for
 the helper application. Let's override the helper app content, with
 the string returned by our `what-kind?` function.
@@ -809,7 +809,7 @@ ClojureScript compiler options, figwheel options, and a stable name
 for the configuration.
 
 To help explain what a build file is and how it works, we'll start
-with and example.
+with an example.
 
 First let's reset things. Make sure you quit the REPL and then
 delete the `target/public` directory to get rid of our compiled

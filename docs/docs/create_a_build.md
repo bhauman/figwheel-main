@@ -49,7 +49,7 @@ The contents of the `deps.edn` file should be:
  :paths ["src" "resources" "target"]}
 ```
 
-If your using Leiningen your `project.clj` should be:
+If you're using Leiningen your `project.clj` should be:
 
 ```clojure
 (defproject example-project "0.1.0-SNAPSHOT"
@@ -160,23 +160,23 @@ that prints this is in our `hello_world.core` namespace).
 <img width="1032" class="white-img-border" alt="devtools open" src="https://user-images.githubusercontent.com/2624/43166008-6047dfa0-8f63-11e8-9f63-6997228e003f.png">
 
 You should now be able to return to the terminal where you launched
-Figwheel from to see a working REPL that is ready for your to evaluate
+Figwheel from to see a working REPL that is ready for you to evaluate
 some ClojureScript Code.
 
 <img width="773" alt="screen shot 2018-07-24 at 4 44 25 pm" src="https://user-images.githubusercontent.com/2624/43165069-05d5b4fe-8f61-11e8-9943-4fb546150415.png">
 
 You can now try out some ClojureScript at the REPL.
 
-As an example try enter `(js/alert "Crocodile Rock!")` at the
+As an example try entering `(js/alert "Crocodile Rock!")` at the
 `cljs.user=>` prompt.
 
 You can also return to the `src/hello_world/core.cljs` file and edit
-the `"Hello there world!"` string so that reads `"Live edit!!!!!"` and
-then save the file.
+the `"Hello there world!"` string so that it reads `"Live edit!!!!!"`
+and then save the file.
 
-You should notice that the Figwheel reports loading the new file in
-the console and you should we `Live edit!!!!!` printed in the console
-as well.
+You should notice that Figwheel reports loading the new file in the
+console and you should see `Live edit!!!!!` printed in the console as
+well.
 
 ## Congrats!
 
@@ -207,9 +207,9 @@ this:
 ```
 
 The `^` character is not a typo it's a
-[reader macro][reader-macro-meta] that in this case is adding meta
-data to the map that follows it. Figwheel examines the metadata of
-your build config for its own configuration options.
+[reader macro][reader-macro-meta] that in this case is adding metadata
+to the map that follows it. Figwheel examines the metadata of your
+build config for its own configuration options.
 
 You can also specify a map of Figwheel configuration in a
 `figwheel-main.edn` file in your project root directory. See the

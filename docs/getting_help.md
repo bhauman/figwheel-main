@@ -50,7 +50,7 @@ for Clojure), setting up a Clojure webserver all at the same time.
 
 This layering strategy may be an efficient way to learn when one is
 learning an imperative programming language like Python, Ruby or
-JavaScript. It becomes losing strategy when you start to work with
+JavaScript. It becomes a losing strategy when you start to work with
 ClojureScript. The biggest reason for this is that the language itself
 is significantly different than these imperative languages. There are
 enough differences that you will find it difficult to associate these
