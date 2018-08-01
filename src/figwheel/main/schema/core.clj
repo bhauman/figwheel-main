@@ -172,7 +172,7 @@ An example `dev.cljs.edn` build file that supplies figwheel config options.
 {:main example.core}
 ```
 
-Any options provided in the metadata of build file will override the
+Any options provided in the metadata of the build file will override the
 options in the `figwheel-main.edn` file.
 
 # Commonly used options
