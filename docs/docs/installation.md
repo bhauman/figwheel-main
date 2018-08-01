@@ -120,8 +120,13 @@ Type `Control-C` to quit out of the Clojure REPL.
 ## Adding Figwheel as a dependency
 
 You can add `com.bhauman/figwheel-main` by itself as a dependency to
-get started. However, you are better off adding the latest version of
-ClojureScript along with Rebel Readline.
+get started. However, you are better off adding Clojure and the
+latest version of ClojureScript along with Rebel Readline.
+
+Adding `org.clojure/clojure` as a dependency will help you ensure that
+you are using the version of Clojure that you want to be
+using. Figwheel requires Clojure 1.9 at least because it uses spec to
+validate configuration. CLI Tools adds Clojure 1.9 by default.
 
 Adding `org.clojure/clojurescript` as a dependency will allow to
 ensure that you are getting the latest version of ClojureScript not

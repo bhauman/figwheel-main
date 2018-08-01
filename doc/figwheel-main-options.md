@@ -29,7 +29,7 @@ An example `dev.cljs.edn` build file that supplies figwheel config options.
 {:main example.core}
 ```
 
-Any options provided in the metadata of build file will override the
+Any options provided in the metadata of the build file will override the
 options in the `figwheel-main.edn` file.
 
 # Commonly used options
@@ -41,8 +41,8 @@ options in the `figwheel-main.edn` file.
 A list of ClojureScript source directories to be watched and compiled on change.
 
 The directories in `:watch-dirs` are passed to the compiler as source
-directories. For this reason, any entry in watch directories must be
-on the classpath and must point to the root directory of a
+directories. For this reason, any entry in the watch directories must
+be on the classpath and must point to the root directory of a
 ClojureScript namespace source tree.
 
 I.E. If your `example.core` namespace is located at
@@ -63,7 +63,7 @@ A list of CSS source directories to be watched and reloaded into the browser.
 A symbol or string indicating a ring-handler to embed in the
 figwheel.repl server. This aids in quickly getting a dev server up and
 running. If the figwheel server doesn't meet your needs you can simply
-start your own server, the figwheel.client will still be able to
+start your own server. The figwheel.client will still be able to
 connect to its websocket endpoint.
 Default: none
 
@@ -79,14 +79,14 @@ https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/ada
 
 This will normally be used to set the `:port` and `:host` of the server.
 
-Most uses of these options are considered advanced if you find
+Most uses of these options are considered advanced. If you find
 yourself using many of these options you problably need to run your
 own server outside of figwheel.main.
 
 ## :rebel-readline
 
 By default Figwheel engauges a Rebel readline editor when it starts
-the ClojureScript Repl in the terminal that it is launched in.
+the ClojureScript REPL in the terminal that it is launched in.
 
 This will only work if you have `com.bhauman/rebel-readline-cljs` in
 your dependencies.
@@ -120,17 +120,17 @@ ie. in  ~/bin/myfile-opener
     #! /bin/sh
     emacsclient -n +$2:$3 $1
 
-The add this script in your config:
+Then add this script in your config:
 
     :open-file-command "myfile-opener"
 
-But thats not the best example because Figwheel handles `emacsclient`
-as a special case so as long as `emacsclient` is on the shell path you can
+But that's not the best example because Figwheel handles `emacsclient`
+as a special case. So as long as `emacsclient` is on the shell path you can
 simply do:
 
     :open-file-command "emacsclient"
 
-and Figwheel will call emacsclient with the correct args.
+and Figwheel will call `emacsclient` with the correct args.
 
 ## :figwheel-core
 
@@ -150,8 +150,8 @@ Default: true
 
 ## :reload-dependents
 
-Whether or not figwheel.core should reload reload the namespaces
-that `depend` on the changed namespaces in addition to the changed
+Whether or not figwheel.core should reload the namespaces that
+`depend` on the changed namespaces in addition to the changed
 namespaces themselves. Only has meaning when :figwheel is true.
 Default:true
 
@@ -159,7 +159,7 @@ Default:true
 
 ## :connect-url
 
-The url that the figwheel repl client will use to connect back to
+The url that the figwheel REPL client will use to connect back to
 the server.
 
 This url is actually a template that will be filled in.  For example
@@ -188,7 +188,7 @@ connection will be established. If the url starts with an http scheme
 ## :open-url
 
 Either a boolean value `false` or a string that indicates the url
-that the figwheel repl will open in the browser after the source code
+that the figwheel REPL will open in the browser after the source code
 has been compiled. A `false` value will disable this behavior.
 
 The string value is actually a template that can provide optional
@@ -324,8 +324,8 @@ Defaults to "node"
 ## :cljs-devtools
 
 A boolean that indicates whether to include binaryage/devtools into
-the your clojurescript build. Defaults to true when the target is a
-browser and the :optimizations level is :none, otherwise it is false.
+the clojurescript build. Defaults to true when the target is a browser
+and the :optimizations level is :none, otherwise it is false.
 
     :cljs-devtools false
 
@@ -343,7 +343,7 @@ disable this option.
 ## :client-print-to
 
 The `figwheel.repl` client can direct printed (via pr) output to the
-repl and or the console. `:client-print-to` is a list of where you
+REPL and/or the console. `:client-print-to` is a list of where you
 want print output directed. The output choices are `:console` and `:repl`
 Default: [:console :repl]
 
@@ -351,7 +351,7 @@ Default: [:console :repl]
 
 ## :ring-stack
 
-The fighweel server has a notion of a `:ring-stack`. The
+The figwheel server has a notion of a `:ring-stack`. The
 `:ring-stack` is a composition of basic ring-middleware (think
 sessions) to wrap around a supplied `:ring-handler`.
 
@@ -360,7 +360,7 @@ The default `:ring-stack` is a slightly modified
 
 ## :ring-stack-options
 
-The fighweel.repl server has a notion of a `:ring-stack`. The
+The figwheel.repl server has a notion of a `:ring-stack`. The
 `:ring-stack` is a composition of basic ring-middleware to wrap around
 a supplied `:ring-handler`.
 
@@ -393,7 +393,7 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
 You can override these options by suppling your own to `:ring-stack-options`
 
 If these options are changed significantly don't be suprised if the
-figwheel stops behaving correctly :)
+figwheel server stops behaving correctly :)
 
 ## :wait-time-ms
 
@@ -410,7 +410,7 @@ Default: 50
 The `:mode` indicates the behavior that occurs after a compile.
 Options: `:repl` `:serve` or `:build-once`
 
-* `:repl` indicates that repl sill be started
+* `:repl` indicates that a REPL will be started
 * `:serve` indicates that a server will be started
 * `:build-once` indicates that a compile will not be follwed by any action
 
@@ -439,11 +439,11 @@ behavior. Default: false
 
 ## :repl-eval-timeout
 
-The time (in milliseconds) it takes for the repl to timeout.
+The time (in milliseconds) it takes for the REPL to timeout.
 Evaluating any given expression in cljs can take some time.
-The repl is configured to throw a timeout exception as to not hang forever.
+The REPL is configured to throw a timeout exception as to not hang forever.
 
-This config option will determine how long the repl waits for the result of an eval
+This config option will determine how long the REPL waits for the result of an eval
 before throwing.
 
 Default: 8000

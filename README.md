@@ -1,6 +1,6 @@
 # Figwheel Main
 
-[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main)
+[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main) [![Documentation](https://img.shields.io/badge/documentation-incomplete-yellow.svg)](http://figwheel.org/docs)
 
 Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
@@ -34,7 +34,7 @@ making a contribution.
 #### Live code reloading
 
 If you write
-[**reloadable code**](http://rigsomelight.com/figwheel-main/reloadable_code)
+[**reloadable code**](http://figwheel.org/reloadable_code)
 figwheel can facilitate automated live interactive programming.
 
 #### Supports Node.js
@@ -169,7 +169,11 @@ There is an [extensive getting started tutorial][tutorial] I highly
 reccomend reading it if you are new to Clojure, ClojureScript and or
 the new Clojure CLI tools.
 
-<a href="http://rigsomelight.com/figwheel-main/tutorial"><img width="216" alt="tutorial-button" src="https://user-images.githubusercontent.com/2624/42537600-5c61f57a-8463-11e8-9d87-604b1b61247e.png"></a>
+<a href="http://figwheel.org/tutorial"><img width="216" alt="tutorial-button" src="https://user-images.githubusercontent.com/2624/42537600-5c61f57a-8463-11e8-9d87-604b1b61247e.png"></a>
+
+## Documentation
+
+The [documentation][docs] a currently a good resource but is still a work in progress.
 
 ## Getting Help
 
@@ -651,8 +655,8 @@ Copyright © 2018 Bruce Hauman
 Distributed under the Eclipse Public License either version 1.0 or any
 later version.
 
-
-[tutorial]: http://rigsomelight.com/figwheel-main/tutorial
+[tutorial]: http://figwheel.org/tutorial
+[docs]: http://figwheel.org/docs
 [figwheel-main-template]: http://rigsomelight.com/figwheel-main-template
 [clojure-west-figwheel-video]: https://www.youtube.com/watch?v=j-kj2qwJa_E
 [figwheel-demo-video]: https://www.youtube.com/watch?v=KZjFVdU8VLI 
