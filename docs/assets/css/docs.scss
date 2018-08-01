@@ -13,6 +13,7 @@ body {
 
 header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     min-height: 4rem;
     background-color: #563d7c;
@@ -42,6 +43,20 @@ header > * {
     padding-left: 0.5rem;
     padding-right: 0.5rem;    
 
+}
+
+.right-links {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row-reverse;
+}
+
+.right-links > a {
+    color: #cbbde2;
+}
+
+.right-links > a:hover {
+    color: white;
 }
 
 .logo {
