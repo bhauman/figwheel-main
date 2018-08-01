@@ -71,7 +71,7 @@ variable in your shell environment this should look familiar.
 The classpath is a list of paths that will be used to search for
 various artifacts. For instance Clojure uses the classpath to find and
 load Clojure namespaces. ClojureScript does the same to find and
-compile ClojureScript source files. 
+compile ClojureScript source files.
 
 Another thing to notice about the classpaths above is that the
 classpath starts with several **local** directories and then continues
@@ -182,7 +182,7 @@ to bundle. All of the following `project.clj` configuration keys add
 paths to the classpath.
 
 * `:source-paths` - is for paths that hold source files
-* `:resource-paths` - holds paths to assets that you want 
+* `:resource-paths` - holds paths to assets that you want
 * `:target-paths` - for paths that hold output files that can be safely deleted
 
 #### Inspecting the new classpath
@@ -329,7 +329,7 @@ the classpath so that the webserver can serve them.
 
 An earlier convention, and one that you can still use, was to place
 the output files in the `resources/public` directory alongside all of
-your other web assets. 
+your other web assets.
 
 While that works, `figwheel.main` by default places output files in
 the `target/public` directory. Using the `target` directory for output
@@ -424,7 +424,7 @@ Thus, our general project layout will look like this:
 │   │       # other source files
 └── target
     └── public
-        # compiled ClojureScript files 
+        # compiled ClojureScript files
 ```
 
 
@@ -441,6 +441,6 @@ Thus, our general project layout will look like this:
 
 [lein]: https://leiningen.org/
 [lein-profiles]: https://github.com/technomancy/leiningen/blob/stable/doc/PROFILES.md
-[cli-tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code 
+[cli-tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code
 [classpath]: https://en.wikipedia.org/wiki/Classpath_(Java)
 [robots-info]: http://www.robotstxt.org/robotstxt.html
