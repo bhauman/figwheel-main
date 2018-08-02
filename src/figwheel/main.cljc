@@ -1227,7 +1227,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
   (when-let [v (resolve sym)]
     (thread-bound? v)))
 
-(defn in-nrepl? [] (bound-var? 'clojure.tools.nrepl.middleware.interruptible-eval/*msg*))
+(defn in-nrepl? []
+  (or
+   (bound-var? 'nrepl.middleware.interruptible-eval/*msg*)
+   (bound-var? 'clojure.tools.nrepl.middleware.interruptible-eval/*msg*)))
 
 (defn nrepl-repl [repl-env repl-options]
   (if-let [piggie-repl (or (and (bound-var? 'cider.piggieback/*cljs-repl-env*)
