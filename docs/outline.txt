@@ -2,21 +2,17 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
-* getting help
-* project layout and the classpath
-* creating a build
+* advanced compile
+* ring handler
+* seperate server
+
+* setting up emacs
+* setting up vscode
+* setting up vi fireplace
+
 * usage
-
-* quickish start
-
-
 * How to use HTTPS
 * How to override the jetty version (to use with Datomic Cloud)
-
-
-
-
-
 
 * Command line options detatiled overview
 * Modules and Code Splitting 
