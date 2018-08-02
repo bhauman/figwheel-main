@@ -120,7 +120,8 @@
 
   (with-edn-files {:devver.cljs.edn :delete
                    :helper.cljs.edn :delete
-                   :dev.cljs.edn    :delete}
+                   :dev.cljs.edn    :delete
+                   :docs.cljs.edn   :delete}
     (incl (validate-cli-extra ["-bb" "decent" ])
           "Build file decent.cljs.edn not found"
           "there are no build files in the current directory")))
