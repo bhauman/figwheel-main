@@ -181,7 +181,7 @@ page.
            (= "/"  (:uri request)))
     {:status 200
      :headers {"Content-Type" "text/html"}
-     :body home}}
+     :body home}
     {:status 404
      :headers {"Content-Type" "text/plain"}
      :body "Not Found"}))
