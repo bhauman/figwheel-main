@@ -177,7 +177,7 @@ page.
 </html>")
 
 (defn handler [request]
-  (if (and (= :get (:method request))
+  (if (and (= :get (:request-method request))
            (= "/"  (:uri request)))
     {:status 200
      :headers {"Content-Type" "text/html"}
