@@ -84,12 +84,13 @@
 
 #?(:clj
   (do
-
     (defn main-wrapper [{:keys [body output-to header] :as options}]
       (format
          "<!DOCTYPE html>
 <html>
   <head>
+   <meta charset=\"UTF-8\">
+   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   </head>
   <body>
     <div id=\"app\">
