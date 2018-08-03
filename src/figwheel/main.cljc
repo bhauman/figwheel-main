@@ -915,10 +915,12 @@ classpath. Classpath-relative paths have prefix of @ or @/")
   (cond-> cfg
     ;; check for a main??
     (figwheel-mode? cfg)
-    (update-in [:options :preloads]
-               (fn [p]
-                 (vec (distinct
-                       (concat p '[figwheel.core figwheel.main])))))
+    (->
+     (update ::initializers (fnil conj []) #(figwheel.core/start*))
+     (update-in [:options :preloads]
+                (fn [p]
+                  (vec (distinct
+                        (concat p '[figwheel.core figwheel.main]))))))
     (false? (:heads-up-display config))
     (update-in [:options :closure-defines] assoc 'figwheel.core/heads-up-display false)
     (true? (:load-warninged-code config))
