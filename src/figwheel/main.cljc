@@ -514,10 +514,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
         (assoc-in [:options :output-dir] output-dir)
         (assoc-in [:options :output-to]  output-to)
         (assoc-in [:options :asset-path]
-                  (str "cljs-out"
+                  (str "/cljs-out"
                        (when-let [id (-> cfg ::build :id)]
-                         (str (System/getProperty "file.separator")
-                              id)))))))
+                         (str "/" id)))))))
 
 (defn should-add-temp-dir? [cfg]
   (let [target-on-classpath?
@@ -951,7 +950,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                           last
                           rest
                           not-empty)]
-            (string/join "/" asset-path)))))))
+            (str "/" (string/join "/" asset-path))))))))
 
 ;; targets options
 (defn- config-default-asset-path [{:keys [options] :as cfg}]
