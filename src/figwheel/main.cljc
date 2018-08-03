@@ -1397,7 +1397,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                      (:options cfg)
                      cenv
                      (select-keys config [:reload-clj-files :wait-time-ms]))
-        ;; TODO need to move to this pattern instead of repl evals
+        ;; initializers are not run for a background build
         (when (first (filter #{'figwheel.core} (:preloads (:options cfg))))
           (binding [cljs.repl/*repl-env* (figwheel.repl/repl-env*
                                           (select-keys repl-env-options
@@ -1522,12 +1522,18 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
        sah
        #(helper/missing-index % (select-keys (:options cfg) [:output-to]))))))
 
+(defn validate-basic-assumptions! [{:keys [options ::config] :as cfg}]
+  (when (and (= (:mode config) :repl)
+             (not= :none (:optimizations options :none)))
+    (throw (ex-info "Can only start a REPL and inject hot-reloading when the :optimizations level is set to :none" {::error true}))))
+
 (defn default-compile [repl-env-fn cfg]
   (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
         (add-default-system-app-handler (update-config cfg))
         {:keys [mode pprint-config]} config
         repl-env (apply repl-env-fn (mapcat identity repl-env-options))
         cenv (cljs.env/default-compiler-env options)]
+    (validate-basic-assumptions! b-cfg)
     (validate-fix-target-classpath! b-cfg)
     (binding [*base-config* cfg
               *config* b-cfg]
@@ -1553,7 +1559,9 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                                   config))
                   (doseq [init-fn (::initializers b-cfg)] (init-fn))
                   (log/trace "Figwheel.core config:" (pr-str figwheel.core/*config*))
-                  (figwheel.core/start*)
+                  ;; TODO shouldn't we only start figwheel.core when we are in figwheel-mode?
+                  ;; solution move this to an initializer
+                  #_(figwheel.core/start*)
                   (cond
                     (= mode :repl)
                     ;; this forwards command line args
