@@ -242,7 +242,8 @@ resource paths should start with @")
                                        :repl-serve (s/? ::repl-or-serve))
                     :compile    (s/cat :flag #{"-c" "--compile"}
                                        :repl-serve (s/? ::repl-or-serve))
-                    :build-once ::build-once
+                    :build-once (s/cat :opt ::build-once
+                                       :repl-serve (s/? ::serve))
                     :help   ::help
                     :repl   ::repl
                     :serve  ::serve

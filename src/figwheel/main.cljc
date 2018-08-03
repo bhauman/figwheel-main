@@ -468,7 +468,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
 (defn build-once-opt [cfg bn]
   (let [cfg (build-opt cfg bn)]
-    (assoc-in cfg [::config :mode] :build-once)))
+    (assoc-in cfg [::config ::build-once] true)))
 
 (defn background-build-opt [cfg bn]
   (let [{:keys [options ::build]} (build-opt {} bn)]
@@ -653,7 +653,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
           {:fn build-once-main-opt
            :arg "string"
            :doc (str "Compile for the build name one time. "
-                     "Looks for a build EDN file just like the --build command.")}
+                     "Looks for a build EDN file just like the --build command."
+                     "If --server follows, will start a web server according to "
+                     "current configuration after the compile "
+                     "completes.")}
           ["-r" "--repl"]
           {:fn repl-main-opt
            :doc "Run a REPL"}
@@ -871,6 +874,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
               (distinct
                (let [ns-watch-dir (and
                                    (#{:repl :serve} (:mode config))
+                                   (not (::build-once config))
                                    (not (:watch options))
                                    (empty? %)
                                    (:main options)
@@ -897,11 +901,13 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 (defn figwheel-mode? [{:keys [::config options]}]
   (and (:figwheel-core config true)
        (and (#{:repl :serve} (:mode config))
+            (not (::build-once config))
             (not-empty (:watch-dirs config)))
        (= :none (:optimizations options :none))))
 
 (defn repl-connection? [{:keys [::config options] :as cfg}]
-  (or (and (#{:repl :main} (:mode config))
+  (or (and (#{:repl :serve} (:mode config))
+           (not (::build-once config))
            (= :none (:optimizations options :none)))
       (figwheel-mode? cfg)))
 
@@ -1199,9 +1205,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 ;; Main action
 ;; ----------------------------------------------------------------------------
 
-(defn build [{:keys [watch-dirs mode ::build] :as config} options cenv]
+(defn build [{:keys [watch-dirs mode ::build ::build-once] :as config}
+             options cenv]
   (let [id (:id (::build *config*) "dev")]
-    (if-let [paths (and (not= mode :build-once)
+    (if-let [paths (and (not build-once)
                         (= :none (:optimizations options :none))
                         (not-empty watch-dirs))]
       ;; only build all paths when opt :none and doing a watching build
@@ -1532,7 +1539,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defn default-compile [repl-env-fn cfg]
   (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
         (add-default-system-app-handler (update-config cfg))
-        {:keys [mode pprint-config]} config
+        {:keys [mode pprint-config ::build-once]} config
         repl-env (apply repl-env-fn (mapcat identity repl-env-options))
         cenv (cljs.env/default-compiler-env options)]
     (validate-basic-assumptions! b-cfg)
@@ -1555,28 +1562,27 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                   (build config options cenv)
                   (catch Throwable t
                     (log/error t)))
-                (when-not (= mode :build-once)
+                (log/trace "Figwheel.core config:" (pr-str figwheel.core/*config*))
+                (when-not build-once
                   (start-background-builds (assoc cfg
                                                   ::start-figwheel-options
                                                   config))
-                  (doseq [init-fn (::initializers b-cfg)] (init-fn))
-                  (log/trace "Figwheel.core config:" (pr-str figwheel.core/*config*))
-                  ;; TODO shouldn't we only start figwheel.core when we are in figwheel-mode?
-                  ;; solution move this to an initializer
-                  #_(figwheel.core/start*)
-                  (cond
-                    (= mode :repl)
-                    ;; this forwards command line args
-                    (repl repl-env repl-options)
-                    (= mode :serve)
-                    ;; we need to get the server host:port args
-                    (serve {:repl-env repl-env
-                            :repl-options repl-options
+                  (doseq [init-fn (::initializers b-cfg)] (init-fn)))
+                (cond
+                  (and (= mode :repl) (not build-once))
+                  ;; this forwards command line args
+                  (repl repl-env repl-options)
+                  (= mode :serve)
+                  ;; we need to get the server host:port args
+                  (serve {:repl-env repl-env
+                          :repl-options repl-options
                           :join? (get b-cfg ::join-server? true)})
-                    ;; the final case is compiling without a repl or a server
-                    ;; if there is a watcher running join it
-                    (and (fww/running?) (get b-cfg ::join-server? true))
-                    (fww/join))))
+                  ;; the final case is compiling without a repl or a server
+                  ;; if there is a watcher running join it
+                  (and (not build-once)
+                       (fww/running?)
+                       (get b-cfg ::join-server? true))
+                  (fww/join)))
               (finally
                 (when (get b-cfg ::join-server? true)
                   (fww/stop!))))))))))
@@ -1607,7 +1613,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                   ::join-server? (if (true? join-server?) true false)}
            figwheel-options (assoc ::start-figwheel-options figwheel-options)
            id    (assoc ::build (dissoc build :options))
-           (not (get figwheel-options :mode))
+           (and (not (get figwheel-options :mode))
+                (= :none (get-in build [:options :optimizations] :none)))
            (assoc-in [::config :mode] :repl)
            (not-empty background-builds)
            (assoc ::background-builds (mapv
