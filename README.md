@@ -79,7 +79,7 @@ something.
 When you launch Figwheel it not only starts a live building/reloading
 process but it also optionally launches a CLJS REPL into your running
 application. This REPL shares compilation information with the
-ClojureScript compiler, allowing the REPL is to be aware of the code
+ClojureScript compiler, allowing the REPL to be aware of the code
 changes as well. The REPL also has some special built-in control functions
 that allow you to control the auto-building process and execute
 various build tasks without having to stop and rerun `figwheel.main`.
