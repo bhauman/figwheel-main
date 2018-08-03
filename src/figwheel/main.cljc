@@ -1199,10 +1199,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
 (defn build [{:keys [watch-dirs mode ::build] :as config} options cenv]
   (let [id (:id (::build *config*) "dev")]
-    ;; TODO should probably try obtain a watch path from :main here
-    ;; if watch-dirs is empty
     (if-let [paths (and (not= mode :build-once)
+                        (= :none (:optimizations options :none))
                         (not-empty watch-dirs))]
+      ;; only build all paths when opt :none and doing a watching build
       (do
         (build-cljs id (apply bapi/inputs paths) options cenv)
         (watch-build id paths options cenv (select-keys config [:reload-clj-files
