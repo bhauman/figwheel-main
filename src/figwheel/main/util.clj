@@ -33,14 +33,42 @@
 
 (defn require-resolve-var [handler]
   (when handler
+    (let [h (symbol handler)]
+      (or (try (resolve h) (catch Throwable t nil))
+          (when-let [ns (namespace h)]
+            (when (require? (symbol ns))
+              (when-let [handler-var (resolve h)]
+                handler-var)))))))
+
+(defn require-resolve-handler [handler]
+  (when handler
     (if (fn? handler)
       handler
-      (let [h (symbol handler)]
-        (or (try (resolve h) (catch Throwable t nil))
-            (when-let [ns (namespace h)]
-              (when (require? (symbol ns))
-                (when-let [handler-var (resolve h)]
-                  handler-var))))))))
+      (require-resolve-var handler))))
+
+(let [symbol->parts (comp (partial map symbol) (juxt namespace name) symbol)
+      require-it    #(do (require (first %)) %)
+      resolve-it    #(resolve (apply symbol (map str %)))
+      fn->error     {symbol->parts :bad-namespaced-symbol
+                     require-it    :unable-to-load-handler-namespace
+                     resolve-it    :unable-to-resolve-handler-fn}]
+  (defn require-resolve-var-or-error [handler]
+    (when handler
+      (reduce
+       (fn [v f]
+         (try (f v)
+              (catch Throwable t
+                (reduced {:stage (fn->error f)
+                          :value v
+                          :exception t}))))
+       handler
+       [symbol->parts require-it resolve-it]))))
+
+(defn require-resolve-handler-or-error [handler]
+  (when handler
+    (if (fn? handler)
+      handler
+      (require-resolve-var-or-error handler))))
 
 (defn rebel-readline? []
   (require-resolve-var 'rebel-readline.core/read-line))

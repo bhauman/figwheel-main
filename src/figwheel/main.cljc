@@ -719,11 +719,35 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                   :else b))
               a' b'))
 
-(defn process-main-config [{:keys [ring-handler] :as main-config}]
-  (let [handler (and ring-handler (fw-util/require-resolve-var ring-handler))]
+(defn resolve-ring-handler [ring-handler]
+  (let [handler (fw-util/require-resolve-handler-or-error ring-handler)]
     (when (and ring-handler (not handler))
-      (throw (ex-info "Unable to find :ring-handler" {::error true
-                                                      :ring-handler ring-handler})))
+      (throw (ex-info (str "Was able to load :ring-handler but unable to resolve the specific var: "
+                       (pr-str ring-handler))
+                      {::error true
+                       :ring-handler ring-handler})))
+    (if (map? handler)
+      (condp = (:stage handler)
+        :bad-namespaced-symbol
+        (throw
+         (ex-info (str ":ring-handler has the wrong form it must be a namespaced symbol "
+                       (pr-str ring-handler))
+                  {::error true
+                   :ring-handler ring-handler} (:exception handler)))
+        :unable-to-resolve-handler-fn
+        (throw
+         (ex-info (str "Was able to load :ring-handler but unable to resolve the specific var: "
+                       (pr-str ring-handler))
+                  {::error true
+                   :ring-handler ring-handler}
+                  (:exception handler)))
+        :unable-to-load-handler-namespace
+        (do (log/syntax-exception (:exception handler))
+            (throw (ex-info "There was an exception while loading the :ring-handler" {::error true}))))
+      handler)))
+
+(defn process-main-config [{:keys [ring-handler] :as main-config}]
+  (let [handler (resolve-ring-handler ring-handler)]
     (cond-> main-config
       handler (assoc :ring-handler handler))))
 
