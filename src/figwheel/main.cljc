@@ -1038,7 +1038,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                    (vec (distinct
                          (concat p '[figwheel.repl.preload])))))
       conn?
-      (update-in [:options :repl-requires] into '[[figwheel.main :refer-macros [stop-builds start-builds build-once reset clean status]]
+      (update-in [:options :repl-requires] into '[[cljs.repl :refer-macros [source doc find-doc apropos dir pst]]
+                                                  [cljs.pprint :refer [pprint] :refer-macros [pp]]
+                                                  [figwheel.main :refer-macros [stop-builds start-builds build-once reset clean status]]
                                                   [figwheel.repl :refer-macros [conns focus]]])
       (and conn? (:client-print-to config))
       (update-in [:options :closure-defines] assoc
