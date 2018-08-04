@@ -28,3 +28,7 @@ _site
 .sass-cache
 Gemfile.lock
 docs/assets/compiled/js/out
+
+mod.cljs.edn
+
+devel/exproj/more.cljs
