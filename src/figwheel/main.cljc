@@ -322,7 +322,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
          (read-edn-file f)
          (cljs.cli/missing-file str))))))
 
-(defn merge-meta [m m] (with-meta (merge m m) (merge (meta m) (meta m))))
+(defn merge-meta [m m1] (with-meta (merge m m1) (merge (meta m) (meta m1))))
 
 (defn load-edn-opts [str]
   (reduce merge-meta {} (map read-edn-opts (cljs.util/split-paths str))))
@@ -447,7 +447,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
    "<p>This page is currently hosting your REPL and application evaluation environment. "
    "Validate the connection by typing <code>(js/alert&nbsp;\"Hello&nbsp;Figwheel!\")</code> in the REPL.</p>"))
 
-(defn build-opt [cfg bn]
+(defn get-build-with-error [bn]
   (when-not (.exists (io/file (str bn ".cljs.edn")))
     (if (or (string/starts-with? bn "-")
             (string/blank? bn))
@@ -459,10 +459,17 @@ classpath. Classpath-relative paths have prefix of @ or @/")
         (ex-info
           (str "Build " (str bn ".cljs.edn") " does not exist")
           {:cljs.main/error :invalid-arg}))))
-  (let [options (get-build bn)]
+  (get-build bn))
+
+(defn build-opt [cfg bn]
+  (let [bns (string/split bn #":")
+        id  (string/join "" bns)
+        options (->> bns
+                     (map get-build-with-error)
+                     (reduce merge-meta))]
     (-> cfg
         (update :options merge options)
-        (assoc  ::build (cond-> {:id bn}
+        (assoc  ::build (cond-> {:id id}
                           (meta options)
                           (assoc :config (meta options)))))))
 
@@ -638,22 +645,29 @@ classpath. Classpath-relative paths have prefix of @ or @/")
    :main {["-b" "--build"]
           {:fn build-main-opt
            :arg "string"
-           :doc (str "Run a compile. The supplied build name refers to a  "
-                     "compililation options edn file. IE. \"dev\" will indicate "
+           :doc (str "Run a compile process. The supplied build name or a list of build names "
+                     "(seperated by \":\") refer to "
+                     "EDN files of compile options "
+                     "IE. If you use \"dev\" as a build name it will indicate "
                      "that a \"dev.cljs.edn\" will be read for "
-                     "compilation options. The --build option will make an "
+                     "compile options. "
+                     "Multiple build names will merged left to right along with their metadata. "
+                     "The --build option will make an "
                      "extra attempt to "
                      "initialize a figwheel live reloading workflow. "
+                     "May be followed buy either --repl or --server. "
                      "If --repl follows, "
-                     "will launch a REPL after the compile completes. "
-                     "If --server follows, will start a web server according to "
+                     "will launch a REPL (along with a server) after the compile completes. "
+                     "If --server follows, will only start a web server according to "
                      "current configuration after the compile "
                      "completes.")}
           ["-bo" "--build-once"]
           {:fn build-once-main-opt
            :arg "string"
            :doc (str "Compile for the build name one time. "
-                     "Looks for a build EDN file just like the --build command."
+                     "Looks for build EDN files just like the --build command. "
+                     "This will not inject Figwheel or REPL functionality into your build. "
+                     "It will still inject devtools if you are using :optimizations :none. "
                      "If --server follows, will start a web server according to "
                      "current configuration after the compile "
                      "completes.")}

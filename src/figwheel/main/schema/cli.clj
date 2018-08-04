@@ -104,7 +104,9 @@ resource paths should start with @")
                               :opt-val #{"none" "whitespace" "simple" "advanced"}))
 
 (defn build-exists? [b]
-  (file-exists? (str b ".cljs.edn")))
+  (every?
+   file-exists?
+   (map #(str % ".cljs.edn") (string/split b #":"))))
 
 (exp/def ::not-end-with-cljs-edn #(not (string/ends-with? % ".cljs.edn"))
   "should not end with .cljs.edn as this is already implied\n(this should be maria if you have a maria.cljs.edn file)")
@@ -385,7 +387,6 @@ resource paths should start with @")
 
 #_(similar-flags "--cd")
 
-
 (defmulti update-problem (fn [expd p] (:expound.spec.problem/type p)))
 
 (defmethod update-problem :default [expd p] p)
@@ -404,14 +405,13 @@ resource paths should start with @")
     (assoc p ::unknown-script unknown-script)))
 
 (defmethod update-problem ::missing-build-file [{:keys [::s/value ::s/problems] :as expd} p]
-  (let [build-id (:val p)
-        build-file (str build-id)
-        all-build-files (map second (keep #(when (.isFile %)
-                                             (re-matches #"(.+)\.cljs\.edn" (.getName %)))
-                                          (file-seq (io/file "."))))]
-    (cond-> (assoc p ::missing-file build-file)
-      (not-empty all-build-files) (assoc :pred (set all-build-files)))))
-
+  (let [all-build-files (set (map second (keep #(when (.isFile %)
+                                                  (re-matches #"(.+)\.cljs\.edn" (.getName %)))
+                                               (file-seq (io/file ".")))))
+        build-ids           (set (string/split (str (:val p)) #":"))
+        not-found-build-ids (set/difference build-ids all-build-files)]
+    (cond-> (assoc p ::missing-files not-found-build-ids)
+      (not-empty all-build-files) (assoc :pred all-build-files))))
 
 (defn update-problems [expd]
   (update expd ::s/problems #(mapv (partial update-problem expd) %)))
@@ -645,19 +645,22 @@ resource paths should start with @")
 
 (defmethod exp/problem-group-str ::missing-build-file [_type spec-name val path problems opts]
   (spell-exp/exp-formated
-   (str "Build file " (::missing-file (first problems)) ".cljs.edn not found" )
+   (str "Build file " (first (::missing-files (first problems)))
+        ".cljs.edn not found" )
    _type spec-name val path problems opts))
 
 (defmethod exp/expected-str ::missing-build-file
   [_type spec-name val path problems opts]
-  (let [{:keys [val pred] :as prob} (first problems)]
+  (let [{:keys [val pred] :as prob} (first problems)
+        ids (string/split val #":")
+        prefix (when (> (count ids) 1) "all build-ids ")]
     (if (and (set? pred) (not-empty pred))
       ;; there are build files
-      (str "should refer to an existing build" (spell-exp/format-correction-list pred))
-      (str "should refer to a build file but there are no build files in the current directory"))))
+      (str prefix "should refer to an existing build," (spell-exp/format-correction-list pred))
+      (str prefix "should refer to a build file but there are no build files in the current directory"))))
 
 
-#_ (validate-cli ["-e" "(list)" "-c" "-s" "asdf:asdf" "-d"])
+#_ (print (validate-cli ["-b" "dev:devr" "-r" ]))
 
 #_(exp/expound-str ::cli-options ["-i" "asdf" "-i" "asdf" "-e" "15"])
 
