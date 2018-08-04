@@ -2,6 +2,9 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
+* hot reloading (metadata hooks)
+* code splitting
+
 * advanced compile
 * ring handler
 * seperate server

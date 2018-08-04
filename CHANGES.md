@@ -1,3 +1,19 @@
+# 0.1.5 Windows Fix and merge multiple build-ids: `--build dev:other`
+
+* fixed a major problem on Windows that created a bad `:asset-path` which prevented the REPL from connecting
+* merge build args which allows you to supply path seperated build ids to `--build`
+* allow connect-urls to not have a process-id and still connect
+* change the default build name to `"unknown"` rather than common name `"dev"`
+* allow the `--serve` flag after the `--build-once` flag, for testing advanced compiles and such
+* throw an error when trying to start a REPL with a level other than `:optimizations :none`
+* when the compile level is `:whitespace`, `:simple` or `:advanced` only pass `:main` ns to compiler
+* made the default :asset-path a root path instead of relative
+* add cljs.repl macros (doc, source, and friends) to the REPL
+* now providing much more feedback when a `:ring-handler` doesn't load, prints out syntax errors etc.
+* added support for the new nREPL https://github.com/nrepl/nREPL
+* setting `:reload-clj-files false` should still reload cljc files on the CLJS side
+* support code splitting
+
 # 0.1.4 Move into own Repository
 
 This release was only to establish https://github.com/bhauman/figwheel-main as the new home of com.bhauman/figwheel-main
