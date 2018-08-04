@@ -62,10 +62,10 @@ all works.
 You can verify that your advanced compiled code is working two
 different ways.
 
-The first is to just compile it once and start the server like so:
+The first is to just build it once and start the server like so:
 
 ```shell
-$ clojure -m figwheel.main -O advanced -c hello-world.core -s
+$ clojure -m figwheel.main -O advanced -bo hello-world.core -s
 ```
 
 or alternatively you can watch and compile the advanced build so that
