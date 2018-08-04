@@ -273,8 +273,8 @@ Defaults to the empty vector [].
 (s/def ::modules (s/map-of
                     keyword?
                     (spell/keys
-                     :req-un [:cljs.options-schema.modules/output-to]
                      :opt-un [::entries
+                              :cljs.options-schema.modules/output-to
                               ::depends-on])))
 (def-spec-meta ::modules
   :doc

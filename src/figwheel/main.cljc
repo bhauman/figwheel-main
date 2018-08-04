@@ -946,12 +946,30 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (true? (:load-warninged-code config))
     (update-in [:options :closure-defines] assoc 'figwheel.core/load-warninged-code true)))
 
+(defn- modules-output-to [{:keys [options ::config ::build] :as cfg}]
+  (if (not-empty (:modules options))
+    (update-in
+     cfg [:options :modules]
+     #(->> %
+           (map (fn [[k v]]
+                  (if-not (:output-to v)
+                    [k (assoc v :output-to
+                              (string/replace
+                               (default-output-to cfg)
+                               "main.js" ;; brittle
+                               (str (name k) ".js")))]
+                    [k v])))
+           (into {})))
+    cfg))
+
 ;; targets options
 ;; TODO needs to consider case where one or the other is specified???
 (defn- config-default-dirs [{:keys [options ::config ::build] :as cfg}]
   (cond-> cfg
-    (nil? (:output-to options))
+    (and (nil? (:output-to options)) (not (:modules options)))
     (assoc-in [:options :output-to] (default-output-to cfg))
+    (:modules options)
+    modules-output-to
     (nil? (:output-dir options))
     (assoc-in [:options :output-dir] (default-output-dir cfg))))
 
@@ -1536,7 +1554,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                      (:options b-cfg) cljs.env/*compiler*)
           (cljs.cli/default-main repl-env-fn b-cfg))))))
 
-(defn add-default-system-app-handler [cfg]
+(defn add-default-system-app-handler [{:keys [options] :as cfg}]
   (update-in
    cfg
    [:repl-env-options
@@ -1546,7 +1564,12 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
    (fn [sah]
      (if sah
        sah
-       #(helper/missing-index % (select-keys (:options cfg) [:output-to]))))))
+       #(helper/missing-index
+         %
+         (if (and (:modules options)
+                  (:output-dir options))
+           {:output-to (str (io/file (:output-dir options) "cljs_base.js"))}
+           (select-keys (:options cfg) [:output-to])))))))
 
 (defn validate-basic-assumptions! [{:keys [options ::config] :as cfg}]
   (when (and (= (:mode config) :repl)
