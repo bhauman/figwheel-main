@@ -1,6 +1,6 @@
 # makefile for figwheel.main
 PROJECT_FILES=../figwheel-core/project.clj ../figwheel-repl/project.clj project.clj
-DOC_FILES=README.md helper-content/*.md
+DOC_FILES=README.md helper-content/*.md docs/*.md docs/docs/*.md
 DEPS_FILES=deps.edn
 
 # sed commands for changing version strings
