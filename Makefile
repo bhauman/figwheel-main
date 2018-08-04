@@ -29,10 +29,13 @@ helper-docs:
 opt-docs:
 	clojure -Adocs
 
+readme:
+	cp docs/README.md ./
+
 docs-app:
 	clojure -Abuild-docs-app
 
-docs: helper-docs opt-docs docs-app
+docs: helper-docs opt-docs readme docs-app
 
 
 helper:
