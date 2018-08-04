@@ -1207,7 +1207,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
 (defn build [{:keys [watch-dirs mode ::build ::build-once] :as config}
              options cenv]
-  (let [id (:id (::build *config*) "dev")]
+  (let [id (:id (::build *config*) "unknown")]
     (if-let [paths (and (not build-once)
                         (= :none (:optimizations options :none))
                         (not-empty watch-dirs))]
