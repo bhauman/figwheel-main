@@ -1063,8 +1063,11 @@ classpath. Classpath-relative paths have prefix of @ or @/")
       (assoc-in [:repl-env-options :connection-filter]
                 (let [kys (keys connect-id)]
                   (fn [{:keys [query]}]
-                    (= (select-keys query kys)
-                       connect-id)))))))
+                    (if (not (:fwprocess query))
+                      (= (:fwbuild query)
+                         (:fwbuild connect-id))
+                      (= (select-keys query kys)
+                         connect-id))))))))
 
 (defn config-cljs-devtools [{:keys [::config options] :as cfg}]
   (if (and
