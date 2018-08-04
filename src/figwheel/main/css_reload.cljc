@@ -49,8 +49,9 @@
   (.makeUnique (guri/parse url)))
 
 (defn current-links []
-  (.call (.. js/Array -prototype -slice)
-         (.getElementsByTagName js/document "link")))
+  (->> (.getElementsByTagName js/document "link")
+       (.call (.. js/Array -prototype -slice))
+       (remove (comp #{"preload"} #(.-rel %)))))
 
 (defn truncate-url [url]
   (-> (first (string/split url #"\?"))
