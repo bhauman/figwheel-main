@@ -2,10 +2,6 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
-* hot reloading (metadata hooks)
-* code splitting
-
-* advanced compile
 * ring handler
 * seperate server
 
@@ -18,7 +14,6 @@ At first this will be a rough list of subjects.
 * How to override the jetty version (to use with Datomic Cloud)
 
 * Command line options detatiled overview
-* Modules and Code Splitting 
 * REPL session management
 * Testing patterns
 
