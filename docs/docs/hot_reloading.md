@@ -25,6 +25,26 @@ biggest one is ensuring that you are aware of the
 Here we are going to cover the tools available to you to tweak hot
 reloading behavior of Figwheel.
 
+## Configuring which directories to watch
+
+Of all the [Figwheel config options][config-options] the one you will
+use the most often is the [`:watch-dirs` option][watch-dirs]. This
+option determines which directories Figwheel will watch for file
+changes. While Figwheel will guess which directory to watch based on
+your `:main` namespace. It is better to configure this explicitly.
+Please take a moment to read the
+[`:watch-dirs` documentation][watch-dirs]. It is very important to
+understand that watched directories need to also be in the list of
+paths on the [classpath][classpath].
+
+Note that you will normally configure this on a per build basis, for
+example in our `dev.cljs.edn`:
+
+```clojure
+^{:watch-dirs ["src"]}
+{:main hello-world.core}
+```
+
 ## Reload a file on every save
 
 Sometimes there is a file that you want to reload every time a file is
@@ -251,5 +271,8 @@ If you want to disable this you can set the
 [reload-clj-files]: ../config-options#reload-clj-files
 [reload-dependents]: ../config-options#reload-dependents
 [hot-reload-cljs]: ../config-options#hot-reload-cljs
+[watch-dirs]: ../config-options#watch-dirs
 [reloadable-code]: reloadable_code
 [jekyll]: https://jekyllrb.com
+[config-options]: ../config-options
+[classpath]: classpaths
