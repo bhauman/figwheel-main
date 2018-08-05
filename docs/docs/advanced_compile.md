@@ -65,7 +65,7 @@ different ways.
 The first is to just build it once and start the server like so:
 
 ```shell
-$ clojure -m figwheel.main -O advanced -bo hello-world.core -s
+$ clojure -m figwheel.main -O advanced -bo dev -s
 ```
 
 or alternatively you can watch and compile the advanced build so that
