@@ -18,10 +18,10 @@ to use Figwheel with a build where you are utilizing code splitting.
 ## Skip `:main` and `:output-to`
 
 The first thing to note is that both the `:main` and the top-level
-`:output-to` compile options have no meaning and are complete ignored
-when you configure a code splitting build with `:modules`.
+`:output-to` compile options have no meaning and are ignored when you
+configure a code splitting build with `:modules`.
 
-Previously we have said that to use the `--build` Figwheel flag
+Previously, we have said that to use the `--build` Figwheel flag
 requires declaring a `:main` at the very least. This doesn't apply
 when you configure a code splitting build.
 
@@ -29,8 +29,10 @@ when you configure a code splitting build.
 
 > This requires figwheel-main version `0.1.5` or greater. 
 
-This is going to be a brief version of the official [Code Splitting
-Guide][code-splitting-guide] with adjustments for working with Figwheel.
+This is going to be a brief version of the official
+[Code Splitting Guide][code-splitting-guide] with adjustments for
+working with Figwheel. You should read and understand that document
+first.
 
 ### Make a Simple Project
 
@@ -98,8 +100,6 @@ Edit this file to look like the following:
 > the Figwheel default dev page. I also added [`^:figwheel-load`
 > metatdata][figwheel-load] to the namespace so that I can easily load the file into
 > my environment by saving it.
-
-
 
 Create the `bar.core` namespace:
 
