@@ -34,7 +34,7 @@ making a contribution.
 #### Live code reloading
 
 If you write
-[**reloadable code**](http://figwheel.org/reloadable_code)
+[**reloadable code**](http://figwheel.org/docs/reloadable_code)
 figwheel can facilitate automated live interactive programming.
 
 #### Supports Node.js

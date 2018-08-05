@@ -1,3 +1,10 @@
+---
+title: Reloadable Code
+layout: docs
+category: docs
+order: 20
+---
+
 # Writing reloadable code
 
 Figwheel relies on having files that can be reloaded. 
