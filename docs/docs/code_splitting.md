@@ -197,7 +197,7 @@ It will show compile configuration to be this:
   [cljs.repl :refer-macros [source doc find-doc apropos dir pst]])}
 ```
 
-The main difference here and ordinary build is that there is neither a
+The main difference here and an ordinary build is that there is neither a
 `:main` option nor a top-level `:output-to` option.
 
 ### Build and start a REPL
