@@ -154,6 +154,17 @@ files. In our example `hello-world` app the handler would be at
 This file will be a Clojure source file rather than a ClojureScript
 source file and it will be running in the Clojure server process.
 
+> We are about to introduce you to some Clojure code. If you have
+> never worked with Clojure up to now, I highly reccomend you
+> understand how to work with [Clojure at the REPL][clojure-repl]
+> before starting this. If you do want to go ahead with this example,
+> first start your `hello-world.core` example build running with
+> `clojure -m figwheel.main -b dev -r` and keep your the browser page
+> open and in view while you code it, as this will give you important
+> feedback about the correctness of the Clojure code as you work. Only
+> configure the `:ring-handler` option when you are sure the code is
+> correct and loadable.
+
 Without further ado here is our fancy handler to serve our HTML host
 page.
 
@@ -210,5 +221,7 @@ return the `home` page when needed.
 [ring-handler]: ../config-options#ring-handler
 [open-url]: ../config-options#open-url
 [classpaths-web-assets]: classpaths#using-the-classpath-to-find-web-assets
+[clojure-repl]: https://clojure.org/guides/repl/introduction
+
 
 
