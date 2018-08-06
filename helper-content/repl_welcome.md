@@ -21,7 +21,7 @@ bearings for you while you explore this new terrain.
 
 `figwheel.main` is a tool that is very similar in function to
 [`cljs.main`](https://clojurescript.org/guides/quick-start){:target="_blank"}, if you
-are unfamiliar with `cljs.main` you should really take some time to to
+are unfamiliar with `cljs.main` you should really take some time to
 read the
 [ClojureScript Quick Start](https://clojurescript.org/guides/quick-start){:target="_blank"}. It
 will be time well spent.

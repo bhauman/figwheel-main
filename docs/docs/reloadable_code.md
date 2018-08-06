@@ -16,13 +16,13 @@ behavior.
 Let's face it though, we are in JavaScript's domain and mutating state
 is just the way stuff gets done.
 
-## Load Time Side Effects
+## Load Time Side-Effects
 
 Load time side-effects are the side-effects that change the state of
 our JavaScript environment when a file is loaded. As an illustration:
 when a file with code in it is loaded, it will be changing the state
 by importing that code into the environment. That is a side-effect of
-loading the file but it is exactly the side effect we want when we
+loading the file but it is exactly the side-effect we want when we
 load a file.
 
 If you are mutating the [DOM][DOM] or your program state at the
@@ -52,7 +52,7 @@ reloadable code.
 
 #### Top-level mutable state
 
-One problematic pattern is top level definitions that have local
+One problematic pattern is top-level definitions that have local
 state.
 
 ```clojure
@@ -70,15 +70,15 @@ The way to fix this is to use `defonce`
 (defonce state (atom {}))
 ```
 
-This will fix most situations where you have a top level
-definition. It is important to remember that if you change code that
-in a `defonce` you won't see the changes after a reload because it
-won't be evaluated after the first load.
+This will fix most situations where you have a top-level
+definition. It is important to remember that if you change code in a
+`defonce` you won't see the changes after a reload because it won't be
+evaluated after the first load.
 
 #### Page initialization
 
-It is not uncommon to initialize and launch your program from top
-level of a file. However, you normally won't want to run this
+It is not uncommon to initialize and launch your program from the
+top-level of a file. However, you normally won't want to run this
 initialization every time this file gets reloaded.
 
 We can solve this problem by using `defonce` again. For example:
@@ -91,7 +91,7 @@ We can solve this problem by using `defonce` again. For example:
 	 true))
 ```
 
-Above we use the name `initialize-block` but you can use any name
+Above, we use the name `initialize-block` but you can use any name
 because it will probably never be referenced in your program. We use a
 `do` block because `defonce` can only take one form besides the
 name. At the end of the `do` block we provide a value `true` so that
@@ -165,9 +165,9 @@ paying attention to load time side-effects, the exercise of writing
 reloadable code becomes fairly straight forward.
 
 Since a great deal of programming complexity stems from complex
-interactions (side effecting events) between things that have local
+interactions (side-effecting events) between things that have local
 state, it is my belief that being more attentive to load time
-side-effects, leads developers to reduced the amount of state and
+side-effects, leads developers to reduce the amount of state and
 stateful objects that are strewn throughout their programs and take a
 more intentional approach to where state is stored and how it is
 transformed.
