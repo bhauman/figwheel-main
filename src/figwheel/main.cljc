@@ -1355,12 +1355,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
     Exit: :cljs/quit
  Results: Stored in vars *1, *2, *3, *e holds last exception object"))
 
-;; TODO this needs to work in nrepl as well
 (defn repl [repl-env repl-options]
-  (log-server-start repl-env)
-  (log/info "Starting REPL")
-  ;; when we have a logging file start log here
-  (start-file-logger)
   (binding [cljs.analyzer/*cljs-warning-handlers*
             (conj (remove #{cljs.analyzer/default-warning-handler}
                           cljs.analyzer/*cljs-warning-handlers*)
@@ -1410,8 +1405,14 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     (cljs.repl/repl* repl-env repl-options))
                 (throw e)))))))))
 
-(defn serve [{:keys [repl-env repl-options eval-str join?]}]
+(defn repl-action [repl-env repl-options]
   (log-server-start repl-env)
+  (log/info "Starting REPL")
+  ;; when we have a logging file start log here
+  (start-file-logger)
+  (repl repl-env repl-options))
+
+(defn serve [{:keys [repl-env repl-options eval-str join?]}]
   (cljs.repl/-setup repl-env repl-options)
   (when eval-str
     (cljs.repl/evaluate-form repl-env
@@ -1422,6 +1423,11 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                              (first (ana-api/forms-seq (StringReader. eval-str)))))
   (when-let [server (and join? @(:server repl-env))]
     (.join server)))
+
+(defn serve-action [{:keys [repl-env] :as options}]
+  (log-server-start repl-env)
+  (start-file-logger)
+  (serve options))
 
 (defn background-build [cfg {:keys [id config options]}]
   (let [{:keys [::build ::config repl-env-options] :as cfg}
@@ -1576,12 +1582,15 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              (not= :none (:optimizations options :none)))
     (throw (ex-info "Can only start a REPL and inject hot-reloading when the :optimizations level is set to :none" {::error true}))))
 
+(defonce build-registry (atom {}))
+
 (defn default-compile [repl-env-fn cfg]
   (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
         (add-default-system-app-handler (update-config cfg))
         {:keys [mode pprint-config ::build-once]} config
         repl-env (apply repl-env-fn (mapcat identity repl-env-options))
-        cenv (cljs.env/default-compiler-env options)]
+        cenv (cljs.env/default-compiler-env options)
+        repl-options (assoc repl-options :compiler-env cenv)]
     (validate-basic-assumptions! b-cfg)
     (validate-fix-target-classpath! b-cfg)
     (binding [*base-config* cfg
@@ -1596,6 +1605,10 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     figwheel.core/*config* (select-keys config [:hot-reload-cljs
                                                                 :broadcast-reload
                                                                 :reload-dependents])]
+            (swap! build-registry assoc (get-in *config* [::build :id])
+                   {:repl-env repl-env
+                    :repl-options repl-options
+                    :config *config*})
             (try
               (let [fw-mode? (figwheel-mode? b-cfg)]
                 (try
@@ -1611,12 +1624,13 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                 (cond
                   (and (= mode :repl) (not build-once))
                   ;; this forwards command line args
-                  (repl repl-env repl-options)
+                  (repl-action repl-env repl-options)
                   (= mode :serve)
                   ;; we need to get the server host:port args
-                  (serve {:repl-env repl-env
-                          :repl-options repl-options
-                          :join? (get b-cfg ::join-server? true)})
+                  (serve-action
+                   {:repl-env repl-env
+                    :repl-options repl-options
+                    :join? (get b-cfg ::join-server? true)})
                   ;; the final case is compiling without a repl or a server
                   ;; if there is a watcher running join it
                   (and (not build-once)
@@ -1627,7 +1641,11 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                 (when (get b-cfg ::join-server? true)
                   (fww/stop!))))))))))
 
-(defn start-build-arg->build-options [build]
+;; ------------------------------------------------------------
+;; REPL API
+;; ------------------------------------------------------------
+
+(defn- start-build-arg->build-options [build]
   (let [[build-id build-options config]
         (if (map? build)
           [(:id build) (:options build)
@@ -1681,20 +1699,59 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
          {:id \"dev\" :options {:main 'example.core}})
 
   If you don't want to launch a REPL:
-  (start {:css-dirs [\"resources/public/css\"]
-          :mode :serve}
-         {:id \"dev\" :options {:main 'example.core}})"
+  (start {:mode :serve} \"dev\")
+
+  You can start repl later with 
+  (cljs-repl \"dev\")"
   [& args]
   (apply start* false args))
 
 (defn start-join
   "Starts figwheel and blocks, useful when starting figwheel as a
-  server only i.e. `:mode :serve`  from a script."
+  server only i.e. `:mode :serve` from a script."
   [& args]
   (apply start* true args))
 
+(defn repl-env
+  "Once you have already started Figwheel in the backgound with 
+
+`(figwheel.main/start {:mode :serve} \"dev\")`
+  
+You can supply a build name to this function to fetch the repl-env for
+the running build. This is helpful in environments like
+vim-fireplace that need the repl-env.
+
+Example:
+
+(fighweel.main/repl-env \"dev\")
+
+The REPL started with the above repl-env will be inferior to the REPL
+that is started by either `figwheel.main/start` and
+`figwheel.main/cljs-repl` as it listens to the compiler warnings and
+prints informative warnings."
+  [build-id]
+  (get-in @build-registry [build-id :repl-env]))
+
+(defn cljs-repl
+  "Once you have already started Figwheel in the backgound with a call
+to `start` like this:
+
+`(figwheel.main/start {:mode :serve} \"dev\")`
+  
+You can supply a build name to this function to start a ClojureScript
+REPL for the running build.
+
+Example:
+
+(fighweel.main/cljs-repl \"dev\")"
+  [build-id]
+  (if-let [{:keys [repl-env repl-options config] :as repl-info} (get @build-registry build-id)]
+    (binding [*config* config]
+      (repl repl-env repl-options))
+    (throw (ex-info (format "Build % isn't registered. Did you start it?" {})))))
+
 ;; ----------------------------------------------------------------------------
-;; REPL api
+;; CLJS REPL api
 ;; ----------------------------------------------------------------------------
 
 (defn currently-watched-ids []
