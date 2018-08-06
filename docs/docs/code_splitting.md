@@ -7,7 +7,7 @@ order: 20
 
 # Code Splitting
 
-<div class="lead-in">ClojureScript let's you break down a larger
+<div class="lead-in">ClojureScript lets you break down a larger
 application into modules that can be dynamically loaded into your host
 environment at runtime.</div>
 
@@ -128,7 +128,7 @@ touch src/bar/core.cljs
 
 ### Configure your build file
 
-Let's make our Figwheel build file to support a `:modules` based build.
+Let's make our Figwheel build file support a `:modules` based build.
 
 In a `dev.cljs.edn` file place the following:
 
@@ -151,7 +151,7 @@ each of your modules if one doesn't exist already.
 If you do want to supply your own `:output-to` parameters to each
 module you will want to heed the
 [advice that is true for the top level `:output-to`][output-to]
-option. It needs to be on a path that the client to load it and thus
+option. It needs to be on a path that the client can load and thus
 should normally be on the classpath under a `public` directory.
 
 If you want to choose your `:output-to` you will probably also want to
@@ -203,8 +203,8 @@ The main difference here and an ordinary build is that there is neither a
 ### Build and start a REPL
 
 Note that we haven't created a [host HTML page][host-page-doc] for our
-build yet. The Figwheel default dev page work and host a REPL for your
-`:modules` build.
+build yet. The Figwheel default dev page should work and host a REPL
+for your `:modules` build.
 
 To begin just start the build as usual:
 
@@ -229,29 +229,29 @@ work.
 ### Host page
 
 We're going to make a Host page now. Almost every thing that we
-covered on the [Host Page doc][host-page-doc] still applies here The
+covered on the [Host Page doc][host-page-doc] still applies here. The
 only difference is that we need to load a `cljs_base.js` file along
 with any modules we want to initialize the page with.
 
-Now make an `resources/public/index.html` file:
+Now make a `resources/public/index.html` file:
 
 ```html
 <html>
-    <body>
-		 <div id="app"></div>
-		 <!-- include the cljs_base.js target file -->
-         <script src="target/cljs-out/dev/cljs_base.js" type="text/javascript"></script>
-		 <!-- You will normally want to include at least one module otherwise nothing will happen -->		 
-         <script src="target/cljs-out/dev-foo.js" type="text/javascript"></script>
-    </body>
+  <body>
+    <div id="app"></div>
+    <!-- include the cljs_base.js target file -->
+    <script src="target/cljs-out/dev/cljs_base.js" type="text/javascript"></script>
+    <!-- You will normally want to include at least one module otherwise nothing will happen -->		 
+    <script src="target/cljs-out/dev-foo.js" type="text/javascript"></script>
+  </body>
 </html>
 ```
 
 Note the name of the default `:output-to` file for the `:foo` module is
-the `[build-id]-[module-name].js`.
+`[build-id]-[module-name].js`.
 
 > If you customize the `:output-to`'s for the modules you will need to
-> alter the the paths on your host page accordingly.
+> alter the paths on your host page accordingly.
 
 ### Build the Project
 
