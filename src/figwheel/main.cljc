@@ -1661,7 +1661,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              :options options}
       config (assoc :config config))))
 
-(defn start*
+(defn- start*
   ([join-server? build] (start* nil nil build))
   ([join-server? figwheel-options build & background-builds]
    (assert build "Figwheel Start: build argument required")
@@ -1678,7 +1678,9 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
            (assoc ::background-builds (mapv
                                        start-build-arg->build-options
                                        background-builds)))]
-     (default-compile cljs.repl.figwheel/repl-env cfg))))
+     (if (and id (get @build-registry id))
+       (throw (ex-info (format "A build with id \"%s\" is already running." id) {}))
+       (default-compile cljs.repl.figwheel/repl-env cfg)))))
 
 (defn start
   "Starts Figwheel.
@@ -1711,6 +1713,31 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   server only i.e. `:mode :serve` from a script."
   [& args]
   (apply start* true args))
+
+(defn stop
+  "Once you have already started Figwheel in the backgound with 
+
+`(figwheel.main/start {:mode :serve} \"dev\")`
+
+This function will stop the build from from running. It will stop the
+both the Figwheel server process and the watcher/builder process."
+  [build-id]
+  (if-let [build-info (get @build-registry build-id)]
+    (let [{:keys [repl-env repl-options]} build-info]
+      ;; stop the server
+      (log/info (format "Stopping the server for build - %s" build-id))
+      (cljs.repl/-tear-down repl-env)
+      ;; stop the watcher builder
+      (log/info (format "Stopping the watcher for build - %s" build-id))
+      (fww/remove-watch! [::autobuild build-id])
+      ;; remove the watch hook from the compiler env
+      ;; not reallly neccessary but removing it can't hurt either
+      (when-let [compiler-env (:compiler-env repl-options)]
+        (log/info "Removing Figwheel Core watch hook")        
+        (remove-watch compiler-env :figwheel-core/watch-hook))
+      (swap! build-registry dissoc build-id)
+      true)
+    (throw (ex-info (format "Build \"%s\" isn't registered. Did you start it?" build-id) {}))))
 
 (defn repl-env
   "Once you have already started Figwheel in the backgound with 
