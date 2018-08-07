@@ -1,4 +1,5 @@
 ^{:open-url "http://127.0.0.1:4000/docs"
+  :watch-dirs ["docs-cljs"]
   :css-dirs ["docs/assets/css"]}
 {:main figwheel-main-docs.main
  :output-to "docs/assets/compiled/js/main.js"

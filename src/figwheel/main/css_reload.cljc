@@ -186,7 +186,7 @@
 ;; repl-env needs to be bound
 (defn start* [paths]
   (fww/add-watch!
-   ::watcher
+   [::watcher paths] 
    {:paths paths
     :filter (fww/suffix-filter #{"css"})
     :handler (fww/throttle
@@ -195,13 +195,13 @@
                 (when-let [files (not-empty (mapv (comp prep-css-file-path :file) evts))]
                   (reload-css-files files))))}))
 
-(defn stop* []
+(defn stop* [paths]
   (let [remove-watch! (resolve 'figwheel.main/remove-watch!)]
-    (remove-watch! ::watcher)))
+    (remove-watch! [::watcher paths])))
 
 (defmacro start [paths] (start* paths) nil)
 
-(defmacro stop [] (stop*) nil)
+(defmacro stop [paths] (stop* paths) nil)
 
      )
 

@@ -79,6 +79,10 @@
    form
    (#'cljs.repl/wrap-fn form)))
 
+;; XXX this doesn't work very well in an environment with multiple connections
+;; needs to obtain the compiler-env for the individual build process
+;; if we add a build-id to the messages or find a way to look up a build-id
+;; from a session id we can get the compiler-env from the build-registry
 (let [repl-env (EvalOnConnectionEnv.)]
   (defn eval-back-atcha [{:keys [session-id response] :as msg} cenv]
     (try
@@ -90,10 +94,10 @@
       (catch Throwable e
         (log/error "Error in eval back"  e)))))
 
-
 (defn setup []
   (let [cenv cljs.env/*compiler*]
     (figwheel.repl/add-listener
+     ::evalback
      (fn [{:keys [response] :as msg}]
        (when (= "eval-back" (:figwheel-event response))
          (#'eval-back-atcha msg cenv))))))

@@ -63,8 +63,10 @@
       (println "Figwheel: Can't open " (pr-str (vals (select-keys msg [:file-name :file-line :file-column])))
                "No :open-file-command supplied in the config."))))
 
+
 (defn setup [open-file-command]
   (figwheel.repl/add-listener
+   [::open-editor open-file-command]
    (fn [{:keys [response] :as msg}]
      (when (= "file-selected" (:figwheel-event response))
        (exec-open-file-command open-file-command response)))))
