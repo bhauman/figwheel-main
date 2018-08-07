@@ -94,6 +94,9 @@
 (def build-cljs (wrap-with-build-logging bapi/build))
 (def fig-core-build (wrap-with-build-logging figwheel.core/build))
 
+(defn config->reload-config [config]
+  (select-keys config [:reload-clj-files :wait-time-ms :hawk-options]))
+
 (defn watch-build [id inputs opts cenv & [reload-config]]
   (when-let [inputs (if (coll? inputs) inputs [inputs])]
     (let [build-inputs (if (coll? inputs) (apply bapi/inputs inputs) inputs)
@@ -1249,9 +1252,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
       ;; only build all paths when opt :none and doing a watching build
       (do
         (build-cljs id (apply bapi/inputs paths) options cenv)
-        (watch-build id paths options cenv (select-keys config [:reload-clj-files
-                                                                :wait-time-ms
-                                                                :hawk-options])))
+        (watch-build id paths options cenv (config->reload-config config)))
       (let [source (when (:main options)
                      (:uri (fw-util/ns->location (symbol (:main options)))))]
         (cond
@@ -1446,7 +1447,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                      (:watch-dirs config)
                      (:options cfg)
                      cenv
-                     (select-keys config [:reload-clj-files :wait-time-ms]))
+                     (config->reload-config config))
         ;; initializers are not run for a background build
         (when (first (filter #{'figwheel.core} (:preloads (:options cfg))))
           (binding [cljs.repl/*repl-env* (figwheel.repl/repl-env*
@@ -1759,9 +1760,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   Here's an example of printing out the final config options instead
   of running the command:
 
-  (start {:pprint-config true} \"dev\")
-
-  [& args]"
+  (start {:pprint-config true} \"dev\")"
+  [& args]
   (apply start* false args))
 
 (defn start-join
@@ -1931,11 +1931,12 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
         (let [{:keys [options repl-env-options ::config]} *config*
               {:keys [watch-dirs]} config]
           (println "Starting build id:" main-build-id)
+          ;; XXX should this have syntax error feedback?
           (bapi/build (apply bapi/inputs watch-dirs) options cljs.env/*compiler*)
           (watch-build main-build-id
                        watch-dirs options
                        cljs.env/*compiler*
-                       (select-keys config [:reload-clj-files :wait-time-ms]))
+                       (config->reload-config config))
           (when (first (filter #{'figwheel.core} (:preloads options)))
             (binding [cljs.repl/*repl-env* (figwheel.repl/repl-env*
                                             (select-keys repl-env-options
