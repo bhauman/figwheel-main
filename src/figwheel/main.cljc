@@ -1430,34 +1430,49 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   (start-file-logger)
   (serve options))
 
+(defonce build-registry (atom {}))
+
+(defn register-build! [id build-info]
+  (swap! build-registry assoc id build-info))
+
 (defn background-build [cfg {:keys [id config options]}]
-  (let [{:keys [::build ::config repl-env-options] :as cfg}
+  (let [{:keys [::build ::config repl-env-options repl-options] :as cfg}
         (-> (select-keys cfg [::start-figwheel-options])
             (assoc :options options
-                   ::build {:id id :config config})
+                   ::build {:id id :config (assoc config :mode :serve)})
             update-config)
-        cenv (cljs.env/default-compiler-env)]
+        repl-env (figwheel.repl/repl-env*
+                  (merge
+                   repl-env-options
+                   (select-keys cljs.repl/*repl-env* [:server])))
+        cenv (cljs.env/default-compiler-env)
+        repl-options (assoc repl-options :compiler-env cenv)]
     (when (empty? (:watch-dirs config))
-          (log/failure "Can not watch a build with no :watch-dirs"))
+          (log/failure (format "Can not watch build \"%s\" with no :watch-dirs" id)))
     (when (not-empty (:watch-dirs config))
       (log/info "Starting background autobuild - " (:id build))
-      (binding [cljs.env/*compiler* cenv]
+      (binding [*config* cfg
+                cljs.env/*compiler* cenv]
         (build-cljs (:id build) (apply bapi/inputs (:watch-dirs config)) (:options cfg) cenv)
         (watch-build (:id build)
                      (:watch-dirs config)
                      (:options cfg)
                      cenv
                      (config->reload-config config))
-        ;; initializers are not run for a background build
+        (register-build!
+         (get-in *config* [::build :id])
+         {:repl-env repl-env
+          :repl-options repl-options
+          :config *config*
+          :background true})
         (when (first (filter #{'figwheel.core} (:preloads (:options cfg))))
-          (binding [cljs.repl/*repl-env* (figwheel.repl/repl-env*
-                                          (select-keys repl-env-options
-                                                       [:connection-filter]))
+          ;; let's take parent repl-env and change the connection filter
+          (binding [cljs.repl/*repl-env* repl-env
                     figwheel.core/*config*
                     (select-keys config [:hot-reload-cljs
                                          :broadcast-reload
                                          :reload-dependents])]
-            (figwheel.core/start*)))))))
+            (doseq [init-fn (::initializers cfg)] (init-fn))))))))
 
 (defn start-background-builds [{:keys [::background-builds] :as cfg}]
   (doseq [build background-builds]
@@ -1583,8 +1598,6 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              (not= :none (:optimizations options :none)))
     (throw (ex-info "Can only start a REPL and inject hot-reloading when the :optimizations level is set to :none" {::error true}))))
 
-(defonce build-registry (atom {}))
-
 (defn default-compile [repl-env-fn cfg]
   (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
         (add-default-system-app-handler (update-config cfg))
@@ -1606,10 +1619,6 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     figwheel.core/*config* (select-keys config [:hot-reload-cljs
                                                                 :broadcast-reload
                                                                 :reload-dependents])]
-            (swap! build-registry assoc (get-in *config* [::build :id])
-                   {:repl-env repl-env
-                    :repl-options repl-options
-                    :config *config*})
             (try
               (let [fw-mode? (figwheel-mode? b-cfg)]
                 (try
@@ -1618,9 +1627,13 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     (log/error t)))
                 (log/trace "Figwheel.core config:" (pr-str figwheel.core/*config*))
                 (when-not build-once
-                  (start-background-builds (assoc cfg
-                                                  ::start-figwheel-options
-                                                  config))
+                  (register-build!
+                   (get-in *config* [::build :id])
+                   {:repl-env repl-env
+                    :repl-options repl-options
+                    :config *config*})
+                  (start-background-builds (select-keys cfg [::background-builds
+                                                             ::start-figwheel-options]))
                   (doseq [init-fn (::initializers b-cfg)] (init-fn)))
                 (cond
                   (and (= mode :repl) (not build-once))
@@ -1731,7 +1744,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   (start {:css-dirs [\"resources/public/css\"]}
          {:id \"dev\" :options {:main 'example.core}})
 
-  
+  REPL API USAGE
+
   Starting a Figwheel build stores important build-info in a build
   registry. This build data can be used by the other REPL Api
   functions:
@@ -1754,13 +1768,12 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
           :config {:watch-dirs [\"src\"]
                    :mode :serve}})
   
-  The above commands will leave you free to start and stop a REPL
-  without interrupting the server and build process.
+  The above commands will leave you free to call the `cljs-repl`,
+  `repl-env` and `stop` functions without interrupting the server and
+  build process.
 
-  Here's an example of printing out the final config options instead
-  of running the command:
-
-  (start {:pprint-config true} \"dev\")"
+  However once you call `start` you cannot call it again until you
+  have stopped all of the running builds."
   [& args]
   (apply start* false args))
 
@@ -1778,25 +1791,35 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   "Once you have already started Figwheel in the background with a
   call to `figwheel.main/start`
 
-  This function will stop the build from from running. It will stop the
-  both the Figwheel server process and the watcher/builder process."
+  This function will stop the build from from running."
   [build-id]
+  ;; This is all ad-hoc need to move to a notion of starting and stopping
   (if-let [build-info (get @build-registry build-id)]
     (let [{:keys [repl-env repl-options]} build-info]
-      ;; stop the server
-      (log/info (format "Stopping the server for build - %s" build-id))
-      (cljs.repl/-tear-down repl-env)
-      ;; stop the watcher builder
+      
       (log/info (format "Stopping the watcher for build - %s" build-id))
       (fww/remove-watch! [::autobuild build-id])
-      ;; remove the watch hook from the compiler env
-      ;; not reallly neccessary but removing it can't hurt either
+
       (when-let [compiler-env (:compiler-env repl-options)]
         (log/info "Removing Figwheel Core watch hook")        
         (remove-watch compiler-env :figwheel-core/watch-hook))
+
       (swap! build-registry dissoc build-id)
+      
+      (when (zero? (count @build-registry))
+        (log/info "Doing final clean up")
+        (log/info (format "Stopping the Figwheel server" build-id))
+        (figwheel.repl/tear-down-server repl-env)
+        (log/info "Remove all repl listeners")
+        (figwheel.repl/clear-listeners)
+        (log/info "Remove all watchers")
+        (fww/reset-watch!))
       true)
     (throw (ex-info (format "Build \"%s\" isn't registered. Did you start it?" build-id) {}))))
+
+(defn stop-all "Stops all of the running builds." []
+  (doseq [build-id (keys @build-registry)]
+    (stop build-id)))
 
 (defn repl-env
   "Once you have already started Figwheel in the background with a
@@ -1810,12 +1833,24 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   
   (fighweel.main/repl-env \"dev\")
   
+  The repl-env returned by this function will not open urls when you
+  start a ClojureScript REPL with it. If you want to change that
+  behavior:
+
+  (dissoc (fighweel.main/repl-env \"dev\") :open-url-fn)
+
   The REPL started with the above repl-env will be inferior to the REPL
   that is started by either `figwheel.main/start` and
   `figwheel.main/cljs-repl` as it listens to the compiler warnings and
   prints informative warnings."
   [build-id]
-  (get-in @build-registry [build-id :repl-env]))
+  (when-let [repl-env (get-in @build-registry [build-id :repl-env])]
+    (assoc repl-env
+           :prevent-server-tear-down true
+           :open-url-fn
+           (fn [open-url]
+             (when open-url
+               (println (str "Open URL " open-url)))))))
 
 (defn cljs-repl
   "Once you have already started Figwheel in the background with a
@@ -1828,10 +1863,10 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 
   (fighweel.main/cljs-repl \"dev\")"
   [build-id]
-  (if-let [{:keys [repl-env repl-options config] :as repl-info} (get @build-registry build-id)]
+  (if-let [{:keys [repl-options config]} (get @build-registry build-id)]
     (binding [*config* config]
-      (repl repl-env repl-options))
-    (throw (ex-info (format "Build % isn't registered. Did you start it?" {})))))
+      (repl (repl-env build-id) repl-options))
+    (throw (ex-info (format "Build %s isn't registered. Did you start it?" build-id) {}))))
 
 ;; ----------------------------------------------------------------------------
 ;; CLJS REPL api
