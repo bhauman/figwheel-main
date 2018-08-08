@@ -141,8 +141,12 @@
                                (try
                                  (figwheel.core/reload-clj-files clj-files)
                                  (catch Throwable t
-                                   (log/syntax-exception t)
-                                   (figwheel.core/notify-on-exception cenv t {})
+                                   (if (-> t ex-data :figwheel.core/internal)
+                                     (log/error (.getMessage t) t)
+                                     (do                                   
+                                       (log/syntax-exception t)
+                                       (figwheel.core/notify-on-exception cenv t {})))
+                                   ;; skip cljs reloading in this case
                                    (throw t))))
                              (log/debug "Detected changed cljs files: " (pr-str (map str files)))
                              (build-fn files)
