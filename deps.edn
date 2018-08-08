@@ -40,7 +40,7 @@
                         "-bo" "docs"]}
            :docs
            {:extra-paths ["dev"]
-            :main-opts ["-e" (build-option-docs)]}
+            :main-opts ["-e" (build-docs)]}
            :rebel
            {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.3"}}}
            :dev

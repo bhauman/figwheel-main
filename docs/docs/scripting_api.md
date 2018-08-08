@@ -88,13 +88,4 @@ to the Clojure REPL so you can continue interacting with your Clojure
 process.
 
 
-
-
-
-
-
-
-
-
-
-
+{% include main-api-docs.md %}

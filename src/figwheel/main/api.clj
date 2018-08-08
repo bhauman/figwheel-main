@@ -15,13 +15,15 @@
 
   A `build` arg can be either:
   * the name of a build like \"dev\" (described in a .cljs.edn file) 
-  * it can be a map describing a build should have the form
-    {
-     :id      \"dev\"                  ; a required string build id   
-     :options {:main hello-world.core} ; a required map of cljs compile options
-     :config  {:watch-dirs [\"src\"]}  ; an options map of figwheel.main config options
-     }
-
+  * a map describing a build with the following form
+  
+  ```
+  {
+       :id      \"dev\"                  ; a required string build id   
+       :options {:main hello-world.core} ; a required map of cljs compile options
+       :config  {:watch-dirs [\"src\"]}  ; an options map of figwheel.main config options
+  }
+  ```
   If the `:options` map has Figwheel options metadata, it will be used
   unless there is non-nil `:config` option. The presence of a non-nil
   `:config` option map will cause any metadata on the `:options` map
@@ -35,6 +37,7 @@
 
   Examples:
 
+  ```clojure
   ; The simplest and most common case. This will start figwheel just like
   ; `clojure -m figwheel.main -b dev -r`
   (start \"dev\") 
@@ -50,8 +53,9 @@
   ; With inline figwheel and build config:
   (start {:css-dirs [\"resources/public/css\"]}
          {:id \"dev\" :options {:main 'example.core}})
+  ```
 
-  REPL API USAGE
+  ### REPL Api Usage
 
   Starting a Figwheel build stores important build-info in a build
   registry. This build data can be used by the other REPL Api
@@ -68,13 +72,15 @@
 
   For example neither of the following will start a REPL:
 
+  ```clojure
   (start {:mode :serve} \"dev\")
 
   (start {:id \"dev\" 
           :options {:main 'example.core} 
           :config {:watch-dirs [\"src\"]
                    :mode :serve}})
-  
+  ```  
+
   The above commands will leave you free to call the `cljs-repl`,
   `repl-env` and `stop` functions without interrupting the server and
   build process.
@@ -96,10 +102,8 @@
   (apply fig/start* true args))
 
 (defn stop
-  "Once you have already started Figwheel in the background with a
-  call to `figwheel.main/start`
-
-  This function will stop the build from from running."
+  "Takes a `build-id` and stops the given build from running. This
+  will not work if you have not started the build with `start`"
   [build-id]
   ;; This is all ad-hoc need to move to a notion of starting and stopping
   (if-let [build-info (get @fig/build-registry build-id)]
@@ -130,27 +134,31 @@
     (stop build-id)))
 
 (defn repl-env
-  "Once you have already started Figwheel in the background with a
-  call to `figwheel.main/start`
+  "Once you have already started a build in the background with a
+  call to `start`
   
-  You can supply a build name to this function to fetch the repl-env for
-  the running build. This is helpful in environments like
-  vim-fireplace that need the repl-env.
+  You can supply the `build-id` to this function to fetch the repl-env
+  for the running build. This is helpful in environments like
+  **vim-fireplace** that need the repl-env.
   
   Example:
   
+  ```clojure
   (fighweel.main/repl-env \"dev\")
-  
+  ```
+
   The repl-env returned by this function will not open urls when you
   start a ClojureScript REPL with it. If you want to change that
   behavior:
 
+  ```clojure
   (dissoc (fighweel.main/repl-env \"dev\") :open-url-fn)
+  ```
 
-  The REPL started with the above repl-env will be inferior to the REPL
-  that is started by either `figwheel.main/start` and
-  `figwheel.main/cljs-repl` as it listens to the compiler warnings and
-  prints informative warnings."
+  The REPL started with the above repl-env will be inferior to the
+  REPL that is started by either `figwheel.main/start` and
+  `figwheel.main/cljs-repl` as these will listen for and print out
+  well formatted compiler warnings."
   [build-id]
   (when-let [repl-env (get-in @fig/build-registry [build-id :repl-env])]
     (assoc repl-env
@@ -168,8 +176,10 @@
   REPL for the running build.
 
   Example:
-
-  (fighweel.main/cljs-repl \"dev\")"
+  
+  ```clojure
+  (fighweel.main/cljs-repl \"dev\")
+  ```"
   [build-id]
   (if-let [{:keys [repl-options config]} (get @fig/build-registry build-id)]
     (binding [fig/*config* config]
