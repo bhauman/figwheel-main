@@ -2,8 +2,8 @@
 title: Scripting API
 layout: docs
 category: docs
-order: 20
-published: false
+order: 12
+published: true
 ---
 
 # Scripting API
@@ -11,62 +11,39 @@ published: false
 <div class="lead-in">You can readily start and stop a Figwheel build
 process from the REPL or a script.</div>
 
-There are times when you will want to launch Figwheel from a
-script. We'll explore the scripting API here.
+> This API is only available for `figwheel.main 0.1.6` and higher.
 
-## Starting Figwheel
+## Starting Figwheel from the REPL (or Script)
 
-The API isn't quite as general as the command line API. It focuses on
-creating and managing running build processes rather, and currently
-doesn't facilitate.
+The scripting API isn't quite as general as the command line API. It focuses on
+creating and managing running build processes.
 
 First off you will need to ensure that you have
 [the dependencies](installation) and the [classpaths](classpath)
 sorted out to use `figwheel.main`. Then you will need to require the
-`figwheel.main` namespace and call the `figwheel.main/start` function.
+`figwheel.main.api` namespace and call the `figwheel.main.api/start` function.
 
 Let's assume we have a `dev.cljs.edn` build file and we want to start
-`figwheel.main` from the Clojure REPL. You would start Figwheel as follows:
+Figwheel from the Clojure REPL. You can start the `dev` build with a REPL as follows:
 
 ```clojure
 $ clj
 Clojure 1.9.0
-user=> (require 'figwheel.main)
+user=> (require 'figwheel.main.api)
 nil
-user=> (figwheel.main/start "dev")
-[Figwheel] Validating figwheel-main.edn
-[Figwheel] figwheel-main.edn is valid!
-[Figwheel] Compiling build dev to "target/public/cljs-out/dev-main.js"
-[Figwheel] Successfully compiled build dev to "target/public/cljs-out/dev-main.js" in 0.808 seconds.
-[Figwheel] Watching and compiling paths: ("src" "devel") for build - dev
-[Figwheel] Starting Server at http://localhost:9550
-[Figwheel] Starting REPL
-Prompt will show when REPL connects to evaluation environment (i.e. a REPL hosting webpage)
-Figwheel Main Controls:
-          (figwheel.main/stop-builds id ...)  ;; stops Figwheel autobuilder for ids
-          (figwheel.main/start-builds id ...) ;; starts autobuilder focused on ids
-          (figwheel.main/reset)               ;; stops, cleans, reloads config, and starts autobuilder
-          (figwheel.main/build-once id ...)   ;; builds source one time
-          (figwheel.main/clean id ...)        ;; deletes compiled cljs target files
-          (figwheel.main/status)              ;; displays current state of system
-Figwheel REPL Controls:
-          (figwheel.repl/conns)               ;; displays the current connections
-          (figwheel.repl/focus session-name)  ;; choose which session name to focus on
-In the cljs.user ns, controls can be called without ns ie. (conns) instead of (figwheel.repl/conns)
-    Docs: (doc function-name-here)
-    Exit: :cljs/quit
- Results: Stored in vars *1, *2, *3, *e holds last exception object
-2018-08-06 17:47:51.991:INFO::main: Logging initialized @34931ms
-Opening URL http://localhost:9550
+user=> (figwheel.main.api/start "dev")
+;; ... Figwheel startup output ommitted ...
 ClojureScript 1.10.238
 cljs.user=>
 ```
 
-As you can see this starts the Figwheel build process along with a REPL.
+As you can see this starts a Figwheel build process along with a
+ClojureScript REPL.
+
 
 If you want to start a Figwheel build without a REPL you will need to
-ensure that the `:mode` option is `:serve`. You can do this in the
-metadata in the build file or you can supply a replacement for the
+ensure that the [`:mode` option][mode] is `:serve`. You can do this in
+the metadata in the build file or you can supply a **replacement** for the
 `figwheel-main.edn` config options like so:
 
 ```clojure
@@ -87,5 +64,74 @@ server but does not start ClojureScript REPL, but rather returns you
 to the Clojure REPL so you can continue interacting with your Clojure
 process.
 
+Now that you have started Figwheel, you can now use the rest of the
+Scripting API. For example, you can launch a ClojureScript REPL
+attached to the running build process like so:
+
+```clojure
+;; in the Clojure REPL after you have started the "dev" build
+user=> (figwheel.main.api/cljs-repl "dev")
+```
+
+This will start a REPL into the running `dev` build. You can quit the
+REPL via `:cljs/quit` and and then restart it by calling
+`figwheel.main.api/cljs-repl` again.
+
+## REPL switching example
+
+In this example, it is assumed that you have included
+`com.bhauman/rebel-readline-cljs` as a dependency. 
+
+We'll start off by starting a Rebel Readline Clojure REPL.
+
+```clojure
+$ clj -m rebel-readline.main
+user=>
+```
+
+Assuming that we already have a build set up in `dev.cljs.end` and a
+[background build][background-builds] defined `admin.cljs.edn`.
+
+We can start both of these builds running with:
+
+```clojure
+user=> (require '[figwheel.main.api :as fig])
+nil
+user=> (fig/start {:mode :serve} "dev" "admin")
+```
+
+Now we'll start a REPL for the `dev` build:
+
+```clojure
+user=> (fig/cljs-repl "dev")
+;; .. figwheel REPL startup output omitted ...
+cljs.user=> (js/console.log "hey")
+nil
+```
+
+There are a couple of things to notice at this point.  If you check
+the console of the browser window that the `dev` application is
+running in. You should also notice that you're ClojureScript REPL is
+utilizing Rebel Readline.
+
+You can now quit the `dev` REPL and launch a REPL into `admin`.
+
+```clojure
+cljs.user=> :cljs/quit
+nil
+;; returns us to the Clojure REPL prompt
+user=> (fig/cljs-repl "admin")
+;; .. figwheel REPL startup output omitted ...
+cljs.user=> 
+```
+
+We've successfully switched between ClojureScript REPLs for our builds
+all the while staying in a Rebel Readline environment.
+
+# API Docs
 
 {% include main-api-docs.md %}
+
+
+[mode]: ../config_options#mode
+[background-builds]: background_builds

@@ -66,7 +66,7 @@
   ### REPL Api Usage
 
   Starting a Figwheel build stores important build-info in a build
-  registry. This build data can be used by the other REPL Api
+  registry. This build data will be used by the other REPL Api
   functions:
   
   * `figwheel.main.api/cljs-repl`
@@ -75,7 +75,7 @@
 
   If you are in a REPL session the only way you can use the above
   functions is if you start Figwheel in a non-blocking manner. You can
-  make `start` not lauch a REPL by providing a `:mode :serve` entry in
+  make `start` not launch a REPL by providing a `:mode :serve` entry in
   the Figwheel options.
 
   For example neither of the following will start a REPL:
@@ -145,14 +145,14 @@
   "Once you have already started a build in the background with a
   call to `start`
   
-  You can supply the `build-id` to this function to fetch the repl-env
-  for the running build. This is helpful in environments like
-  **vim-fireplace** that need the repl-env.
+  You can supply the `build-id` of the running build to this function
+  to fetch the repl-env for the running build. This is helpful in
+  environments like **vim-fireplace** that need the repl-env.
   
   Example:
   
   ```clojure
-  (fighweel.main.api/repl-env \"dev\")
+  (figwheel.main.api/repl-env \"dev\")
   ```
 
   The repl-env returned by this function will not open urls when you
@@ -160,7 +160,7 @@
   behavior:
 
   ```clojure
-  (dissoc (fighweel.main.api/repl-env \"dev\") :open-url-fn)
+  (dissoc (figwheel.main.api/repl-env \"dev\") :open-url-fn)
   ```
 
   The REPL started with the above repl-env will be inferior to the
@@ -180,13 +180,13 @@
   "Once you have already started Figwheel in the background with a
   call to `figwheel.main.api/start`
 
-  You can supply a build name to this function to start a ClojureScript
-  REPL for the running build.
+  You can supply a build name of a running build to this function to
+  start a ClojureScript REPL for the running build.
 
   Example:
   
   ```clojure
-  (fighweel.main.api/cljs-repl \"dev\")
+  (figwheel.main.api/cljs-repl \"dev\")
   ```"
   [build-id]
   (if-let [{:keys [repl-options config]} (get @fig/build-registry build-id)]
