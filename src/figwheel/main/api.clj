@@ -1,5 +1,6 @@
 (ns figwheel.main.api
   (:require
+   [clojure.java.io :as io]
    [figwheel.main :as fig]
    [figwheel.main.logging :as log]
    [figwheel.main.watching :as fww]
@@ -11,7 +12,12 @@
   Has two arities:
 
   (start build)
-  (start figwheel-config build & backgound-builds)
+  (start figwheel-config-o-build build & backgound-builds)
+
+  You can call `start` with any number of `build` arguments. The first
+  one will be the foreground build and any builds that follow will be
+  background builds. When you provide more than one argument to `start`
+  the first argument can optionally be a map of Figwheel Main options.
 
   A `build` arg can be either:
   * the name of a build like \"dev\" (described in a .cljs.edn file) 
@@ -24,13 +30,15 @@
        :config  {:watch-dirs [\"src\"]}  ; an options map of figwheel.main config options
   }
   ```
+
   If the `:options` map has Figwheel options metadata, it will be used
   unless there is non-nil `:config` option. The presence of a non-nil
   `:config` option map will cause any metadata on the `:options` map
   to be ignored.
   
-  The `figwheel-config` is a map of Figwheel options that will be used
-  in place of the options found in a `figwheel-main.edn` file if present.
+  The `figwheel-config-o-build` arg can be a build or a map of
+  Figwheel options that will be used in place of the options found in
+  a `figwheel-main.edn` file if present.
 
   The `background-builds` is collection of `build` args that will be
   run in the background. 
@@ -61,9 +69,9 @@
   registry. This build data can be used by the other REPL Api
   functions:
   
-  * `figwheel.main/cljs-repl`
-  * `figwheel.main/repl-env`
-  * `figwheel.main/stop`
+  * `figwheel.main.api/cljs-repl`
+  * `figwheel.main.api/repl-env`
+  * `figwheel.main.api/stop`
 
   If you are in a REPL session the only way you can use the above
   functions is if you start Figwheel in a non-blocking manner. You can
@@ -88,8 +96,8 @@
   However once you call `start` you cannot call it again until you
   have stopped all of the running builds."
   ([build] (fig/start* false build))
-  ([figwheel-options build & background-builds]
-   (apply fig/start* false figwheel-options build background-builds)))
+  ([figwheel-options-o-build build & background-builds]
+   (apply fig/start* false figwheel-options-o-build build background-builds)))
 
 (defn start-join
   "Takes the same arguments as `start`.
@@ -144,7 +152,7 @@
   Example:
   
   ```clojure
-  (fighweel.main/repl-env \"dev\")
+  (fighweel.main.api/repl-env \"dev\")
   ```
 
   The repl-env returned by this function will not open urls when you
@@ -152,12 +160,12 @@
   behavior:
 
   ```clojure
-  (dissoc (fighweel.main/repl-env \"dev\") :open-url-fn)
+  (dissoc (fighweel.main.api/repl-env \"dev\") :open-url-fn)
   ```
 
   The REPL started with the above repl-env will be inferior to the
-  REPL that is started by either `figwheel.main/start` and
-  `figwheel.main/cljs-repl` as these will listen for and print out
+  REPL that is started by either `figwheel.main.api/start` and
+  `figwheel.main.api/cljs-repl` as these will listen for and print out
   well formatted compiler warnings."
   [build-id]
   (when-let [repl-env (get-in @fig/build-registry [build-id :repl-env])]
@@ -170,7 +178,7 @@
 
 (defn cljs-repl
   "Once you have already started Figwheel in the background with a
-  call to `figwheel.main/start`
+  call to `figwheel.main.api/start`
 
   You can supply a build name to this function to start a ClojureScript
   REPL for the running build.
@@ -178,10 +186,31 @@
   Example:
   
   ```clojure
-  (fighweel.main/cljs-repl \"dev\")
+  (fighweel.main.api/cljs-repl \"dev\")
   ```"
   [build-id]
   (if-let [{:keys [repl-options config]} (get @fig/build-registry build-id)]
     (binding [fig/*config* config]
       (fig/repl (repl-env build-id) repl-options))
     (throw (ex-info (format "Build %s isn't registered. Did you start it?" build-id) {}))))
+
+(defn read-build
+  "A helper function that takes one or more build-ids and merges them into a single build
+  ready to be passed to `figwheel.main.api/start`
+
+  Example:
+
+  ```clojure
+  (figwheel.main.api/start (read-build \"dev\" \"admin\") \"tests\")  
+  ```"
+  [build-id & build-ids]
+  (let [b (->> (cons build-id build-ids)
+               (map name)
+               (map #(io/file (str % ".cljs.edn")))
+               (map #(do (assert (.isFile %) "should be a file.")
+                         %))
+               (map (comp read-string slurp))
+               (reduce figwheel.main/merge-meta {}))]
+    {:id (apply str (map name build-ids))
+     :options b
+     :config (meta b)}))

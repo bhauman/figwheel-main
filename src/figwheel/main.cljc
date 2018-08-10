@@ -1681,11 +1681,25 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              :options options}
       config (assoc :config config))))
 
+(defn build-option-arg? [a]
+  (or
+   (string? a)
+   (keyword? a)
+   (symbol? a)
+   (and (map? a)
+        (:id a)
+        (:options a))))
+
 (defn start*
-  ([join-server? build] (start* nil nil build))
-  ([join-server? figwheel-options build & background-builds]
-   (assert build "Figwheel Start: build argument required")
-   (let [{:keys [id] :as build} (start-build-arg->build-options build)
+  ([join-server? build]
+   (assert (build-option-arg? build) "Figwheel Start: build argument required")
+   (start* join-server? nil build))
+  ([join-server? figwheel-options-o-build bbuild & builds]
+   (let [[figwheel-options build & background-builds]
+         (if-not (build-option-arg? figwheel-options-o-build)
+           (concat [figwheel-options-o-build bbuild] builds)
+           (concat [nil figwheel-options-o-build bbuild] builds))
+         {:keys [id] :as build} (start-build-arg->build-options build)
          cfg
          (cond-> {:options (:options build)
                   ::join-server? (if (true? join-server?) true false)}
