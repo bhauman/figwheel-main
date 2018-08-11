@@ -1,3 +1,14 @@
+# 0.1.6 Scripting API
+
+Added a Scripting API that allows one to start multiple builds and
+then attach a REPL to any of the running builds. The API also allows
+one to stop builds and obtain a repl-env from a build (this is
+expecially helpful for VIM fireplace). See the `figwheel.main.api`
+namespace and the docs at
+[https://figwheel.org/docs/scripting_api.html](https://figwheel.org/docs/scripting_api.html)
+
+* ignore preload link tags when reloading CSS
+
 # 0.1.5 Windows Fix and merge multiple build-ids: `--build dev:other`
 
 * fixed a major problem on Windows that created a bad `:asset-path` which prevented the REPL from connecting

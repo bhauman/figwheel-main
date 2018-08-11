@@ -132,6 +132,5 @@ all the while staying in a Rebel Readline environment.
 
 {% include main-api-docs.md %}
 
-
 [mode]: ../config_options#mode
 [background-builds]: background_builds

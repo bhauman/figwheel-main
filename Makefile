@@ -34,9 +34,9 @@ readme:
 
 docs-app:
 	clojure -Abuild-docs-app
+	rm -rf docs/assets/compiled/js/out
 
 docs: helper-docs opt-docs readme docs-app
-
 
 helper:
 	clojure -Abuild-helper
