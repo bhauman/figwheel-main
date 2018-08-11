@@ -29,6 +29,15 @@
        (filter #(.-id %))
        (rest)))
 
+(defn anchored-header! [header]
+  (let [header-content (dom/getTextContent header)
+        id (.-id header)
+        anchor (dom/createDom "A" #js {:href (str "#" id) :class "page-anchor"} header-content)]
+    ;; make sure we haven't already anchored this header
+    (when (zero? (.-length (dom/getChildren header)))
+      (dom/removeChildren header)
+      (dom/append header anchor))))
+
 (defn extract-heading [el]
   {:ref (.-id el)
    :content (dom/getTextContent el)
@@ -59,6 +68,10 @@
              (filter #(gstring/endsWith (.-href %) path))
              first)))
 
+(defn ^:export anchored-headers []
+  (doseq [header (get-main-headers)]
+    (anchored-header! header)))
+
 (defn ^:export insert-doc-toc []
   (let [cur-nav (get-current-nav-link)
         toc-el (create-toc (->> (get-main-headers)
@@ -66,6 +79,7 @@
                                 (map format-item)))]
     (cl/add cur-nav "focused-nav-link")
     (dom/insertSiblingAfter toc-el cur-nav)
+    (anchored-headers)
     (slide-in! toc-el)))
 
 (defn ^:export insert-options-toc []
@@ -78,7 +92,9 @@
                                      (= (:tag %) "H1") (assoc :type :category)))
                              (map format-item)))]
       (dom/append nav toc-el)
+      (anchored-headers)      
       (.play (fxcss3/fadeIn toc-el 0.3)))))
+
 
 #_(insert-options-toc)
 

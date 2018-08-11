@@ -150,6 +150,14 @@ h3 {
     line-height: 1.2;
 }
 
+a.page-anchor {
+    color: inherit;
+}
+a.page-anchor:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
 .lead-in {
   font-weight: 300;
   margin-bottom: 1rem;
