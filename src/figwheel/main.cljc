@@ -1656,7 +1656,11 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                        (get b-cfg ::join-server? true))
                   (fww/join)))
               (finally
-                (when (or (get b-cfg ::join-server? true) (= mode :repl))
+                ;; these are the blocking states that we want to clean up after
+                (when (or (get b-cfg ::join-server? true)
+                          (and
+                           (not (in-nrepl?))
+                           (= mode :repl)))
                   (fww/stop!)
                   (remove-watch cenv :figwheel.core/watch-hook)
                   (swap! build-registry dissoc (get-in *config* [::build :id])))))))))))
