@@ -1,4 +1,12 @@
+# 0.1.7 Fix for nREPL
+
+Fixes a bad bug that was deleting the listeners that notified the client
+to reload.
+
 # 0.1.6 Scripting API
+
+> update: hot reloading does not work when figwheel.main is
+> started from nREPL
 
 Added a Scripting API that allows one to start multiple builds and
 then attach a REPL to any of the running builds. The API also allows

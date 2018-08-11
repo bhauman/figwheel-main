@@ -161,7 +161,7 @@ As a concrete example, in the root directory of your project place a
   :profiles 
     {:dev 
       {:dependencies [[org.clojure/clojurescript "1.10.339"]
-                      [com.bhauman/figwheel-main "0.1.6"]
+                      [com.bhauman/figwheel-main "0.1.7"]
                       ;; optional but recommended
                       [com.bhauman/rebel-readline-cljs "0.1.4"]]}})
 ```
@@ -198,7 +198,7 @@ following contents:
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.339"}
-        com.bhauman/figwheel-main {:mvn/version "0.1.6"}
+        com.bhauman/figwheel-main {:mvn/version "0.1.7"}
         ;; optional but recommended
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
 ```
@@ -284,7 +284,7 @@ to launch a REPL with `figwheel.main`.
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.339"}
-        com.bhauman/figwheel-main {:mvn/version "0.1.6"}
+        com.bhauman/figwheel-main {:mvn/version "0.1.7"}
         ;; optional but recommended		
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}}
