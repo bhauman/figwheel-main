@@ -152,6 +152,7 @@
                              (build-fn files)
                              (catch Throwable t
                                (log/error t)
+                               (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map) t)))
                                false))))))}))))))
 
 
