@@ -1,6 +1,6 @@
 # 0.1.7 Fix for nREPL
 
-Fixes a bad bug that was deleting the listeners that notified the client
+Fixes a bug that was deleting the listeners that notified the client
 to reload.
 
 # 0.1.6 Scripting API
