@@ -31,4 +31,7 @@ docs/assets/compiled/js/out
 
 mod.cljs.edn
 
+node_modules
+package.json
+yarn.lock
 devel/exproj/more.cljs
