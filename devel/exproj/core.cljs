@@ -4,9 +4,10 @@
    [goog.object :as gobj]
    [clojure.string :as string]
    [exproj.other]
+   [react]
    [cljs.test :refer [deftest is]]))
 
-(enable-console-print!)
+(js/console.log react/Component)
 
 (defn hello []
   "hello  exproj")
@@ -20,7 +21,6 @@
 (deftest this-is-a-test
   (prn "hello")
   (is false))
-
 
 
 #_(d)

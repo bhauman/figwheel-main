@@ -396,6 +396,8 @@ disable this option.
 > Experimental feature! This feature may change or be removed entirely.
 > Only available in `0.1.8-SNAPSHOT` or higher
 
+This also works best with ClojureScript >= `1.10.339`.
+
 Currently takes a map with only one valid key `:bundles`. The
 `:bundles` key must be a map of packaged JavaScript files to the
 indexjs files that they are compiled from.
