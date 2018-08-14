@@ -399,7 +399,7 @@ disable this option.
 This also works best with ClojureScript >= `1.10.339`.
 
 Currently takes a map with only one valid key `:bundles`. The value of
-`:bundles` key must be a map of packaged JavaScript files to the
+the `:bundles` key must be a map of bundled JavaScript files to the
 index JavaScript files that they are compiled from.
 
     :npm {:bundles {\"dist/index.bundle.js\" \"src/webpack/index.js\"}}
