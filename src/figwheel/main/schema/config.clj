@@ -398,21 +398,22 @@ disable this option.
 
 This also works best with ClojureScript >= `1.10.339`.
 
-Currently takes a map with only one valid key `:bundles`. The
+Currently takes a map with only one valid key `:bundles`. The value of
 `:bundles` key must be a map of packaged JavaScript files to the
-indexjs files that they are compiled from.
+index JavaScript files that they are compiled from.
 
     :npm {:bundles {\"dist/index.bundle.js\" \"src/webpack/index.js\"}}
 
-This feature will simply read an index.js file like:
+This feature will read an index.js file like:
 
     import React from 'react';
     import ReactDom from 'react-dom';
     window.React = React;
     window.ReactDom = ReactDom;
 
-and generates a `:foreign-libs` entry for it. For example the above
-this would be added to your compiler options:
+and will then generate a `:foreign-libs` entry for it. For example the
+above index.js would cause the following to be added to your compiler
+options:
 
     :foreign-libs [{:file \"dist/index.bundle.js\"
                     :provides [\"react\" \"react-dom\"]
@@ -422,7 +423,7 @@ this would be added to your compiler options:
 This will set `:npm-deps` to `false` if it hasn't been previously set.
 
 This will set `:infer-externs` to `true` if it hasn't been
-previously set. 
+previously set.
 
 You can learn more about ClojureScript and Webpack here:
 https://clojurescript.org/guides/webpack"

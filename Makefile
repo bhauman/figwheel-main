@@ -27,7 +27,7 @@ helper-docs:
 	$(MARKDOWN) helper-content/*
 
 opt-docs:
-	clojure -Adocs
+	clojure -A:docs
 
 readme:
 	cp docs/README.md ./
@@ -39,7 +39,7 @@ docs-app:
 docs: helper-docs opt-docs readme docs-app
 
 helper:
-	clojure -Abuild-helper
+	clojure -A:build-helper
 
 clean:
 	rm -rf target
