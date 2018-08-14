@@ -31,6 +31,9 @@ docs/assets/compiled/js/out
 
 mod.cljs.edn
 
+target-webpack
+webpack.config.js
+
 node_modules
 package.json
 yarn.lock

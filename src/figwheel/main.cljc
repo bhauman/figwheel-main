@@ -22,6 +22,7 @@
         [figwheel.main.util :as fw-util]
         [figwheel.main.watching :as fww]
         [figwheel.main.helper :as helper]
+        [figwheel.main.npm :as npm]
         [figwheel.repl :as fw-repl]
         [figwheel.tools.exceptions :as fig-ex]))
   #?(:clj
@@ -1235,6 +1236,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        config-default-dirs
        config-default-asset-path
        config-default-aot-cache-false
+       npm/config
        config-repl-connect
        config-cljs-devtools
        config-open-file-command
