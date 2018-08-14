@@ -385,6 +385,49 @@ disable this option.
     :helpful-classpaths false"
   :group :common)
 
+(s/def ::bundles (s/map-of non-blank-string? non-blank-string?))
+
+(s/def ::npm (spell/strict-keys :req-un [::bundles]))
+
+(def-spec-meta ::npm
+  :doc
+  "Support for importing webpack bundles.
+
+> Experimental feature! This feature may change or be removed entirely.
+> Only available in `0.1.8-SNAPSHOT` or higher
+
+This also works best with ClojureScript >= `1.10.339`.
+
+Currently takes a map with only one valid key `:bundles`. The
+`:bundles` key must be a map of packaged JavaScript files to the
+indexjs files that they are compiled from.
+
+    :npm {:bundles {\"dist/index.bundle.js\" \"src/webpack/index.js\"}}
+
+This feature will simply read an index.js file like:
+
+    import React from 'react';
+    import ReactDom from 'react-dom';
+    window.React = React;
+    window.ReactDom = ReactDom;
+
+and generates a `:foreign-libs` entry for it. For example the above
+this would be added to your compiler options:
+
+    :foreign-libs [{:file \"dist/index.bundle.js\"
+                    :provides [\"react\" \"react-dom\"]
+                    :global-exports {react React
+                                     react-dom ReactDom}}]
+
+This will set `:npm-deps` to `false` if it hasn't been previously set.
+
+This will set `:infer-externs` to `true` if it hasn't been
+previously set. 
+
+You can learn more about ClojureScript and Webpack here:
+https://clojurescript.org/guides/webpack")
+
+
 ;; -------------------------------XXXXXXXXXXXX
 
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
@@ -517,7 +560,7 @@ be useful for certain docker environments.
 
 (s/def ::edn
   (ensure-all-registered-keys-included
-   #{::edn}
+   #{::edn ::bundles}
    (spell/strict-keys
     :opt-un
     [::watch-dirs
@@ -543,6 +586,8 @@ be useful for certain docker environments.
      ::validate-cli
      ::target-dir
 
+     ::npm
+     
      ::helpful-classpaths
 
      ::launch-node
