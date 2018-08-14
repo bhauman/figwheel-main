@@ -425,7 +425,8 @@ This will set `:infer-externs` to `true` if it hasn't been
 previously set. 
 
 You can learn more about ClojureScript and Webpack here:
-https://clojurescript.org/guides/webpack")
+https://clojurescript.org/guides/webpack"
+  :group :common)
 
 
 ;; -------------------------------XXXXXXXXXXXX
