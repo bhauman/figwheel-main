@@ -33,7 +33,7 @@ readme:
 	cp docs/README.md ./
 
 docs-app:
-	clojure -Abuild-docs-app
+	clojure -A:build-docs-app
 	rm -rf docs/assets/compiled/js/out
 
 docs: helper-docs opt-docs readme docs-app

@@ -68,33 +68,39 @@
              (filter #(gstring/endsWith (.-href %) path))
              first)))
 
+(defn nav-displayed? []
+  ;; 650 aligns with the CSS value for the
+  ;; nav element
+  (> (.-width (dom/getViewportSize)) 650))
+
 (defn ^:export anchored-headers []
   (doseq [header (get-main-headers)]
     (anchored-header! header)))
 
 (defn ^:export insert-doc-toc []
-  (let [cur-nav (get-current-nav-link)
-        toc-el (create-toc (->> (get-main-headers)
-                                (map extract-heading)
-                                (map format-item)))]
-    (cl/add cur-nav "focused-nav-link")
-    (dom/insertSiblingAfter toc-el cur-nav)
-    (anchored-headers)
-    (slide-in! toc-el)))
+  (when (nav-displayed?)
+    (let [cur-nav (get-current-nav-link)
+          toc-el (create-toc (->> (get-main-headers)
+                                  (map extract-heading)
+                                  (map format-item)))]
+      (cl/add cur-nav "focused-nav-link")
+      (dom/insertSiblingAfter toc-el cur-nav)
+      (slide-in! toc-el)))
+  (anchored-headers))
 
 (defn ^:export insert-options-toc []
-  (when-let [nav (.item (dom/getElementsByTagName "nav") 0)]
-    (dom/removeChildren nav)
-    (let [toc-el (apply dom/createDom "DIV" #js {:style "opacity: 0;"}
-                        (->> (get-main-headers)
-                             (map extract-heading)
-                             (map #(cond-> %
-                                     (= (:tag %) "H1") (assoc :type :category)))
-                             (map format-item)))]
-      (dom/append nav toc-el)
-      (anchored-headers)      
-      (.play (fxcss3/fadeIn toc-el 0.3)))))
-
+  (when (nav-displayed?)
+    (when-let [nav (.item (dom/getElementsByTagName "nav") 0)]
+      (dom/removeChildren nav)
+      (let [toc-el (apply dom/createDom "DIV" #js {:style "opacity: 0;"}
+                          (->> (get-main-headers)
+                               (map extract-heading)
+                               (map #(cond-> %
+                                       (= (:tag %) "H1") (assoc :type :category)))
+                               (map format-item)))]
+        (dom/append nav toc-el)
+        (.play (fxcss3/fadeIn toc-el 0.3)))))
+  (anchored-headers))
 
 #_(insert-options-toc)
 
