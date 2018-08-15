@@ -335,5 +335,7 @@ footer {
 	margin-top: 0.5rem;
 	margin-bottom: 0.5rem;	
     }
-    .section-title, .arrow { display:none;}
+    a.next-btn span, a.back-btn span {display: none;}
+    .section-title, .arrow { display: none;}
+
 }
