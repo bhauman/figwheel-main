@@ -310,3 +310,30 @@ footer {
     text-decoration: none;
     margin: 1px 0px;
 }
+
+@media only screen and (max-width: 650px)  {
+    nav {display: none;}
+    .main {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	flex-basis: 100%
+    }
+    header {
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 0px 1rem;
+    }
+    header > * {
+	padding: 0px;
+    }
+    header > a {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;	
+    }
+    .right-links > a {
+	font-size: 21px;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;	
+    }
+    .section-title, .arrow { display:none;}
+}
