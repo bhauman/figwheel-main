@@ -11,10 +11,12 @@
 (defn kebab-case
   "Converts CamelCase / camelCase to kebab-case"
   [s]
-  (string/lower-case
-   (string/replace s #"[a-z][A-Z]"
-                   (fn [x]
-                     (str (first x) \- (last x))))))
+  (-> s
+      (string/replace #"[a-z][A-Z]"
+                      (fn [x]
+                        (str (first x) \- (second x))))
+      (string/replace #"\s+" "-")
+      string/lower-case))
 
 (defn camel-case
   "Converts kebab-case to CamelCase"
