@@ -377,6 +377,79 @@ previously set.
 You can learn more about ClojureScript and Webpack here:
 https://clojurescript.org/guides/webpack
 
+## :pre-build-hooks
+
+A collection of symbol or strings that represent Clojure functions
+to call just before your ClojureScript sources get built.
+
+These functions will be passed the current configuration of the
+system. This is a fairly complex data-structure and contains the
+`:options` for the current build among other things.
+
+    :pre-build-hooks [user/gen-testfile]
+
+## :post-build-hooks
+
+A collection of symbol or strings that represent clojure functions
+to call just after your ClojureScript sources have been built.
+
+These functions will be passed the current configuration of the
+system. This is a fairly complex data-structure and contains the
+`:options` for the current build among other things.
+
+    :post-build-hooks [user/gen-alternate-main-js]
+
+## :extra-main-files
+
+A map of keyword ids to Clojurescript option maps.
+
+`:extra-main-files` will output *extra* main files besides the one that was
+configured in your ClojureScript options.
+
+For example this will output a dev-main-test.js file for your tests:
+
+    ::extra-main-files {:tests {:main example.tests.test-runner}}
+
+This file will be created in addition to the `dev-main.js` file.
+
+The options will be merged with the ClojureScript options for the
+current build. The only exception to the merge is `:preloads`. If you
+supply `:preloads` in the options map they will be concatenated with
+the existing already supplied `:preloads`. These include the
+`:preloads` that `figwheel.main` has already added.
+
+This extra main will have all the same configured Figwheel options as
+the main build. In other words, the extra main will connect to the
+Figwheel REPL and get reloads just like the main build.
+
+This feature will only output the ClojureScript bootstrap file that
+you will require on your host page, it will not cause any files to be
+compiled. So you will need to make sure that you have added all the
+needed source directories to your `:watch-dirs` and your classpath.
+
+This will only work under `:optimizations` level `:none`.
+
+Figwheel provides a default host page for extra mains so that you do
+not have to configure one. The default host page can be found at
+`/figwheel-extra-main/[id]` where id is the id you supplied as a key
+in the config you passed to the `:extra-main-files`. For example the
+config above you would be able to find the `:tests` main at
+`/figwheel-extra-main/tests`. Keep in mind that the `id` of the app
+div on the default host page will be `app-[id]`.
+
+If you don't want to use the default host page you will need to create
+a your own host page for it. See
+https://figwheel.org/docs/your_own_page for help.
+
+This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display) 
+and [devcards](https://github.com/bhauman/devcards) to your workflow.
+
+Also keep in mind that you can insert extra behavior with `:preloads`
+and you can even change the `:target` to `:nodejs` if you want to work
+on a Nodejs app in parallel with your main build.
+
+    ::extra-main-files {:devcards {:main example.devcards}}
+
 # Rarely used options
 
 ## :client-print-to
