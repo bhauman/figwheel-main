@@ -2,6 +2,9 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
+* :extra-main-files testing
+* using an init script to start garden compiles
+
 * ring handler
 * seperate server
 
