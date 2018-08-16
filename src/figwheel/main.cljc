@@ -817,7 +817,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
       (validate-config!
        :figwheel.main.schema.config/edn
        main-edn "Configuration error in figwheel-main.edn"
-       "figwheel-main.edn is valid!"))
+       "figwheel-main.edn is valid \\(ツ)/"))
     (process-main-config main-edn)))
 
 ;; use tools reader read-string for better error messages
