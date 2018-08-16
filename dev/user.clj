@@ -13,8 +13,6 @@
 (def doc-string #(-> % resolve meta :doc strip-leading-whitspace))
 (def args #(-> % resolve meta :arglists))
 
-(doc-string 'figwheel.main.api/start)
-
 (defn sym->markdown-doc [sym]
   (str
    "## `" sym "`\n\n"

@@ -84,7 +84,9 @@
 
 #?(:clj
   (do
-    (defn main-wrapper [{:keys [body output-to header] :as options}]
+    (defn main-wrapper [{:keys [body output-to header app-div-class sidebar]
+                         :or {app-div-class "app"
+                              sidebar true} :as options}]
       (format
          "<!DOCTYPE html>
 <html>
@@ -93,13 +95,13 @@
    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   </head>
   <body>
-    <div id=\"app\">
-      <link href=\"com/bhauman/figwheel/helper/css/style.css\" rel=\"stylesheet\" type=\"text/css\">
-      <link href=\"com/bhauman/figwheel/helper/css/coderay.css\" rel=\"stylesheet\" type=\"text/css\">
+    <div id=\"%s\">
+      <link href=\"/com/bhauman/figwheel/helper/css/style.css\" rel=\"stylesheet\" type=\"text/css\">
+      <link href=\"/com/bhauman/figwheel/helper/css/coderay.css\" rel=\"stylesheet\" type=\"text/css\">
       <header>
         <div class=\"container\">
           <div id=\"connect-status\">
-            <img class=\"logo\" width=\"60\" height=\"60\" src=\"com/bhauman/figwheel/helper/imgs/cljs-logo-120b.png\">
+            <img class=\"logo\" width=\"60\" height=\"60\" src=\"/com/bhauman/figwheel/helper/imgs/cljs-logo-120b.png\">
             <div class=\"connect-text\"><span id=\"connect-msg\"></span></div>
           </div>
           <div class=\"logo-text\">%s</div>
@@ -113,12 +115,7 @@
       </header>
 
       <div class=\"container\">
-        <aside>
-          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"figwheel/helper/welcome\">Welcome</a>
-          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"com/bhauman/figwheel/helper/content/creating_a_build_cli_tools.html\">Create a build</a>
-          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"com/bhauman/figwheel/helper/content/creating_a_build_lein.html\">Create a build (lein)</a>
-          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"com/bhauman/figwheel/helper/content/css_reloading.html\">Live Reload CSS</a>
-        </aside>
+        %s
         <section id=\"main-content\">
         %s
         </section>
@@ -127,9 +124,10 @@
         <div class=\"container flex-column\">
           <div class=\"off-site-resources\">
              <h6>Figwheel Main</h6>
-             <a href=\"https://github.com/bhauman/figwheel-main/tree/master\" target=\"_blank\">Figwheel Main Home / Readme</a>
-             <a href=\"https://github.com/bhauman/figwheel-main/blob/master/doc/figwheel-main-options.md\" target=\"_blank\">Config Options</a>
-
+             <a href=\"https://figwheel.org\" target=\"_blank\">Figwheel Main Home / Readme</a>
+             <a href=\"https://figwheel.org/docs\" target=\"_blank\">Documentation</a>
+             <a href=\"https://figwheel.org/config-options\" target=\"_blank\">Config Options</a>
+             <a href=\"https://github.com/bhauman/figwheel-main\" target=\"_blank\">Github</a>
           </div>
           <div class=\"off-site-resources\">
              <h6>Clojurescript</h6>
@@ -152,17 +150,28 @@
     <script type=\"text/javascript\">%s</script>
   </body>
 </html>"
+         (str app-div-class)
          (str header)
+         (cond
+           (true? sidebar) 
+           "<aside>
+          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"/figwheel/helper/welcome\">Welcome</a>
+          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"/com/bhauman/figwheel/helper/content/creating_a_build_cli_tools.html\">Create a build</a>
+          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"/com/bhauman/figwheel/helper/content/creating_a_build_lein.html\">Create a build (lein)</a>
+          <a class=\"figwheel_main_content_link\" href=\"javascript:\" rel=\"/com/bhauman/figwheel/helper/content/css_reloading.html\">Live Reload CSS</a>
+        </aside>"
+           (string? sidebar)
+           sidebar
+           :else "")
          (str body)
          (str
           (when-not (:dev-mode options)
-            "<script src=\"com/bhauman/figwheel/helper.js\"></script>"))
+            "<script src=\"/com/bhauman/figwheel/helper.js\"></script>"))
          (str
           (when (and output-to
                      (.isFile (io/file output-to)))
             (-> (slurp output-to)
                 (string/replace #"<\/script" "<\\\\/script"))))))
-
 
 (defn main-action [req options]
   {:status 200
@@ -238,6 +247,39 @@
             (slurp (io/resource "public/com/bhauman/figwheel/helper/content/missing_index.html"))
             (default-index-code (:output-to options)))}
     options)))
+
+(defn extra-main-body [nm output-to]
+  (str (format (str "<h1>Host page for <code>:%s</code> main file</h1>"
+                    "<blockquote>You can override the content of this "
+                    "page by replacing the contents of the <code>app-%s</code> "
+                    "div.</blockquote><p></p>"
+                    "<blockquote>You can create your own "
+                    "<a href=\"https://figwheel.org/docs/your_own_page.html\" target=\"_blank\">host page</a> "
+                    "for this extra main by including the "
+                    "<code>%s</code> bootstrap script in your host page. "
+                    "If you are unsure how to create a host page please see this "
+                    "<a href=\"https://figwheel.org/docs/your_own_page.html\" target=\"_blank\">documentation</a>. "
+                    "</blockquote>") nm nm (if (string/includes? output-to "/public/")
+                                             (str "/" (second (string/split output-to #"\/public\/")))
+                                             (format "/cljs-out/[build-id]-main-%s.js" nm)))))
+
+(defn extra-main-hosting [handler
+                          name-output-to-map]
+  (if (not-empty name-output-to-map)
+    (fn [req]
+      (let [[method uri] ((juxt :request-method :uri) req)]
+        (if (and (= :get method)
+                 (string/starts-with? uri "/figwheel-extra-main/"))
+          (let [nm (string/replace uri "/figwheel-extra-main/" "")]
+            (if-let [output-to (name-output-to-map nm)]
+              (main-action req {:output-to output-to
+                                :header (format "Extra Main: %s Host Page" (string/capitalize nm))
+                                :app-div-class (str "app-" nm)
+                                :sidebar false
+                                :body (extra-main-body nm output-to)})
+              (handler req)))
+          (handler req))))
+    handler))
 
 (defn serve-only-middleware [handler options]
   (missing-index-middleware

@@ -92,8 +92,24 @@
           (log/syntax-exception e)
           (throw e))))))
 
-(def build-cljs (wrap-with-build-logging bapi/build))
-(def fig-core-build (wrap-with-build-logging figwheel.core/build))
+(declare resolve-fn-var)
+
+(defn run-hooks [hooks & args]
+  (when (not-empty hooks)
+    (doseq [h hooks]
+      (apply h args))))
+
+(defn- wrap-with-build-hooks [build-fn]
+  (fn [& args]
+    (run-hooks (::pre-build-hooks *config*) *config*)
+    (apply build-fn args)
+    (run-hooks (::post-build-hooks *config*) *config*)))
+
+(def build-cljs
+  (-> bapi/build wrap-with-build-logging wrap-with-build-hooks))
+
+(def fig-core-build
+  (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks))
 
 (defn config->reload-config [config]
   (select-keys config [:reload-clj-files :wait-time-ms :hawk-options]))
@@ -744,32 +760,50 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                   :else b))
               a' b'))
 
+(defn resolve-fn-var [prefix handler]
+  (if (or (nil? handler) (var? handler))
+    handler
+    (let [prefix (when prefix (str prefix ": "))]
+      (when (and handler (nil? (namespace (symbol handler)))) 
+        (throw
+         (ex-info
+          (format "%sThe var '%s has the wrong form it must be a namespaced symbol" prefix
+                  (pr-str handler))
+          {::error true :handler handler})))
+      (let [handler-res (fw-util/require-resolve-handler-or-error handler)]
+        (when (and handler (not handler-res))
+          (throw (ex-info
+                  (format "%sWas able to load namespace '%s but unable to resolve the specific var: '%s"
+                          prefix
+                          (namespace (symbol handler))
+                          (str handler))
+                  {::error true
+                   :handler handler})))
+        (when (map? handler-res)
+          (letfn [(error [s]
+                    (throw (ex-info s {::error true :handler handler})))]
+            (condp = (:stage handler-res)
+              :bad-namespaced-symbol
+              (do (log/syntax-exception (:exception handler-res))
+                  (error (format "%sThere was an error while trying to resolve '%s"
+                                 prefix
+                                 (pr-str handler))))
+              :unable-to-resolve-handler-fn
+              (error (format "%sWas able to load namespace '%s but unable to resolve the specific var: '%s"
+                             prefix
+                             (namespace (symbol handler))
+                             (str handler)))
+              :unable-to-load-handler-namespace
+              (do
+                (log/syntax-exception (:exception handler-res))
+                (error (format "%sThere was an exception while requiring the namespace '%s while trying to load the var '%s"
+                               prefix
+                               (namespace (symbol handler))
+                               (str handler)))))))
+        handler-res))))
+
 (defn resolve-ring-handler [ring-handler]
-  (let [handler (fw-util/require-resolve-handler-or-error ring-handler)]
-    (when (and ring-handler (not handler))
-      (throw (ex-info (str "Was able to load :ring-handler but unable to resolve the specific var: "
-                       (pr-str ring-handler))
-                      {::error true
-                       :ring-handler ring-handler})))
-    (if (map? handler)
-      (condp = (:stage handler)
-        :bad-namespaced-symbol
-        (throw
-         (ex-info (str ":ring-handler has the wrong form it must be a namespaced symbol "
-                       (pr-str ring-handler))
-                  {::error true
-                   :ring-handler ring-handler} (:exception handler)))
-        :unable-to-resolve-handler-fn
-        (throw
-         (ex-info (str "Was able to load :ring-handler but unable to resolve the specific var: "
-                       (pr-str ring-handler))
-                  {::error true
-                   :ring-handler ring-handler}
-                  (:exception handler)))
-        :unable-to-load-handler-namespace
-        (do (log/syntax-exception (:exception handler))
-            (throw (ex-info "There was an exception while loading the :ring-handler" {::error true}))))
-      handler)))
+  (resolve-fn-var "ring-handler" ring-handler))
 
 (defn process-main-config [{:keys [ring-handler] :as main-config}]
   (let [handler (resolve-ring-handler ring-handler)]
@@ -1218,7 +1252,56 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                 "    the default server will not be able to find your index.html"])))
   cfg)
 
-#_(config-connect-url {::build-name "dev"})
+(defn config-pre-post-hooks [{:keys [::config] :as cfg}]
+  (cond-> cfg
+    (not-empty (:pre-build-hooks config))
+    (update ::pre-build-hooks concat
+            (doall
+             (keep (partial resolve-fn-var "pre-build-hook-fn")
+                   (:pre-build-hooks config))))
+    (not-empty (:post-build-hooks config))
+    (update ::post-build-hooks concat
+            (doall
+             (keep (partial resolve-fn-var "post-build-hook-fn")
+                   (:post-build-hooks config))))))
+
+(defn alter-output-to [nm {:keys [output-to output-dir] :as opts}]
+  (cond
+    output-to
+    (let [f (io/file output-to)
+          fname (string/replace (.getName f) #"\.js$" "")]
+      (assoc opts :output-to
+             (str (io/file (.getParent f) (str fname "-" nm ".js")))))
+    output-dir
+    (assoc opts :output-to (str (io/file output-dir (str "main-" nm ".js"))))
+    :else nil))
+
+(defn extra-main-options [nm em-options options]
+  (cond-> (merge (alter-output-to (name nm) options) em-options)
+    (or (:preloads em-options)
+        (:preloads options))
+    (assoc :preloads (vec (concat
+                           (:preloads options)
+                           (:preloads em-options))))))
+
+(defn extra-main-fn [nm em-options options]
+  ;; TODO modules??
+  (let [opts (extra-main-options nm em-options options)]
+    (fn [_]
+      (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
+      (cljs.closure/output-main-file
+       (cljs.closure/add-implicit-options
+        opts)))))
+
+(defn config-extra-mains [{:keys [::config options] :as cfg}]
+  (let [{:keys [extra-main-files]} config]
+    (if (and (not-empty extra-main-files)
+             (= :none (:optimizations options :none)))
+      (update cfg ::post-build-hooks
+              concat (map (fn [[k v]]
+                            (extra-main-fn k v options))
+                          extra-main-files))
+      cfg)))
 
 (defn update-config [cfg]
   (->> cfg
@@ -1237,12 +1320,14 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        config-default-asset-path
        config-default-aot-cache-false
        npm/config
+       config-pre-post-hooks
        config-repl-connect
        config-cljs-devtools
        config-open-file-command
-       config-eval-back
+       #_config-eval-back
        config-watch-css
        config-finalize-repl-options
+       config-extra-mains
        config-clean
        config-warn-resource-directory-not-on-classpath))
 
@@ -1583,22 +1668,28 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                      (:options b-cfg) cljs.env/*compiler*)
           (cljs.cli/default-main repl-env-fn b-cfg))))))
 
-(defn add-default-system-app-handler [{:keys [options] :as cfg}]
-  (update-in
-   cfg
-   [:repl-env-options
-    :ring-stack-options
-    :figwheel.server.ring/dev
-    :figwheel.server.ring/system-app-handler]
-   (fn [sah]
-     (if sah
-       sah
-       #(helper/missing-index
-         %
-         (if (and (:modules options)
-                  (:output-dir options))
-           {:output-to (str (io/file (:output-dir options) "cljs_base.js"))}
-           (select-keys (:options cfg) [:output-to])))))))
+(defn add-default-system-app-handler [{:keys [options ::config] :as cfg}]
+  (let [extra-mains-name->output-to
+        (into {}
+              (keep (fn [[nm em-options]]
+                      [(name nm) (:output-to (extra-main-options nm em-options options))])
+                    (:extra-main-files config)))]
+    (update-in
+     cfg
+     [:repl-env-options
+      :ring-stack-options
+      :figwheel.server.ring/dev
+      :figwheel.server.ring/system-app-handler]
+     (fn [sah]
+       (if sah
+         sah
+         #(-> %
+           (helper/extra-main-hosting extra-mains-name->output-to)
+           (helper/missing-index
+            (if (and (:modules options)
+                     (:output-dir options))
+              {:output-to (str (io/file (:output-dir options) "cljs_base.js"))}
+              (select-keys (:options cfg) [:output-to])))))))))
 
 (defn validate-basic-assumptions! [{:keys [options ::config] :as cfg}]
   (when (and (= (:mode config) :repl)
