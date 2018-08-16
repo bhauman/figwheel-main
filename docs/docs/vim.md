@@ -2,21 +2,21 @@
 title: Vim
 layout: docs
 category: docs
-order: 10
+order: 20
+published: false
 ---
 
 # Vim
 
-<div class="lead-in">
-  vim-fireplace is the most popular Clojure plugin for Vim, providing
-  good integration with Clojure and ClojureScript REPLs via nREPL and
-  Piggieback.
+<div class="lead-in"><a href="https://github.com/tpope/vim-fireplace">vim-fireplace</a> 
+is the most popular Clojure plugin for Vim, providing good integration
+with Clojure and ClojureScript REPLs via nREPL and Piggieback.
 </div>
 
 ## Quick Setup
 
 If you don't already have vim-fireplace setup head on over to the
-[Github project](https://github.com/tpope/vim-fireplace) and follow
+[Github project][vim-fireplace] and follow
 the installation guide.
 
 To demonstrate how all the pieces fit together we'll create a simple,
@@ -45,8 +45,7 @@ and folders:
 The following is a minimal figwheel dev config, `dev.cljs.edn`:
 
 ```clojure
-^{:open-url false
-  :watch-dirs ["src"]}
+^{:watch-dirs ["src"]}
 {:main fullstack.main}
 ```
 
@@ -74,13 +73,6 @@ Place the following in `project.clj`:
               :resource-paths ["target"]
               :clean-targets ^{:protect false} ["target"]
               :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}})
-```
-
-When the Clojure REPL starts, it will start in the `user` namespace by
-default. So let's create a starter file, `src/user.clj` with just:
-
-```clojure
-(ns user)
 ```
 
 The `src/fullstack/main.clj` will be the entry-point into the
@@ -295,3 +287,5 @@ $ lein repl :connect
 > for this second REPL instance.
 
 Now we have a dedicated REPL for working with Clojure.
+
+[vim-fireplace]: https://github.com/tpope/vim-fireplace
