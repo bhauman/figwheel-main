@@ -473,10 +473,14 @@ For example this will output a dev-main-test.js file for your tests:
 This file will be created in addition to the `dev-main.js` file.
 
 The options will be merged with the ClojureScript options for the
-current build. The only exception to the merge is `:preloads`. If you
-supply `:preloads` in the options map they will be concatenated with
-the existing already supplied `:preloads`. These include the
-`:preloads` that `figwheel.main` has already added.
+current build. Keep in mind that this merge supports keywords prefixed
+with `extra-` when you want the values of these keys to be merged.  If
+you supply `:extra-preloads` in the options map they will be
+concatenated with the existing `:preloads`. Since
+Figwheel works by injecting itself into your config with `:preloads`
+and `:closure-defines` it is recommended that you always use
+`:extra-preloads` and `:extra-closure-defines` if you want to change
+these values.
 
 This extra main will have all the same configured Figwheel options as
 the main build. In other words, the extra main will connect to the

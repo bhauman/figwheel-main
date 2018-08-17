@@ -1276,13 +1276,35 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (assoc opts :output-to (str (io/file output-dir (str "main-" nm ".js"))))
     :else nil))
 
+(defn merge-extra-key-with [m extra-m f k]
+  (if-let [value (get extra-m k)]
+    (let [act-key (keyword (string/replace (name k) #"^extra-" "")) ]
+      (update m act-key f value))
+    m))
+
+(defn merge-extra-cljs-options
+  "Merges ClojureScript options that are collections if they are
+  prepended with :extra."
+  [opts extra-opts]
+  (let [coll-keys [:extra-foreign-libs
+                   :extra-externs
+                   :extra-preloads
+                   :extra-closure-extra-annotations]
+        map-keys [:extra-modules
+                  :extra-npm-deps
+                  :extra-closure-defines
+                  :extra-closure-warnings]]
+    (as-> (merge opts extra-opts) opts
+      (apply dissoc opts
+             (concat coll-keys map-keys
+                     [:extra-warnings]))
+      (merge-extra-key-with opts extra-opts (fn [x y]
+                                              (merge (if (boolean? x) {} x) y)) :extra-warnings)
+      (reduce #(merge-extra-key-with %1 extra-opts (comp vec concat) %2) opts coll-keys)
+      (reduce #(merge-extra-key-with %1 extra-opts merge %2) opts map-keys))))
+
 (defn extra-main-options [nm em-options options]
-  (cond-> (merge (alter-output-to (name nm) options) em-options)
-    (or (:preloads em-options)
-        (:preloads options))
-    (assoc :preloads (vec (concat
-                           (:preloads options)
-                           (:preloads em-options))))))
+  (merge-extra-cljs-options (alter-output-to (name nm) options) em-options))
 
 (defn extra-main-fn [nm em-options options]
   ;; TODO modules??
