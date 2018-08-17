@@ -81,7 +81,7 @@ For example:
 (println "hello")
 ```
 
-This will prevent `hello-world.core` from every being **re-loaded**. It
+This will prevent `hello-world.core` from ever being **re-loaded**. It
 will load the first time but will not be reloaded after that.
 
 ## Force a file to be loaded
@@ -117,10 +117,10 @@ It is common to want to provide callbacks to do some housekeeping
 before or after a hot reload has occurred.
 
 You can conveniently configure reload callbacks at runtime by
-adding first adding `:figwheel-hooks` metatdata to the namespace that
+first adding `:figwheel-hooks` metatdata to the namespace that
 contains functions that you want called on reload.
 
-Once the namespace is marked you will want then need to add
+Once the namespace is marked you will then need to add
 `:before-load` and `:after-load` metadata to the functions that you
 want called on every reload.
 
