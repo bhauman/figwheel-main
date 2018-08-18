@@ -19,11 +19,12 @@ Extra mains have the advantage of running in the build that declares
 them. This makes them much lighter and simpler than running
 [background builds][background-builds]. It also means they all share
 the same broadcast updates when a file changes. In other words when a
-source file changes the extra main apps all get the message, but the
-namespace is only reloaded when it's in the app's dependency tree.
+source file changes all of the extra main apps get the change message,
+but the namespace is only reloaded when it is in the app's dependency
+tree.
 
 The best part of the extra mains feature is that Figwheel provides
-default web endpoints so you can easily load them without having to
+default web endpoints and you can easily use them without having to
 create a host page.
 
 Let's look at an example of using an extra main, so that we have a
