@@ -1305,9 +1305,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
 (defn extra-main-options [nm em-options options]
   ;; need to remove modules so that we get a funcitioning independent main endpoint
-  (merge-extra-cljs-options (dissoc (alter-output-to options (name nm))
-                                    :modules)
-                            em-options))
+  (merge-extra-cljs-options
+   (dissoc (alter-output-to (name nm) options) :modules)
+   em-options))
 
 (defn extra-main-fn [nm em-options options]
   ;; TODO modules??
