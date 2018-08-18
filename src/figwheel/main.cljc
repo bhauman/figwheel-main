@@ -1304,7 +1304,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
       (reduce #(merge-extra-key-with %1 extra-opts merge %2) opts map-keys))))
 
 (defn extra-main-options [nm em-options options]
-  (merge-extra-cljs-options (alter-output-to (name nm) options) em-options))
+  ;; need to remove modules so that we get a funcitioning independent main endpoint
+  (merge-extra-cljs-options (dissoc (alter-output-to options (name nm))
+                                    :modules)
+                            em-options))
 
 (defn extra-main-fn [nm em-options options]
   ;; TODO modules??
