@@ -1596,7 +1596,11 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
     (background-build cfg build)))
 
 (defn validate-fix-target-classpath! [{:keys [::config ::build options]}]
-  (when (nil? (:target options)) ;; browsers need the target classpath to load files
+  (when (and (nil? (:target options))
+             ;; if build-once and not :serve -> don't validate fix classpath
+             (not (and (::build-once config)
+                       (not (= (:mode config) :serve)))))
+    ;; browsers need the target classpath to load files
     (when-not (contains? (:ring-stack-options config) :static)
       (when-let [output-to (:output-dir options (:output-to options))]
         (when-not (.isAbsolute (io/file output-to))
