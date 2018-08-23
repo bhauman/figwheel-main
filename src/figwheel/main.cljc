@@ -1454,7 +1454,7 @@ This can cause confusion when your are not using Cider."
                                                false
                                                ansip/*use-color*)]
                    (ansip/format-str (log/format-ex except-data))))
-        #_(clojure.pprint/pprint (Throwable->map err))
+        (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map err))))
         (flush)))))
 
 (def repl-header
