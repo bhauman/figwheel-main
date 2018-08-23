@@ -1582,6 +1582,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
           :repl-options repl-options
           :config *config*
           :background true})
+        
         (when (first (filter #{'figwheel.core} (:preloads (:options cfg))))
           ;; let's take parent repl-env and change the connection filter
           (binding [cljs.repl/*repl-env* repl-env
@@ -1859,10 +1860,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 ;; CLJS REPL api
 ;; ----------------------------------------------------------------------------
 
-(defn currently-watched-ids []
-  (set (map second (filter
-               #(and (coll? %) (= (first %) ::autobuild))
-               (keys (:watches @fww/*watcher*))))))
+(defn currently-watched-ids [] (set (keys @build-registry)))
 
 (defn currently-available-ids []
   (into (currently-watched-ids)
@@ -1871,19 +1869,13 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                           (file-seq (io/file "."))))))
 
 (defn config-for-id [id]
-  (update-config (build-opt *base-config* "dev")))
+  (update-config (build-opt {} id)))
 
 (defn clean-build [{:keys [output-to output-dir]}]
   (when (and output-to output-dir)
     (doseq [file (cons (io/file output-to)
                        (reverse (file-seq (io/file output-dir))))]
       (when (.exists file) (.delete file)))))
-
-(defn select-autobuild-watches [ids]
-  (->> ids
-       (map #(vector ::autobuild %))
-       (select-keys (:watches @fww/*watcher*))
-       vals))
 
 (defn warn-on-bad-id [ids]
   (when-let [bad-ids (not-empty (remove (currently-watched-ids) ids))]
@@ -1896,9 +1888,10 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defn clean* [ids]
   (let [ids (->> ids (map name) distinct)]
     (warn-on-bad-id ids)
-    (doseq [watch' (select-autobuild-watches ids)]
-      (when-let [options (-> watch' ::watch-info :options)]
-        (println "Cleaning build id:" (-> watch' ::watch-info :id))
+    (doseq [id ids]
+      (when-let [options (-> build-registry deref (get id) :config :options)]
+        (clojure.pprint/pprint options)
+        (println "Cleaning build id:" id)
         (clean-build options)))))
 
 (defmacro ^:cljs-repl-api clean
