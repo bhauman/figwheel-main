@@ -454,6 +454,38 @@ on a Nodejs app in parallel with your main build.
 
     ::extra-main-files {:devcards {:main example.devcards}}
 
+## :build-inputs
+
+Build inputs are passed as the first argument to the CLJS compiler.
+
+Build inputs are normally a list of sources (files and directories)
+for the compiler to compile.
+
+Figwheel attempts to provide build inputs to the ClojureScript
+compiler based on your current configuration. The logic is roughly: if
+you are using `:optimizations` level `:none` and not only building
+once, use the `:watch-dirs` as the build inputs, otherwise use the
+`:main` namespace as the build input.
+
+Using the `:watch-dirs` as a build input has the advantage that
+Figwheel will watch and compile all the source files in the
+`:watch-dirs` even if they are not required in your application
+yet. This allows Figwheel to provide compiler feedback while you are
+working on files that are not in your require tree.
+
+When you provide a `:build-inputs` in your config you will be
+overriding the default Figwheel behavior and be specifing which
+specific inputs you want to send to the compiler.
+
+`:build-inputs` is a collection of:
+
+* strings representing paths to source files and directories
+* namespace symbols that are on the classpath
+* the keyword `:main` which will be replaced with the namespace in your `:main` CLJS option
+* the keyword `:watch-dirs` which will be replaced with your configured `:watch-dirs`
+
+    :build-inputs [:watch-dirs example.core-tests "extra-src"]
+
 # Rarely used options
 
 ## :client-print-to
