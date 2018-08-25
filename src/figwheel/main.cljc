@@ -111,17 +111,20 @@
 (def fig-core-build
   (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks))
 
+;; TODO the word config is soo abused in this namespace that it's hard to
+;; know what and argument is supposed to be
 (defn config->reload-config [config]
   (select-keys config [:reload-clj-files :wait-time-ms :hawk-options]))
 
-(defn watch-build [id inputs opts cenv & [reload-config]]
-  (when-let [inputs (if (coll? inputs) inputs [inputs])]
+(defn watch-build [id paths inputs opts cenv & [reload-config]]
+  (when-let [inputs (not-empty (if (coll? inputs) inputs [inputs]))]
     (let [build-inputs (if (coll? inputs) (apply bapi/inputs inputs) inputs)
           ;; the build-fn needs to be passed in before here?
           build-fn (if (some #{'figwheel.core} (:preloads opts))
                      #(fig-core-build id build-inputs opts cenv %)
                      (fn [files] (build-cljs id build-inputs opts cenv)))]
-      (log/info "Watching and compiling paths:" (pr-str inputs) "for build -" id)
+      (log/info "Watching paths:" (pr-str paths) "to compile build -" id)
+      (log/debug "Build Inputs:" (pr-str inputs))
       (binding [fww/*hawk-options* (:hawk-options reload-config nil)]
         (fww/add-watch!
          [::autobuild id]
@@ -129,11 +132,12 @@
           {::watch-info (merge
                          (:extra-info reload-config)
                          {:id id
-                          :paths inputs
+                          :paths paths
+                          :inputs inputs
                           :options opts
                           :compiler-env cenv
                           :reload-config reload-config})}
-          {:paths inputs
+          {:paths paths
            :filter (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
            :handler (fww/throttle
                      (:wait-time-ms reload-config 50)
@@ -1328,6 +1332,13 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                           extra-main-files))
       cfg)))
 
+#_(defn config-build-inputs [{:keys [options ::build-inputs] :as cfg}]
+  (if )
+  (cond-> build-inputs
+    
+      ))
+
+
 (defn update-config [cfg]
   (->> cfg
        config-figwheel-main-edn
@@ -1360,24 +1371,30 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 ;; Main action
 ;; ----------------------------------------------------------------------------
 
+(defn config->inputs [{:keys [watch-dirs mode ::build ::build-once] :as config} options]
+  (log/info "options" (with-out-str (pprint options)))
+  (log/info "watch-dirs" (pr-str watch-dirs))
+  (if-let [inputs (and (not build-once)
+                       (= :none (:optimizations options :none))
+                       (not-empty watch-dirs))]
+    inputs
+    (let [source (when (:main options)
+                   (:uri (fw-util/ns->location (symbol (:main options)))))]
+      (cond
+        source [source]
+        (not-empty watch-dirs) watch-dirs))))
+
 (defn build [{:keys [watch-dirs mode ::build ::build-once] :as config}
              options cenv]
-  (let [id (:id (::build *config*) "unknown")]
-    (if-let [paths (and (not build-once)
-                        (= :none (:optimizations options :none))
-                        (not-empty watch-dirs))]
-      ;; only build all paths when opt :none and doing a watching build
-      (do
-        (build-cljs id (apply bapi/inputs paths) options cenv)
-        (watch-build id paths options cenv (config->reload-config config)))
-      (let [source (when (:main options)
-                     (:uri (fw-util/ns->location (symbol (:main options)))))]
-        (cond
-          source
-          (build-cljs id source options cenv)
-          ;; TODO need :compile-paths config param
-          (not-empty watch-dirs)
-          (build-cljs id (apply bapi/inputs watch-dirs) options cenv))))))
+  (let [id (:id (::build *config*) "unknown")
+        inputs (config->inputs config options)]
+    (assert (not-empty inputs) "Should have at least one build input!")
+    (build-cljs id (apply bapi/inputs inputs) options cenv)
+    ;; are we watching?
+    (when-let [paths (and (not build-once)
+                          (= :none (:optimizations options :none))
+                          (not-empty watch-dirs))]
+      (watch-build id paths inputs options cenv (config->reload-config config)))))
 
 (defn log-server-start [repl-env]
   (let [host (get-in repl-env [:ring-server-options :host] "localhost")
@@ -1563,16 +1580,18 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                    repl-env-options
                    (select-keys cljs.repl/*repl-env* [:server])))
         cenv (cljs.env/default-compiler-env)
-        repl-options (assoc repl-options :compiler-env cenv)]
+        repl-options (assoc repl-options :compiler-env cenv)
+        build-inputs (config->inputs config options)]
     (when (empty? (:watch-dirs config))
           (log/failure (format "Can not watch build \"%s\" with no :watch-dirs" id)))
     (when (not-empty (:watch-dirs config))
       (log/info "Starting background autobuild - " (:id build))
       (binding [*config* cfg
                 cljs.env/*compiler* cenv]
-        (build-cljs (:id build) (apply bapi/inputs (:watch-dirs config)) (:options cfg) cenv)
+        (build-cljs (:id build) (apply bapi/inputs build-inputs) (:options cfg) cenv)
         (watch-build (:id build)
                      (:watch-dirs config)
+                     build-inputs
                      (:options cfg)
                      cenv
                      (config->reload-config config))
@@ -1948,12 +1967,14 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   (when-let [{:keys [repl-env repl-options] :as build-info} (get @build-registry (name id))]
     (let [{:keys [options ::config]} (:config build-info)
           {:keys [watch-dirs]} config
-          compiler-env (:compiler-env repl-options)]
+          compiler-env (:compiler-env repl-options)
+          build-inputs (config->inputs config options)]
       (println "Starting build id:" id)
       ;; XXX should this have syntax error feedback?
-      (bapi/build (apply bapi/inputs watch-dirs) options compiler-env)
+      (build-cljs id (apply bapi/inputs build-inputs) options compiler-env)
       (watch-build id
                    watch-dirs
+                   build-inputs
                    options
                    compiler-env
                    (config->reload-config config))
