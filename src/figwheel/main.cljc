@@ -1550,7 +1550,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defonce build-registry (atom {}))
 
 (defn register-build! [id build-info]
-  (swap! build-registry assoc id build-info))
+  (swap! build-registry assoc id (assoc build-info :id id)))
 
 (defn background-build [cfg {:keys [id config options]}]
   (let [{:keys [::build ::config repl-env-options repl-options] :as cfg}
@@ -1860,16 +1860,29 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 ;; CLJS REPL api
 ;; ----------------------------------------------------------------------------
 
-(defn currently-watched-ids [] (set (keys @build-registry)))
+;; Unfortunately this is rather hacky way to allow some control over builds
+;; this works fine for allowing folks to reset builds that are running
+;; but not super helpful otherwise
 
-(defn currently-available-ids []
-  (into (currently-watched-ids)
-        (map second (keep #(when (fww/real-file? %)
-                             (re-matches #"(.+)\.cljs\.edn" (.getName %)))
-                          (file-seq (io/file "."))))))
+;; this does not allow starting up new builds or truely dropping a
+;; build it only manages stopping and starting the the watcher
+;; process, reloading the config, and stopping the watcher process
+;; it doesn't stop and restart the server as that would interrupt the repl
+;; session
 
+(defn autobuilding-ids []
+  (->> (:watches @fww/*watcher*)
+       keys
+       (filter #(-> % first (= ::autobuild)))
+       (map second)
+       set))
+
+(defn currently-available-ids [] (set (keys @build-registry)))
+
+;; doesn't respect ::start-figwheel-options
 (defn config-for-id [id]
-  (update-config (build-opt {} id)))
+  (when-let [{:keys [config]} (get @build-registry id)]
+    config))
 
 (defn clean-build [{:keys [output-to output-dir]}]
   (when (and output-to output-dir)
@@ -1878,9 +1891,9 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
       (when (.exists file) (.delete file)))))
 
 (defn warn-on-bad-id [ids]
-  (when-let [bad-ids (not-empty (remove (currently-watched-ids) ids))]
+  (when-let [bad-ids (not-empty (remove (currently-available-ids) ids))]
     (doseq [bad-id bad-ids]
-      (println "No autobuild currently has id:" bad-id))))
+      (println "No available build currently has id:" bad-id))))
 
 ;; TODO this should clean ids that are not currently running as well
 ;; TODO should this default to cleaning all builds??
@@ -1890,7 +1903,6 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
     (warn-on-bad-id ids)
     (doseq [id ids]
       (when-let [options (-> build-registry deref (get id) :config :options)]
-        (clojure.pprint/pprint options)
         (println "Cleaning build id:" id)
         (clean-build options)))))
 
@@ -1902,7 +1914,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 
 (defn status* []
   (println "------- Figwheel Main Status -------")
-  (if-let [ids (not-empty (currently-watched-ids))]
+  (println "Currently available:" (string/join ", " (currently-available-ids)))
+  (if-let [ids (not-empty (autobuilding-ids))]
     (println "Currently building:" (string/join ", " ids))
     (println "No builds are currently being built.")))
 
@@ -1924,63 +1937,66 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defmacro ^:cljs-repl-api stop-builds
   "Takes one or more build ids and stops watching and compiling them."
   [& build-ids]
-  (stop-builds* build-ids)
+  (stop-builds*
+   (or (not-empty build-ids)
+       (autobuilding-ids)))
   nil)
 
-(defn main-build? [id]
-  (and *config* (= (name id) (-> *config* ::build :id))))
-
-(defn hydrate-all-background-builds [cfg ids]
-  (reduce background-build-opt (dissoc cfg ::background-builds) ids))
+(defn start-build*
+  "This starts a build that has previously been stopped."
+  [id]
+  (when-let [{:keys [repl-env repl-options] :as build-info} (get @build-registry (name id))]
+    (let [{:keys [options ::config]} (:config build-info)
+          {:keys [watch-dirs]} config
+          compiler-env (:compiler-env repl-options)]
+      (println "Starting build id:" id)
+      ;; XXX should this have syntax error feedback?
+      (bapi/build (apply bapi/inputs watch-dirs) options compiler-env)
+      (watch-build id
+                   watch-dirs
+                   options
+                   compiler-env
+                   (config->reload-config config))
+      ;; this might not even need to be done
+      #_(when (first (filter #{'figwheel.core} (:preloads options)))
+        (binding [cljs.repl/*repl-env* repl-env]
+          (figwheel.core/start*))))))
 
 (defn start-builds* [ids]
   (let [ids (->> ids (map name) distinct)
-        already-building (not-empty (filter (currently-watched-ids) ids))
-        ids (filter (complement (currently-watched-ids)) ids)]
+        already-building (not-empty (filter (autobuilding-ids) ids))
+        ids (filter (complement (autobuilding-ids)) ids)]
     (when (not-empty already-building)
       (doseq [i already-building]
         (println "Already building id: " i)))
-    (let [main-build-id     (first (filter main-build? ids))
-          bg-builds (remove main-build? ids)]
-      (when main-build-id
-        (let [{:keys [options repl-env-options ::config]} *config*
-              {:keys [watch-dirs]} config]
-          (println "Starting build id:" main-build-id)
-          ;; XXX should this have syntax error feedback?
-          (bapi/build (apply bapi/inputs watch-dirs) options cljs.env/*compiler*)
-          (watch-build main-build-id
-                       watch-dirs options
-                       cljs.env/*compiler*
-                       (config->reload-config config))
-          (when (first (filter #{'figwheel.core} (:preloads options)))
-            (binding [cljs.repl/*repl-env* (figwheel.repl/repl-env*
-                                            (select-keys repl-env-options
-                                                         [:connection-filter]))]
-              (figwheel.core/start*)))))
-      (when (not-empty bg-builds)
-        (let [cfg (hydrate-all-background-builds
-                   {::start-figwheel-options (::config *config*)}
-                   bg-builds)]
-          (start-background-builds cfg))))))
+    (doseq [id ids]
+      (start-build* id))))
 
-;; TODO should this default to stopping all builds??
-;; I think yes
 (defmacro ^:cljs-repl-api start-builds
   "Takes one or more build names and starts them building."
   [& build-ids]
-  (start-builds* build-ids)
+  (start-builds*
+   (or (not-empty build-ids)
+       (currently-available-ids)))
   nil)
 
-(defn reload-config* []
-  (println "Reloading config!")
-  (set! *config* (update-config *base-config*)))
+(defn reload-config* [id]
+  (println "Reloading config for id:" id)
+  ;; update the config in the registry
+  (when-let [{:keys [build-info]} (get (currently-available-ids) (name id))] 
+    (swap! build-registry update-in [id :config]
+           #(update-config
+             (-> (when (::start-figwheel-options %)
+                   (select-keys % ::start-figwheel-options))
+                 (build-opt id)
+                 (assoc-in [::config :mode] :repl))))))
 
 (defn reset* [ids]
   (let [ids (->> ids (map name) distinct)
-        ids (or (not-empty ids) (currently-watched-ids))]
+        ids (or (not-empty ids) (autobuilding-ids))]
     (clean* ids)
     (stop-builds* ids)
-    (reload-config*)
+    (mapv reload-config* ids)
     (start-builds* ids)
     nil))
 
@@ -1990,6 +2006,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   [& build-ids]
   (reset* build-ids))
 
+;; TODO build inputs will affect this
 (defn build-once* [ids]
   (let [ids (->> ids (map name) distinct)
         bad-ids (filter (complement (currently-available-ids)) ids)
