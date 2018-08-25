@@ -1,3 +1,23 @@
+# 0.1.8 Extra Mains, Much better NPM and Global exports support, Smiley!
+
+The new `:extra-main-files` option makes integrating things like tests
+and devcards to your build super simple and CPU efficient
+[Learn more](https://figwheel.org/docs/extra_mains.html)
+
+There was a long standing bug with `:global-exports` support that I
+was able to squash which in turn led to changes that make working with
+npm modules much easier.
+
+The new `:npm` option will help you make quick work of integrating
+webpack bundled npm modules into your
+build. [Learn more](https://figwheel.org/config-options#npm)
+
+* added `:pre-build-hooks` and `:post-build-hooks` config options [Learn more](https://figwheel.org/config-options#pre-build-hooks)
+* fixed the `figwheel.main` api in the CLJS repl so that it works
+  properly under nREPL
+* added the `:build-inputs` config option [Learn More](https://figwheel.org/config-options#build-inputs)
+* finally added the validation smiley `\\(ツ)/`, I pretty much had to after I saw this [tweet](https://twitter.com/yatesco/status/1027352003868065793)
+
 # 0.1.7 Fix for nREPL
 
 Fixes a bug that was deleting the listeners that notified the client
