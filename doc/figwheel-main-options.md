@@ -484,6 +484,7 @@ specific inputs you want to send to the compiler.
 * the keyword `:main` which will be replaced with the namespace in your `:main` CLJS option
 * the keyword `:watch-dirs` which will be replaced with your configured `:watch-dirs`
 
+
     :build-inputs [:watch-dirs example.core-tests "extra-src"]
 
 # Rarely used options
