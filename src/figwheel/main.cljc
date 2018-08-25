@@ -1248,7 +1248,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
   ;; this could check for other directories than resources
   ;; but this is mainly to help newcomers
   (when (and (nil? (:target options))
-             (#{:repl :serve} (:mode config))
+             (or (and (::build-once config)
+                      (#{:serve} (:mode config)))
+                 (#{:repl :serve} (:mode config)))
              (.isFile (io/file "resources/public/index.html"))
              (not (fw-util/dir-on-classpath? "resources")))
     (log/warn (ansip/format-str
@@ -1332,15 +1334,49 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                           extra-main-files))
       cfg)))
 
-#_(defn config-build-inputs [{:keys [options ::build-inputs] :as cfg}]
-  (if )
-  (cond-> build-inputs
-    
-      ))
+(defn expand-build-inputs [{:keys [watch-dirs build-inputs] :as config} {:keys [main] :as options}]
+  (doall
+   (distinct
+    (mapcat
+     (fn [x]
+       (cond
+         (= x :main)
+         (when-let [{:keys [uri]} (and main (fw-util/ns->location (symbol main)))]
+           [uri])
+         (symbol? x)
+         (when-let [{:keys [uri]} (fw-util/ns->location x)]
+           [uri])
+         (= x :watch-dirs)
+         watch-dirs
+         :else [x]))
+     build-inputs))))
 
+(defn config->inputs [{:keys [watch-dirs mode build-inputs ::build-once] :as config} options]
+  (if (not-empty build-inputs)
+    (expand-build-inputs config options)
+    (if-let [inputs (and (not build-once)
+                         (= :none (:optimizations options :none))
+                         (not-empty watch-dirs))]
+      inputs
+      (let [source (when (:main options)
+                     (:uri (fw-util/ns->location (symbol (:main options)))))]
+        (cond
+          source [source]
+          (not-empty watch-dirs) watch-dirs)))))
+
+(defn config-build-inputs [{:keys [options ::config] :as cfg}]
+  (if-let [inputs (not-empty (config->inputs config options))]
+    (update-in cfg [::config ::build-inputs] (comp vec distinct concat) inputs)
+    cfg))
+
+(defn config-compile-is-build-once [cfg]
+  (cond-> cfg
+    (= (set (keys cfg)) #{:args :ns})
+    (assoc-in [::config ::build-once] true)))
 
 (defn update-config [cfg]
   (->> cfg
+       config-compile-is-build-once
        config-figwheel-main-edn
        config-merge-current-build-conf
        config-ansi-color-output!
@@ -1349,6 +1385,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        config-repl-serve?
        config-main-ns
        config-main-source-path-on-classpath
+
        config-update-watch-dirs
        config-ensure-watch-dirs-on-classpath
        config-figwheel-mode?
@@ -1364,6 +1401,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        config-watch-css
        config-finalize-repl-options
        config-extra-mains
+       config-build-inputs
        config-clean
        config-warn-resource-directory-not-on-classpath))
 
@@ -1371,30 +1409,16 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 ;; Main action
 ;; ----------------------------------------------------------------------------
 
-(defn config->inputs [{:keys [watch-dirs mode ::build ::build-once] :as config} options]
-  (log/info "options" (with-out-str (pprint options)))
-  (log/info "watch-dirs" (pr-str watch-dirs))
-  (if-let [inputs (and (not build-once)
-                       (= :none (:optimizations options :none))
-                       (not-empty watch-dirs))]
-    inputs
-    (let [source (when (:main options)
-                   (:uri (fw-util/ns->location (symbol (:main options)))))]
-      (cond
-        source [source]
-        (not-empty watch-dirs) watch-dirs))))
-
-(defn build [{:keys [watch-dirs mode ::build ::build-once] :as config}
+(defn build [{:keys [watch-dirs mode ::build-once ::build-inputs] :as config}
              options cenv]
-  (let [id (:id (::build *config*) "unknown")
-        inputs (config->inputs config options)]
-    (assert (not-empty inputs) "Should have at least one build input!")
-    (build-cljs id (apply bapi/inputs inputs) options cenv)
+  (let [id (:id (::build *config*) "unknown")]
+    (assert (not-empty build-inputs) "Should have at least one build input!")
+    (build-cljs id (apply bapi/inputs build-inputs) options cenv)
     ;; are we watching?
     (when-let [paths (and (not build-once)
                           (= :none (:optimizations options :none))
                           (not-empty watch-dirs))]
-      (watch-build id paths inputs options cenv (config->reload-config config)))))
+      (watch-build id paths build-inputs options cenv (config->reload-config config)))))
 
 (defn log-server-start [repl-env]
   (let [host (get-in repl-env [:ring-server-options :host] "localhost")
@@ -1581,7 +1605,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                    (select-keys cljs.repl/*repl-env* [:server])))
         cenv (cljs.env/default-compiler-env)
         repl-options (assoc repl-options :compiler-env cenv)
-        build-inputs (config->inputs config options)]
+        build-inputs (::build-inputs config)]
     (when (empty? (:watch-dirs config))
           (log/failure (format "Can not watch build \"%s\" with no :watch-dirs" id)))
     (when (not-empty (:watch-dirs config))
@@ -1966,9 +1990,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   [id]
   (when-let [{:keys [repl-env repl-options] :as build-info} (get @build-registry (name id))]
     (let [{:keys [options ::config]} (:config build-info)
-          {:keys [watch-dirs]} config
-          compiler-env (:compiler-env repl-options)
-          build-inputs (config->inputs config options)]
+          {:keys [watch-dirs ::build-inputs]} config
+          compiler-env (:compiler-env repl-options)]
       (println "Starting build id:" id)
       ;; XXX should this have syntax error feedback?
       (build-cljs id (apply bapi/inputs build-inputs) options compiler-env)

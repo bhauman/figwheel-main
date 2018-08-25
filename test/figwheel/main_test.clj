@@ -52,8 +52,8 @@
     {:figwheel-main.edn {:target-dir "never-gonna-find-me-now"}}
     (is (string/includes? (with-out-str (main->config "-b" "dev"))
                           "Attempting to dynamically add \"never-gonna-find-me-now\""))
-    (is (string/includes? (with-out-str (main->config "-bo" "dev"))
-                          "Attempting to dynamically add \"never-gonna-find-me-now\""))
+    (is (not (string/includes? (with-out-str (main->config "-bo" "dev"))
+                               "Attempting to dynamically add \"never-gonna-find-me-now\"")))
     (is (string/includes? (with-out-str (main->config "-c" "figwheel.main"))
                           "Attempting to dynamically add \"never-gonna-find-me-now\""))))
 

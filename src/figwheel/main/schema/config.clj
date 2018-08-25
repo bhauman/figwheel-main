@@ -7,7 +7,7 @@
    [figwheel.main.util :as util]
    [figwheel.main.schema.core
     :as schema
-    :refer [def-spec-meta non-blank-string? directory-exists?
+    :refer [def-spec-meta non-blank-string? directory-exists? file-exists?
             ensure-all-registered-keys-included]]
    [expound.alpha :as exp]
    [spell-spec.alpha :as spell]
@@ -515,6 +515,49 @@ on a Nodejs app in parallel with your main build.
     ::extra-main-files {:devcards {:main example.devcards}}"
   :group :common)
 
+(s/def ::build-inputs
+  (s/coll-of (s/or :keyword (s/and keyword? #{:main :watch-dirs})
+                   :non-blank-string (s/and non-blank-string?
+                                            (s/or
+                                             :file file-exists?
+                                             :directory
+                                             (s/and directory-exists?
+                                                    ::schema/has-cljs-source-files)))
+                   :namespace ::schema/unquoted-symbol)))
+
+(def-spec-meta ::build-inputs
+  :doc
+ "Build inputs are passed as the first argument to the CLJS compiler.
+
+Build inputs are normally a list of sources (files and directories)
+for the compiler to compile.
+
+Figwheel attempts to provide build inputs to the ClojureScript
+compiler based on your current configuration. The logic is roughly: if
+you are using `:optimizations` level `:none` and not only building
+once, use the `:watch-dirs` as the build inputs, otherwise use the
+`:main` namespace as the build input.
+
+Using the `:watch-dirs` as a build input has the advantage that
+Figwheel will watch and compile all the source files in the
+`:watch-dirs` even if they are not required in your application
+yet. This allows Figwheel to provide compiler feedback while you are
+working on files that are not in your require tree.
+
+When you provide a `:build-inputs` in your config you will be
+overriding the default Figwheel behavior and be specifing which
+specific inputs you want to send to the compiler.
+
+`:build-inputs` is a collection of:
+
+* strings representing paths to source files and directories
+* namespace symbols that are on the classpath
+* the keyword `:main` which will be replaced with the namespace in your `:main` CLJS option
+* the keyword `:watch-dirs` which will be replaced with your configured `:watch-dirs`
+
+    :build-inputs [:watch-dirs example.core-tests \"extra-src\"]"
+  :group :common)
+
 ;; -------------------------------XXXXXXXXXXXX
 
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
@@ -677,6 +720,7 @@ be useful for certain docker environments.
      ::pre-build-hooks
      ::post-build-hooks
      ::extra-main-files
+     ::build-inputs
      
      ::helpful-classpaths
 
