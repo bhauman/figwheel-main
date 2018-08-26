@@ -29,7 +29,7 @@
    #(async-result/send
      (if (failed? %)
        :figwheel.main.result/system-exit-1
-       ::successly)
+       ::success)
      )))
 
 )
@@ -83,7 +83,7 @@
           (run-tests ~env-or-ns ~@test-nses)
           (if (failed? @figwheel.main.testing/test-result-data)
             :figwheel.main.result/system-exit-1
-            ::successes)))))
+            ::success)))))
   ([env-or-ns & namespaces]
    `(cljs.test/run-tests ~env-or-ns ~@namespaces)))
 
