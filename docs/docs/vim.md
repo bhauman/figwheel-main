@@ -36,10 +36,9 @@ and folders:
 └── src
     ├── cljs
     │   └── user.cljs
-    ├── fullstack
-    │   ├── main.clj
-    │   └── main.cljs
-    └── user.clj
+    └── fullstack
+        ├── main.clj
+        └── main.cljs
 ```
 
 The following is a minimal figwheel dev config, `dev.cljs.edn`:
@@ -48,13 +47,6 @@ The following is a minimal figwheel dev config, `dev.cljs.edn`:
 ^{:watch-dirs ["src"]}
 {:main fullstack.main}
 ```
-
-> We're using `:open-url false` so that figwheel doesn't automatically
-> open a browser tab when it starts figwheel, the ClojureScript REPL,
-> etc.
->
-> For the process we're describing here this would otherwise happen
-> multiple times, so this just makes things a bit smoother.
 
 Create a `resources` folder. We'll leave it empty for now.
 
@@ -75,9 +67,8 @@ Place the following in `project.clj`:
               :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}})
 ```
 
-The `src/fullstack/main.clj` will be the entry-point into the
-server-side (Clojure) application (if you choose to make use of it). We
-can start out with a minimal file:
+`src/fullstack/main.clj` will be the entry-point into the server-side
+(Clojure) application . We can start out with a minimal file:
 
 ```clojure
 (ns fullstack.main)
@@ -86,8 +77,8 @@ can start out with a minimal file:
   (println "Hello from CLJ main"))
 ```
 
-The `src/fullstack/main.cljs` will be the entry-point into the
-client-side (ClojureScript) application. We can just start with:
+`src/fullstack/main.cljs` will be the entry-point into the client-side
+(ClojureScript) application. We can just start with:
 
 ```clojure
 (ns fullstack.main)
