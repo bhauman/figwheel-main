@@ -23,6 +23,7 @@
         [figwheel.main.watching :as fww]
         [figwheel.main.helper :as helper]
         [figwheel.main.npm :as npm]
+        [figwheel.main.async-result :as async-result]
         [figwheel.repl :as fw-repl]
         [figwheel.tools.exceptions :as fig-ex]))
   #?(:clj
@@ -1739,7 +1740,36 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
          (build-cljs (get-in b-cfg [::build :id] "figwheel-main-option-build")
                      source
                      (:options b-cfg) cljs.env/*compiler*)
-          (cljs.cli/default-main repl-env-fn b-cfg))))))
+         ;; all the complexity below is to handle async results from -main
+         (let [stolen-repl-env (promise)
+               result-prom (promise)]
+           (async-result/listen result-prom)
+           (try 
+             (with-redefs [cljs.repl/tear-down (partial deliver stolen-repl-env)]
+               (let [res (cljs.cli/default-main repl-env-fn b-cfg)
+                     parsed-result (try
+                                     (read-string res)
+                                     (catch Throwable t
+                                       ::read-error))]
+                 (if (= parsed-result ::read-error)
+                   (deliver result-prom res)
+                   (if (and (coll? parsed-result)
+                            (= (first parsed-result) :figwheel.main.result/async-wait))
+                     (let [[_ arg1 arg2] parsed-result
+                           timeout-val (or arg2 :figwheel.main.result/system-exit-1)]
+                       (when (= timeout-val (deref result-prom (or arg1 5000) timeout-val))
+                         (println (pr-str timeout-val))
+                         (throw (ex-info "Main script timed out" {::system-exit 1
+                                                                  :value timeout-val}))))
+                     (deliver result-prom parsed-result)))
+                 (let [final-result @result-prom]
+                   (if (= final-result :figwheel.main.result/system-exit-1)
+                     (throw (ex-info "System error exit from ClojureScript" {::system-exit 1}))
+                     (if (string? final-result)
+                       (println final-result)
+                       (println (pr-str final-result)))))))
+             (finally
+               (cljs.repl/tear-down @stolen-repl-env)))))))))
 
 (defn add-default-system-app-handler [{:keys [options ::config] :as cfg}]
   (let [extra-mains-name->output-to
@@ -2125,13 +2155,17 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
         (apply cljs.main/-main args')))
     (catch Throwable e
       (let [d (ex-data e)]
-        (if (or (:figwheel.main.schema.core/error d)
-                (:figwheel.main.schema.cli/error d)
-                (:cljs.main/error d)
-                (::error d))
+        (if (or
+             (:figwheel.main.schema.core/error d)
+             (:figwheel.main.schema.cli/error d)
+             (:cljs.main/error d)
+             (::error d))
           (binding [*out* *err*]
             (println (.getMessage e)))
-          (throw e))))))))
+          (throw e))))))
+
+)
+   )
 
 #_(def test-args
   (concat ["-co" "{:aot-cache false :asset-path \"out\"}" "-b" "dev" "-e" "(figwheel.core/start-from-repl)"]
