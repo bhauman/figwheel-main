@@ -105,7 +105,7 @@ Now we can start figwheel:
 ```clojure
 user=> (require 'figwheel.main)
 
-user=> (figwheel.main/start {:mode :serve} "dev")
+user=> (figwheel.main.api/start {:mode :serve} "dev")
 ```
 
 Some log messages will appear including something like:
@@ -128,7 +128,7 @@ within.
 Start the ClojureScript REPL:
 
 ```clojure
-user=> (figwheel.main/cljs-repl "dev")
+user=> (figwheel.main.api/cljs-repl "dev")
 ```
 
 Test the connection to the browser with an alert:
@@ -143,7 +143,7 @@ Now let's connect fireplace. Run this command in Vim while in a
 ClojureScript buffer:
 
 ```vim
-:Piggieback (figwheel.main/repl-env "dev")
+:Piggieback (figwheel.main.api/repl-env "dev")
 ```
 
 This should return immediately if successful.

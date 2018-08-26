@@ -20,12 +20,12 @@
   the first argument can optionally be a map of Figwheel Main options.
 
   A `build` arg can be either:
-  * the name of a build like \"dev\" (described in a .cljs.edn file) 
+  * the name of a build like \"dev\" (described in a .cljs.edn file)
   * a map describing a build with the following form
-  
+
   ```
   {
-       :id      \"dev\"                  ; a required string build id   
+       :id      \"dev\"                  ; a required string build id
        :options {:main hello-world.core} ; a required map of cljs compile options
        :config  {:watch-dirs [\"src\"]}  ; an options map of figwheel.main config options
   }
@@ -35,24 +35,24 @@
   unless there is non-nil `:config` option. The presence of a non-nil
   `:config` option map will cause any metadata on the `:options` map
   to be ignored.
-  
+
   The `figwheel-config-o-build` arg can be a build or a map of
   Figwheel options that will be used in place of the options found in
   a `figwheel-main.edn` file if present.
 
   The `background-builds` is collection of `build` args that will be
-  run in the background. 
+  run in the background.
 
   Examples:
 
   ```clojure
   ; The simplest and most common case. This will start figwheel just like
   ; `clojure -m figwheel.main -b dev -r`
-  (start \"dev\") 
+  (start \"dev\")
 
   ; With inline build config
-  (start {:id \"dev\" 
-          :options {:main 'example.core} 
+  (start {:id \"dev\"
+          :options {:main 'example.core}
           :config {:watch-dirs [\"src\"]}})
 
   ; With inline figwheel config
@@ -63,12 +63,12 @@
          {:id \"dev\" :options {:main 'example.core}})
   ```
 
-  ### REPL Api Usage
+  ### REPL API Usage
 
   Starting a Figwheel build stores important build-info in a build
-  registry. This build data will be used by the other REPL Api
+  registry. This build data will be used by the other REPL API
   functions:
-  
+
   * `figwheel.main.api/cljs-repl`
   * `figwheel.main.api/repl-env`
   * `figwheel.main.api/stop`
@@ -83,11 +83,11 @@
   ```clojure
   (start {:mode :serve} \"dev\")
 
-  (start {:id \"dev\" 
-          :options {:main 'example.core} 
+  (start {:id \"dev\"
+          :options {:main 'example.core}
           :config {:watch-dirs [\"src\"]
                    :mode :serve}})
-  ```  
+  ```
 
   The above commands will leave you free to call the `cljs-repl`,
   `repl-env` and `stop` functions without interrupting the server and
@@ -116,16 +116,16 @@
   ;; This is all ad-hoc need to move to a notion of starting and stopping
   (if-let [build-info (get @fig/build-registry build-id)]
     (let [{:keys [repl-env repl-options]} build-info]
-      
+
       (log/info (format "Stopping the watcher for build - %s" build-id))
       (fww/remove-watch! [::autobuild build-id])
 
       (when-let [compiler-env (:compiler-env repl-options)]
-        (log/info "Removing Figwheel Core watch hook")        
+        (log/info "Removing Figwheel Core watch hook")
         (remove-watch compiler-env :figwheel-core/watch-hook))
 
       (swap! fig/build-registry dissoc build-id)
-      
+
       (when (zero? (count @fig/build-registry))
         (log/info "Doing final clean up")
         (log/info (format "Stopping the Figwheel server" build-id))
@@ -144,13 +144,13 @@
 (defn repl-env
   "Once you have already started a build in the background with a
   call to `start`
-  
+
   You can supply the `build-id` of the running build to this function
   to fetch the repl-env for the running build. This is helpful in
   environments like **vim-fireplace** that need the repl-env.
-  
+
   Example:
-  
+
   ```clojure
   (figwheel.main.api/repl-env \"dev\")
   ```
@@ -184,7 +184,7 @@
   start a ClojureScript REPL for the running build.
 
   Example:
-  
+
   ```clojure
   (figwheel.main.api/cljs-repl \"dev\")
   ```"
@@ -201,7 +201,7 @@
   Example:
 
   ```clojure
-  (figwheel.main.api/start (read-build \"dev\" \"admin\") \"tests\")  
+  (figwheel.main.api/start (read-build \"dev\" \"admin\") \"tests\")
   ```"
   [build-id & build-ids]
   (let [b (->> (cons build-id build-ids)
