@@ -12,7 +12,7 @@
   Has two arities:
 
   (start build)
-  (start figwheel-config-o-build build & backgound-builds)
+  (start figwheel-config-or-build build & backgound-builds)
 
   You can call `start` with any number of `build` arguments. The first
   one will be the foreground build and any builds that follow will be
@@ -36,7 +36,7 @@
   `:config` option map will cause any metadata on the `:options` map
   to be ignored.
 
-  The `figwheel-config-o-build` arg can be a build or a map of
+  The `figwheel-config-or-build` arg can be a build or a map of
   Figwheel options that will be used in place of the options found in
   a `figwheel-main.edn` file if present.
 
@@ -96,8 +96,8 @@
   However once you call `start` you cannot call it again until you
   have stopped all of the running builds."
   ([build] (fig/start* false build))
-  ([figwheel-options-o-build build & background-builds]
-   (apply fig/start* false figwheel-options-o-build build background-builds)))
+  ([figwheel-options-or-build build & background-builds]
+   (apply fig/start* false figwheel-options-or-build build background-builds)))
 
 (defn start-join
   "Takes the same arguments as `start`.

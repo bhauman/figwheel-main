@@ -1,13 +1,13 @@
 ## `figwheel.main.api/start`
 
-Args: `([build] [figwheel-options-o-build build & background-builds])`
+Args: `([build] [figwheel-options-or-build build & background-builds])`
 
 Starts a Figwheel build process.
 
 Has two arities:
 
 (start build)
-(start figwheel-config-o-build build & backgound-builds)
+(start figwheel-config-or-build build & backgound-builds)
 
 You can call `start` with any number of `build` arguments. The first
 one will be the foreground build and any builds that follow will be
@@ -31,7 +31,7 @@ unless there is a non-nil `:config` option. The presence of a non-nil
 `:config` option map will cause any metadata on the `:options` map
 to be ignored.
 
-The `figwheel-config-o-build` arg can be a build or a map of
+The `figwheel-config-or-build` arg can be a build or a map of
 Figwheel options that will be used in place of the options found in
 a `figwheel-main.edn` file if present.
 
