@@ -11,7 +11,7 @@ published: true
 <div class="lead-in">Background builds allow you to run more than one
 Figwheel hot reloading build process at a time.</div>
 
-Background builds and be started with the `--background-build` (`-bb`)
+Background builds can be started with the `--background-build` (`-bb`)
 Figwheel Main CLI option.
 
 For instance, let's say you want to run a build that compiles your
@@ -25,14 +25,14 @@ $ clojure -m figwheel.main -bb admin -b app -r
 ```
 
 The above command will run both the `admin` and `app` builds and allow
-you work on both of them at the same time.
+you to work on both of them at the same time.
 
 ## Difference from foreground build
 
 Background builds are not full fledged citizens like the the build you
 supply to the `--build` option.
 
-In the above example we'll call the `app` build the foreground
+In the above example we'll call the `app` build as the foreground
 build. The foreground build is different because its configuration is
 what gets applied to the Figwheel server when it starts. Practically
 speaking, if both builds have defined their own

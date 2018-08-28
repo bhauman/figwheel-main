@@ -1,13 +1,13 @@
 ## `figwheel.main.api/start`
 
-Args: `([build] [figwheel-options-o-build build & background-builds])`
+Args: `([build] [figwheel-options-or-build build & background-builds])`
 
 Starts a Figwheel build process.
 
 Has two arities:
 
 (start build)
-(start figwheel-config-o-build build & backgound-builds)
+(start figwheel-config-or-build build & backgound-builds)
 
 You can call `start` with any number of `build` arguments. The first
 one will be the foreground build and any builds that follow will be
@@ -18,24 +18,24 @@ A `build` arg can be either:
 * the name of a build like "dev" (described in a .cljs.edn file) 
 * a map describing a build with the following form
 
-```
+```clojure
 {
-     :id      "dev"                  ; a required string build id   
+     :id      "dev"                    ; a required string build id   
      :options {:main hello-world.core} ; a required map of cljs compile options
-     :config  {:watch-dirs ["src"]}  ; an options map of figwheel.main config options
+     :config  {:watch-dirs ["src"]}    ; an options map of figwheel.main config options
 }
 ```
 
 If the `:options` map has Figwheel options metadata, it will be used
-unless there is non-nil `:config` option. The presence of a non-nil
+unless there is a non-nil `:config` option. The presence of a non-nil
 `:config` option map will cause any metadata on the `:options` map
 to be ignored.
 
-The `figwheel-config-o-build` arg can be a build or a map of
+The `figwheel-config-or-build` arg can be a build or a map of
 Figwheel options that will be used in place of the options found in
 a `figwheel-main.edn` file if present.
 
-The `background-builds` is collection of `build` args that will be
+The `background-builds` is a collection of `build` args that will be
 run in the background. 
 
 Examples:
@@ -58,10 +58,10 @@ Examples:
        {:id "dev" :options {:main 'example.core}})
 ```
 
-### REPL Api Usage
+### REPL API Usage
 
 Starting a Figwheel build stores important build-info in a build
-registry. This build data will be used by the other REPL Api
+registry. This build data will be used by the other REPL API
 functions:
 
 * `figwheel.main.api/cljs-repl`
@@ -97,10 +97,9 @@ have stopped all of the running builds.
 Args: `([build-id])`
 
 Once you have already started Figwheel in the background with a
-call to `figwheel.main.api/start`
-
-You can supply a build name of a running build to this function to
-start a ClojureScript REPL for the running build.
+call to `figwheel.main.api/start`, you can supply a build name of a
+running build to this function to start a ClojureScript REPL for the
+running build.
 
 Example:
 
@@ -114,10 +113,8 @@ Example:
 Args: `([build-id])`
 
 Once you have already started a build in the background with a
-call to `start`
-
-You can supply the `build-id` of the running build to this function
-to fetch the repl-env for the running build. This is helpful in
+call to `start`, you can supply the `build-id` of the running build to
+this function to fetch the repl-env for the running build. This is helpful in
 environments like **vim-fireplace** that need the repl-env.
 
 Example:
@@ -145,7 +142,7 @@ well formatted compiler warnings.
 Args: `([build-id])`
 
 Takes a `build-id` and stops the given build from running. This
-will not work if you have not started the build with `start`
+will not work if you have not started the build with `start`.
 
 
 ## `figwheel.main.api/stop-all`
@@ -161,7 +158,7 @@ Args: `([& args])`
 
 Takes the same arguments as `start`.
 
-Starts figwheel and blocks, useful when you want Figwheel to block
+Starts figwheel and blocks. Useful when you want Figwheel to block
 on the server it starts when using `:mode :serve`. You would
 normally use this in a script that would otherwise exit
 prematurely.

@@ -49,7 +49,7 @@ the metadata in the build file or you can supply a **replacement** for the
 
 ```clojure
 $ clj
-user=> (figwheel.main/start {:mode :serve} "dev")
+user=> (figwheel.main.api/start {:mode :serve} "dev")
 [Figwheel] Compiling build dev to "target/public/cljs-out/dev-main.js"
 [Figwheel] Successfully compiled build dev to "target/public/cljs-out/dev-main.js" in 0.782 seconds.
 [Figwheel] Watching and compiling paths: ("src" "devel") for build - dev
@@ -76,7 +76,7 @@ user=> (figwheel.main.api/cljs-repl "dev")
 ```
 
 This will start a REPL into the running `dev` build. You can quit the
-REPL via `:cljs/quit` and and then restart it by calling
+REPL via `:cljs/quit` and then restart it by calling
 `figwheel.main.api/cljs-repl` again.
 
 ## REPL switching example
@@ -87,12 +87,12 @@ dependencies along with `com.bhauman/rebel-readline-cljs`.
 We'll start off by starting a Rebel Readline Clojure REPL.
 
 ```clojure
-$ clj -m rebel-readline.main
+$ clojure -m rebel-readline.main
 user=>
 ```
 
 Assuming that we already have a build set up in `dev.cljs.edn` and a
-[background build][background-builds] defined `admin.cljs.edn`.
+[background build][background-builds] defined in `admin.cljs.edn`.
 
 We can start both of these builds running with:
 
@@ -114,7 +114,7 @@ nil
 There are a couple of things to notice at this point.  If you check
 the console of the browser window that the `dev` application is
 running in you will notice that the word `"hey"` is printed out. You
-should also notice that you're ClojureScript REPL is utilizing Rebel
+should also notice that your ClojureScript REPL is utilizing Rebel
 Readline.
 
 You can now quit the `dev` REPL and launch a REPL into `admin`.
