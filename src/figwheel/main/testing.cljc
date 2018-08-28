@@ -47,18 +47,21 @@
                                "border-radius: 5px; font-family:sans-serif; background-color: #fdfce2")}
       (gdom/createDom
        "h1" #js {:style ""}
-       (gdom/createTextNode "No tests to run yet."))
+       (gdom/createTextNode "No tests found."))
       (gdom/createDom
        "p" #js {:style ""}
        (gdom/createTextNode
-        (str "Figwheel auto-testing isn't able to pick up your testing namespaces until "
+        (str "Figwheel auto-testing sometimes isn't able to pick up your testing namespaces until "
              "after you have hot reloaded a source file at least once.")))
       (gdom/createDom
        "p" #js {:style ""}
        (gdom/createTextNode "For example: Try to open a source file with tests in it and save it."))
       (gdom/createDom
        "p" #js {:style ""}
-       (gdom/createTextNode "Or perhaps you haven't written any tests yet?"))))))
+       (gdom/createTextNode "Or maybe you haven't added the source directories for your tests to `:watch-dirs`?"))
+      (gdom/createDom
+       "p" #js {:style ""}
+       (gdom/createTextNode "Or perhaps you haven't written any tests yet? Nah, that's not possible."))))))
   
 )
 
@@ -67,21 +70,26 @@
    :clj
    (do
 
-;; should only do this once the first time you cant find
-;; tests with the compiler env     
-(defn get-test-namespaces-no-compiler-env [source-dirs]
+;; should only do this once the first time you cant find tests with
+;; the compiler env. This doesn't have to be super accurate because
+;; namespaces without tests will be ignored anyway
+(defn find-test-namespaces
+  "Takes a list of directories and searches them for test source files
+  and returns a list of namespaces that may have tests in them."
+  [source-dirs]
   (->> source-dirs
-       (mapcat file-seq)
+       (mapv io/file)
+       (filter #(.isDirectory %))
+       (mapcat (comp file-seq io/file))
        (filter #(or (.endsWith (str %) ".cljs")
                     (.endsWith (str %) ".cljc")))
-       (filter #(let [content (slurp %)]
+       (filter #(when-let [content (try (slurp %) (catch Throwable t nil))]
                   (.contains content "(deftest ")))
-       )
+       (keep #(try (cljs.analyzer/parse-ns %) (catch Throwable t nil)))
+       (mapv :ns)))
 
-  
-  )
+#_(find-test-namespaces ["devel" "src"])
 
-     
 ;; speed this up by simply checking for cljs.test in the requires first
 ;; or we could consider meta data on the ns as the indicator
 (defn namespace-has-test? [ns-sym]
@@ -90,9 +98,6 @@
 (defn get-test-namespaces []
   (let [sources (:sources @cljs.env/*compiler*)]
     (vec (doall (filter namespace-has-test? (mapv :ns sources))))))
-
-
-
 
 (defn ns? [x]
   (and (seq? x) (= (first x) 'quote)))
@@ -214,18 +219,24 @@
 
 ;; todo generate a different file when there are no namespaces to test
 ;; or create a macro to help in this case
-(defn pre-hook [output-to test-display?]
+(defn pre-hook [{:keys [output-to test-display? initial-namespaces]}]
   (fn [cfg]
-    (let [namespaces (get-test-namespaces)]
+    (let [namespaces
+          (or (when-let [auto-testing (get-in cfg [:figwheel.main/config :auto-testing])]
+                (and (map? auto-testing)
+                     (:namespaces auto-testing)))
+              (not-empty (get-test-namespaces))
+              initial-namespaces)]
       (let [id (-> cfg :figwheel.main/build :id)
             args (cond-> {:test-ns (genned-test-ns id)}
                    test-display?
-                   (assoc :libs (cons '[cljs-test-display.core]
-                                      (map vector namespaces))
-                          :run-tests-args
-                          (cons
-                           '(cljs-test-display.core/init! "app-auto-testing")
-                           (map #(list 'quote %) namespaces))))
+                   (->
+                    (update :libs conj '[cljs-test-display.core])
+                    (update :run-tests-args conj '(cljs-test-display.core/init! "app-auto-testing")))
+                   (not-empty namespaces)
+                   (->
+                    (update :libs concat (map vector namespaces))
+                    (update :run-tests-args concat (map #(list 'quote %) namespaces))))
             content (if (not-empty namespaces)
                       (testing-file-content args)
                       (no-namespaces-content (assoc args :app-id "app-auto-testing")))]
@@ -239,35 +250,35 @@
         
         ))))
 
-
 (defn add-extra-main [cfg]
   (let [id  (-> cfg :figwheel.main/build :id)
         ns' (genned-test-ns id)]
     (assoc-in cfg [:figwheel.main/config :extra-main-files :auto-testing] {:main ns'})))
 
-(defn add-auto-testing? [{:keys [options ::config] :as cfg}]
-  (or (and
-       (= :none (get options :optimizations :none))
-       (get config :auto-testing true))
-      (get config :auto-testing false)))
+(defn add-auto-testing? [{:keys [options :figwheel.main/config] :as cfg}]
+  (and
+   (= :none (get options :optimizations :none))
+   (get config :auto-testing false)))
 
 (defn cljs-test-display? [cfg]
-  (nil? (get-in cfg [:options :target])))
+  (let [auto-testing (get-in cfg [:figwheel.main/config :auto-testing])]
+    (and (nil? (get-in cfg [:options :target]))
+         (not (and (map? auto-testing) (false? (:cljs-test-display auto-testing)))))))
 
-(defn add-file-gen [{:keys [options] :as cfg}]
-  (let [output-to (test-file-output-to (:output-dir options))
-        test-display? (cljs-test-display? cfg)]
+(defn add-file-gen [{:keys [options :figwheel.main/config] :as cfg}]
+  (let [output-to (test-file-output-to (:output-dir options))]
     (-> cfg
         ;; add prehook
-        (update :figwheel.main/pre-build-hooks conj (pre-hook output-to test-display?))
+        (update :figwheel.main/pre-build-hooks
+                conj (pre-hook {:output-to output-to
+                                :test-display? (cljs-test-display? cfg)
+                                :initial-namespaces (find-test-namespaces (:watch-dirs config))}))
         ;; add build input
         (update-in [:figwheel.main/config :figwheel.main/build-inputs] conj output-to))))
 
 (defn plugin [cfg]
   (cond-> cfg
     (add-auto-testing? cfg)
-    (->
-     add-extra-main
-     add-file-gen)))
+    (-> add-extra-main add-file-gen)))
 
 ))
