@@ -11,6 +11,7 @@
    [com.bhauman/figwheel-repl "0.1.9-SNAPSHOT"]
    [com.bhauman/figwheel-core "0.1.9-SNAPSHOT"]
    [com.bhauman/spell-spec "0.1.1"]
+   [com.bhauman/cljs-test-display "0.1.1"]
    [ring "1.6.3"]
    [org.eclipse.jetty.websocket/websocket-servlet "9.2.21.v20170120"]
    [org.eclipse.jetty.websocket/websocket-server "9.2.21.v20170120"]
