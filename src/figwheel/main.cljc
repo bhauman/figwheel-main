@@ -153,7 +153,7 @@
                                               (partial
                                                (fww/suffix-filter
                                                 (set
-                                                 (cond 
+                                                 (cond
                                                    (coll? (:reload-clj-files reload-config))
                                                    (mapv name (:reload-clj-files reload-config))
                                                    (false? (:reload-clj-files reload-config)) []
@@ -166,7 +166,7 @@
                                  (catch Throwable t
                                    (if (-> t ex-data :figwheel.core/internal)
                                      (log/error (.getMessage t) t)
-                                     (do                                   
+                                     (do
                                        (log/syntax-exception t)
                                        (figwheel.core/notify-on-exception cenv t {})))
                                    ;; skip cljs reloading in this case
@@ -770,7 +770,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
   (if (or (nil? handler) (var? handler))
     handler
     (let [prefix (when prefix (str prefix ": "))]
-      (when (and handler (nil? (namespace (symbol handler)))) 
+      (when (and handler (nil? (namespace (symbol handler))))
         (throw
          (ex-info
           (format "%sThe var '%s has the wrong form it must be a namespaced symbol" prefix
@@ -1628,7 +1628,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
           :repl-options repl-options
           :config *config*
           :background true})
-        
+
         (when (first (filter #{'figwheel.core} (:preloads (:options cfg))))
           ;; let's take parent repl-env and change the connection filter
           (binding [cljs.repl/*repl-env* repl-env
@@ -1676,7 +1676,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                   " is on the classpath but doesn't exist. The figwheel "
                                   "server will not be able to find compiled assets."])))
                     ;; quietly fix this situation??
-                    
+
                     (when-not (fw-util/dir-on-classpath? target-dir)
                       (if (get config :helpful-classpaths true)
                         (do
@@ -1897,11 +1897,11 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
   ([join-server? build]
    (assert (build-option-arg? build) "Figwheel Start: build argument required")
    (start* join-server? nil build))
-  ([join-server? figwheel-options-o-build bbuild & builds]
+  ([join-server? figwheel-options-or-build bbuild & builds]
    (let [[figwheel-options build & background-builds]
-         (if-not (build-option-arg? figwheel-options-o-build)
-           (concat [figwheel-options-o-build bbuild] builds)
-           (concat [nil figwheel-options-o-build bbuild] builds))
+         (if-not (build-option-arg? figwheel-options-or-build)
+           (concat [figwheel-options-or-build bbuild] builds)
+           (concat [nil figwheel-options-or-build bbuild] builds))
          {:keys [id] :as build} (start-build-arg->build-options build)
          cfg
          (cond-> {:options (:options build)
@@ -2059,7 +2059,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
 (defn reload-config* [id]
   (println "Reloading config for id:" id)
   ;; update the config in the registry
-  (when-let [{:keys [build-info]} (get (currently-available-ids) (name id))] 
+  (when-let [{:keys [build-info]} (get (currently-available-ids) (name id))]
     (swap! build-registry update-in [id :config]
            #(update-config
              (-> (when (::start-figwheel-options %)

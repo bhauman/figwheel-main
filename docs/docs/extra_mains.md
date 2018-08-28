@@ -38,7 +38,7 @@ so far in this documentation.
 
 We are going to add some basic tests to our project.
 
-Go ahead add the following `tests/hello-world/core_tests.cljs` file to
+Go ahead and add the following `tests/hello-world/core_tests.cljs` file to
 your project tree:
 
 ```clojure
@@ -70,7 +70,7 @@ For example in your `dev.cljs.edn` file:
 
 And now for the magic sauce you need to add an
 [`:extra-main-files` entry][extra-main-files] in your Figwheel
-options. Example:
+options. For example:
 
 ```clojure
 ^{:watch-dirs ["src" "tests"]
@@ -78,7 +78,7 @@ options. Example:
 {:main hello-world.core}
 ```
 
-Now when you build the `dev` build.
+Now when you build the `dev` build:
 
 ```shell
 $ clojure -m figwheel.main -b dev -r
@@ -190,7 +190,7 @@ that has a collection value.
                               :extra-preloads [hello-world.dev-methods]}}
 ```
 
-The options that you supply do not affect how your code is compiled
+The options that you supply do not affect how your code is compiled,
 they only affect how the final main entry file is generated. The
 following options are the only ones that affect how this file is
 generated.
@@ -206,7 +206,7 @@ You can supply an explicit `:output-to` path but Figwheel will supply
 one based on the current `:output-to`. It will add an
 `"-[extra-main-id]"` to the end of the file name before the
 extention. For example, if there is already an `:output-to` file named
-`target/public/cljs-out/dev-main.js`, Figwheel will rename that
+`target/public/cljs-out/dev-main.js`, Figwheel will rename that to
 `target/public/cljs-out/dev-main-tests.js` if the name of the extra
 mains config is `:tests`.
 

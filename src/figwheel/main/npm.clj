@@ -12,7 +12,7 @@
   "Converts CamelCase / camelCase to kebab-case"
   [s]
   (-> s
-      (string/replace #"[a-z][A-Z]"
+      (string/replace #"[a-z\d][A-Z]"
                       (fn [x]
                         (str (first x) \- (second x))))
       (string/replace #"\s+" "-")
@@ -68,8 +68,9 @@
   (->> file-content
        string/split-lines
        (map string/trim)
-       (keep #(re-find #"^window\.(\w+)" %))
-       (map second)
+       (keep #(re-find #"^window(?:\.(\w+)|\[['\"]([^'\"\s]+)['\"]\])" %))
+       (mapcat rest)
+       (keep identity)
        distinct))
 
 (defn exports->foreign-libs [exports]
@@ -84,6 +85,8 @@
 (defn import-file->foreign-lib [[webpack-entity-output-path file-content]]
   (-> (exports->foreign-libs (content->window-exports file-content))
       (assoc :file webpack-entity-output-path)))
+
+#_ (import-file->foreign-lib [nil index-file])
 
 (defn bundle->foreign-lib [[bundle-file js-index-file]]
   (import-file->foreign-lib [bundle-file (slurp (io/file js-index-file))]))
@@ -137,7 +140,10 @@ window.ReactDom = ReactDom;
 window.CreateReactClass = CreateReactClass;
 window.SlateReact = SlateReact;
 window.SlatePlainSerializer = SlatePlainSerializer;
-window.SlateChange = Change;")
+window.SlateChange = Change;
+window[\"ouchy-ouch\"] = Change;
+window['ouchy-oucher'] = Change;
+")
 
 (def index-data
   {:react 'react
