@@ -23,16 +23,16 @@
   * the name of a build like \"dev\" (described in a .cljs.edn file)
   * a map describing a build with the following form
 
-  ```
+  ```clojure
   {
-       :id      \"dev\"                  ; a required string build id
-       :options {:main hello-world.core} ; a required map of cljs compile options
-       :config  {:watch-dirs [\"src\"]}  ; an options map of figwheel.main config options
+       :id      \"dev\"                   ; a required string build id
+       :options {:main hello-world.core}  ; a required map of cljs compile options
+       :config  {:watch-dirs [\"src\"]}   ; an options map of figwheel.main config options
   }
   ```
 
   If the `:options` map has Figwheel options metadata, it will be used
-  unless there is non-nil `:config` option. The presence of a non-nil
+  unless there is a non-nil `:config` option. The presence of a non-nil
   `:config` option map will cause any metadata on the `:options` map
   to be ignored.
 
@@ -40,7 +40,7 @@
   Figwheel options that will be used in place of the options found in
   a `figwheel-main.edn` file if present.
 
-  The `background-builds` is collection of `build` args that will be
+  The `background-builds` is a collection of `build` args that will be
   run in the background.
 
   Examples:
@@ -102,7 +102,7 @@
 (defn start-join
   "Takes the same arguments as `start`.
 
-  Starts figwheel and blocks, useful when you want Figwheel to block
+  Starts figwheel and blocks. Useful when you want Figwheel to block
   on the server it starts when using `:mode :serve`. You would
   normally use this in a script that would otherwise exit
   prematurely."
@@ -111,7 +111,7 @@
 
 (defn stop
   "Takes a `build-id` and stops the given build from running. This
-  will not work if you have not started the build with `start`"
+  will not work if you have not started the build with `start`."
   [build-id]
   ;; This is all ad-hoc need to move to a notion of starting and stopping
   (if-let [build-info (get @fig/build-registry build-id)]
@@ -142,12 +142,10 @@
     (stop build-id)))
 
 (defn repl-env
-  "Once you have already started a build in the background with a
-  call to `start`
-
-  You can supply the `build-id` of the running build to this function
-  to fetch the repl-env for the running build. This is helpful in
-  environments like **vim-fireplace** that need the repl-env.
+  "Once you have already started a build in the background with a call
+  to `start`, you can supply the `build-id` of the running build to
+  this function to fetch the repl-env for the running build. This is
+  helpful in environments like **vim-fireplace** that need the repl-env.
 
   Example:
 
@@ -178,10 +176,9 @@
 
 (defn cljs-repl
   "Once you have already started Figwheel in the background with a
-  call to `figwheel.main.api/start`
-
-  You can supply a build name of a running build to this function to
-  start a ClojureScript REPL for the running build.
+  call to `figwheel.main.api/start`, you can supply a build name of a
+  running build to this function to start a ClojureScript REPL for the
+  running build.
 
   Example:
 
