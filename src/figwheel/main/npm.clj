@@ -12,7 +12,7 @@
   "Converts CamelCase / camelCase to kebab-case"
   [s]
   (-> s
-      (string/replace #"[a-z][A-Z]"
+      (string/replace #"[a-z\d][A-Z]"
                       (fn [x]
                         (str (first x) \- (second x))))
       (string/replace #"\s+" "-")
