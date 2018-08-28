@@ -559,7 +559,44 @@ specific inputs you want to send to the compiler.
     :build-inputs [:watch-dirs example.core-tests \"extra-src\"]"
   :group :common)
 
-;; -------------------------------XXXXXXXXXXXX
+(s/def :figwheel.main.schema.config.testing/namespaces (s/coll-of ::schema/unquoted-symbol))
+(s/def :figwheel.main.schema.config.testing/cljs-test-display boolean?)
+
+(s/def ::auto-testing (s/or
+                       :bool boolean?
+                       :map (spell/strict-keys
+                             :opt-un
+                             [:figwheel.main.schema.config.testing/namespaces
+                              :figwheel.main.schema.config.testing/cljs-test-display])))
+
+(def-spec-meta ::auto-testing
+  :doc
+  "Figwheel will automatically discover all the cljs.test based tests
+that you have defined and will provide an endpoint to display them
+with `cljs-test-display`. It will only provide this by default when
+the tests are present in your watched directories and a build is using
+`:optimizations` level `:none`.
+
+You can find these tests at the `/figwheel-extra-main/auto-testing`
+HTTP endpoint on the Figwheel server.
+
+Figwheel will automatically find all the namespaces with tests in
+them.
+
+You can enable this feature by specifying:
+
+    :auto-testing true
+
+You can specify which namespaces to test:
+
+    :auto-testing {:namespaces [example.core-tests example.logic-tests]}
+
+You can also disable `cljs-test-display` with:
+
+    :auto-testing {:cljs-test-display false}"
+  :group :common)
+
+;; ------ Uncommon options ----------------------------------
 
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
 (def-spec-meta ::client-print-to
@@ -722,6 +759,7 @@ be useful for certain docker environments.
      ::post-build-hooks
      ::extra-main-files
      ::build-inputs
+     ::auto-testing
      
      ::helpful-classpaths
 

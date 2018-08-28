@@ -24,6 +24,7 @@
         [figwheel.main.helper :as helper]
         [figwheel.main.npm :as npm]
         [figwheel.main.async-result :as async-result]
+        [figwheel.main.testing :as testing]
         [figwheel.repl :as fw-repl]
         [figwheel.tools.exceptions :as fig-ex]))
   #?(:clj
@@ -1394,6 +1395,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        config-default-asset-path
        config-default-aot-cache-false
        npm/config
+       testing/plugin
        config-pre-post-hooks
        config-repl-connect
        config-cljs-devtools
