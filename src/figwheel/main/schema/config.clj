@@ -362,6 +362,58 @@ Defaults to true."
 Defaults to \"node\""
   :group :common)
 
+(s/def ::launch-script (s/or :script-path non-blank-string?
+                             :namespaced-symbol ::schema/unquoted-symbol
+                             :shell-command-vector (s/coll-of (s/or :script-part non-blank-string?
+                                                                    :replace #{:open-url :output-to}))))
+
+(def-spec-meta ::launch-script
+  :doc
+  "Figwheel optionally launches a JavaScript host environment when it
+starts a REPL or runs a script. You see this behavior when it opens a
+browser or starts Nodejs. This behavior can be overridden with the
+`:launch-script` option.
+
+Can take the name of an executable script on your system and will
+pass it either the path to the compiled JavaScript (when the target is
+Nodejs) or the URL to the JavaScript (when the target is the browser).
+
+Script example:
+
+    #! /bin/sh
+    chrome --headless --disable-gpu --repl --remote-debugging-port=9222 $1
+
+If the above script is named `headless-chrome-launcher` and is on your
+path, then you would add this to your config:
+
+    :launch-script `headless-chrome-launcher`
+
+Can also take a vector that represents a shell command to invoke. The
+vector can contain the keywords `:output-to` and `:open-url` which
+will be replaced with the the path or the URL to the compiled
+JavaScript.
+
+Shell command vector example:
+
+    :launch-script [\"chrome\" \"--headless\" \"--repl\" \"--disable-gpu\" :open-url]
+
+The `:launch-script` option can also take a namespaced symbol
+representing a function to invoke. The function will be passed a map
+containing the keys `:open-url` and `:output-to`.
+
+Symbol example:
+
+    :launch-script user/start-js-environment
+
+and in your user.clj file:
+
+    (defn start-js-environment [{:keys [output-to open-url]}]
+       (clojure.java.shell/sh \"headless-chome\" open-url))
+
+The `:launch-script` option will take precedence over any node
+configurations like `:node-command` or `:launch-node`."
+  :group :common)
+
 (s/def ::cljs-devtools boolean?)
 
 (def-spec-meta ::cljs-devtools
@@ -760,6 +812,7 @@ be useful for certain docker environments.
      ::extra-main-files
      ::build-inputs
      ::auto-testing
+     ::launch-script
      
      ::helpful-classpaths
 

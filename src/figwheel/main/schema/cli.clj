@@ -512,7 +512,7 @@ resource paths should start with @")
                   :compile-opts  ::compile-opts
                   :output-dir    ::output-dir
                   :repl-opts     ::repl-opts
-                  ;:figwheel-opts ::figwheel-opts
+                  :figwheel-opts ::figwheel-opts
                   :target        ::target
                   :init          ::init
                   :eval          ::eval
