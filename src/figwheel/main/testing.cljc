@@ -32,7 +32,7 @@
    ::exit-on-fail
    #(async-result/send
      (if (failed? %)
-       :figwheel.main.result/system-exit-1
+       [:figwheel.main.result/throw-ex-info "ClojureScript test run failed" %]
        ::success))))
 
 (defn no-auto-tests-display-message [app-id]
@@ -111,11 +111,11 @@
   results.  Defaults to running all the namespaces in the local source
   files if no namespaces are given. 
 
-  Will return `:figwheel.main.result/system-exit-1` if tests have
+  Will return `[:figwheel.main.result/throw-ex-info message data]` if tests have
   failed. This is only useful if you are NOT running asynchronous
-  tests. The value `:figwheel.main.result/system-exit-1` if returned
+  tests. The value `[:figwheel.main.result/throw-ex-info message data]` if returned
   from a `-main` method, will cause a process started with the
-  `--main` CLI arg to exit unsuccessfully with 1.
+  `--main` CLI arg to exit unsuccessfully.
   
   Usage examples: 
 
@@ -138,7 +138,9 @@
   ([env-or-ns & namespaces]
    `(do (cljs.test/run-tests ~env-or-ns ~@namespaces)
         (if (failed? @figwheel.main.testing/test-result-data)
-          :figwheel.main.result/system-exit-1
+          [:figwheel.main.result/throw-ex-info
+           "ClojureScript test run failed"
+           @figwheel.main.testing/test-result-data]
           ::success))))
 
 ;; this helps if you are running async tests and you have a custom
