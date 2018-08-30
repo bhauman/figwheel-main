@@ -1371,9 +1371,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (update-in cfg [::config ::build-inputs] (comp vec distinct concat) inputs)
     cfg))
 
-(defn config-compile-is-build-once [cfg]
+(defn config-compile-is-build-once [{:keys [args] :as cfg}]
   (cond-> cfg
-    (= (set (keys cfg)) #{:args :ns})
+    (and (= (set (keys cfg)) #{:args :ns})
+         (not (#{"-r" "--repl" "-s" "--serve"} (first args))))
     (assoc-in [::config ::build-once] true)))
 
 (defn update-config [cfg]
