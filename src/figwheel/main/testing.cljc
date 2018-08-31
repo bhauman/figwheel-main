@@ -32,8 +32,9 @@
    ::exit-on-fail
    #(async-result/send
      (if (failed? %)
-       [:figwheel.main.result/throw-ex-info "ClojureScript test run failed" %]
-       ::success))))
+       (async-result/throw-ex
+        (ex-info "ClojureScript async test run failed" %))
+       ::success-async))))
 
 (defn no-auto-tests-display-message [app-id]
   (if (nil? goog/global.document)
@@ -102,8 +103,15 @@
 (defn ns? [x]
   (and (seq? x) (= (first x) 'quote)))
 
+(defn get-quoted-test-nses []
+  (not-empty
+   (map #(list 'quote %)
+        (or (not-empty (get-test-namespaces))
+            (and cljs.analyzer/*cljs-ns*
+                 [cljs.analyzer/*cljs-ns*])))))
+
 (defmacro run-tests
-  "Differs from cljs.test/run-tests in that this macro by finds all
+  "Differs from `cljs.test/run-tests` in that this macro by finds all
   the available namespaces in the local sources to test and tests
   them.
 
@@ -111,11 +119,10 @@
   results.  Defaults to running all the namespaces in the local source
   files if no namespaces are given. 
 
-  Will return `[:figwheel.main.result/throw-ex-info message data]` if tests have
-  failed. This is only useful if you are NOT running asynchronous
-  tests. The value `[:figwheel.main.result/throw-ex-info message data]` if returned
-  from a `-main` method, will cause a process started with the
-  `--main` CLI arg to exit unsuccessfully.
+  Will throw an exception if tests have failed. This is only useful if
+  you are NOT running asynchronous tests. An exception thrown from a
+  `-main` will cause a process started with the `--main` CLI arg to
+  exit unsuccessfully.
   
   Usage examples: 
 
@@ -129,18 +136,15 @@
   ([env-or-ns]
    (if (ns? env-or-ns)
      `(run-tests (empty-env) ~env-or-ns)
-     (when-let [test-nses (not-empty
-                           (map #(list 'quote %)
-                                (or (not-empty (get-test-namespaces))
-                                    (and cljs.analyzer/*cljs-ns*
-                                         [cljs.analyzer/*cljs-ns*]))))]
+     (when-let [test-nses (get-quoted-test-nses)]
        `(run-tests ~env-or-ns ~@test-nses))))
   ([env-or-ns & namespaces]
    `(do (cljs.test/run-tests ~env-or-ns ~@namespaces)
         (if (failed? @figwheel.main.testing/test-result-data)
-          [:figwheel.main.result/throw-ex-info
-           "ClojureScript test run failed"
-           @figwheel.main.testing/test-result-data]
+          (throw
+           (ex-info
+            "ClojureScript test run failed"
+            @figwheel.main.testing/test-result-data))
           ::success))))
 
 ;; this helps if you are running async tests and you have a custom
@@ -149,15 +153,25 @@
   "This is only supported when run in conjunction with the
   `figwheel.main`'s `--main` CLI option.
   
+  Differs from `cljs.test/run-tests` in that this macro by finds all
+  the available namespaces in the local sources to test and tests
+  them.
+
   This is helpful when running asynchronous tests from a main script
   on the command line. `run-tests-async` will wait for the test run to
   come to an end or time out.
 
-  The first argument `run-tests-async` must be a `wait-time` integer
+  The first argument `run-tests-async` must be a `timeout` integer
   that is the number of milliseconds the process should wait for
   completion before timing out.
 
   The rest of the arguments are the same as figwheel.main.testing/run-tests.
+
+  The return value from `run-tests-async` has to be returned from the
+  `-main` function in order to block and wait for the tests to
+  complete.  If it can not be the last statement in your `-main`
+  function then you need to make sure that the `-main` function returns a
+  `[:figwheel.main.async-result/wait timeout]` value.
 
   Usage examples: 
 
@@ -167,19 +181,24 @@
       (run-tests-async 5000 'example.core-tests) ;; 
       ;; run tests in 'example.core-tests and display with cljs-test-display
       (run-tests-async 5000 (cljs-test-display.core/init!) 'example.core-tests)"
-  ([wait-time]
-   `(run-tests-async ~wait-time (cljs.test/empty-env)))
-  ([wait-time env-or-ns & namespaces]
+  ([timeout]
+   `(run-tests-async ~timeout (cljs.test/empty-env)))
+  ([timeout env-or-ns]
+   (if (ns? env-or-ns)
+     `(run-tests-async ~timeout (empty-env) ~env-or-ns)
+     (when-let [test-nses (get-quoted-test-nses)]
+       `(run-tests-async ~timeout ~env-or-ns ~@test-nses))))
+  ([timeout env-or-ns & namespaces]
    `(do
       (figwheel.main.testing/system-exit-on-fail)
       ~(if (ns? env-or-ns)
-         `(run-tests ~env-or-ns ~@namespaces)
+         `(cljs.test/run-tests ~env-or-ns ~@namespaces)
          `(let [reporter# (:reporter ~env-or-ns)]
             (when-not (#{:cljs.test/default :cljs-test-display.core/default} reporter#)
               (defmethod cljs.test/report [reporter# :end-run-tests] [m#]
                 (reset! figwheel.main.testing/test-result-data m#)))
-            (run-tests ~env-or-ns ~@namespaces)))
-      [:figwheel.main.result/async-wait ~wait-time])))
+            (cljs.test/run-tests ~env-or-ns ~@namespaces)))
+      [:figwheel.main.async-result/wait ~timeout])))
 
 
 ;; we need to generate a testing file

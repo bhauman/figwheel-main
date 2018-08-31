@@ -1758,7 +1758,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                  (if (= parsed-result ::read-error)
                    (deliver result-prom res)
                    (if (and (coll? parsed-result)
-                            (= (first parsed-result) :figwheel.main.result/async-wait))
+                            (= (first parsed-result) :figwheel.main.async-result/wait))
                      (let [[_ arg1 arg2] parsed-result
                            timeout-val (or arg2 ::timed-out)]
                        (when (= timeout-val (deref result-prom (or arg1 5000) timeout-val))
@@ -1766,11 +1766,14 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                          (throw (ex-info "Main script timed out" {:value timeout-val}))))
                      (deliver result-prom parsed-result)))
                  (let [final-result @result-prom]
-                   (if (and (coll? final-result)
-                            (= (first final-result) :figwheel.main.result/throw-ex-info))
-                     (let [[_ message data] final-result]
-                       (throw (ex-info (or message "System error exit from ClojureScript")
-                                       (or data {}))))
+                   (if (and (map? final-result)
+                            (= (get final-result :type)
+                               :figwheel.main.async-result/exception))
+                     (throw (ex-info
+                             (:value final-result "System error exit from ClojureScript")
+                             {:type :js-eval-exception
+                              :error final-result
+                              :repl-env @stolen-repl-env}))
                      (if (string? final-result)
                        (println final-result)
                        (println (pr-str final-result)))))))
