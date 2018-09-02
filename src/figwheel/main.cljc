@@ -1220,7 +1220,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                    :node-command
                    :broadcast
                    :open-url
-                   :launch-script
+                   :launch-js
                    :repl-eval-timeout])
      repl-env-options ;; from command line
      (select-keys options [:output-to :output-dir :target]))))
@@ -1760,7 +1760,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                    (if (and (coll? parsed-result)
                             (= (first parsed-result) :figwheel.main.async-result/wait))
                      (let [[_ arg1 arg2] parsed-result
-                           timeout-val (or arg2 ::timed-out)]
+                           timeout-val (or arg2 :figwheel.main.async-result/timed-out)]
                        (when (= timeout-val (deref result-prom (or arg1 5000) timeout-val))
                          (println (pr-str timeout-val))
                          (throw (ex-info "Main script timed out" {:value timeout-val}))))
@@ -2164,14 +2164,20 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
         (apply cljs.main/-main args')))
     (catch Throwable e
       (let [d (ex-data e)]
-        (if (or
-             (:figwheel.main.schema.core/error d)
-             (:figwheel.main.schema.cli/error d)
-             (:cljs.main/error d)
-             (::error d))
+        (cond
+          (or
+           (:figwheel.main.schema.core/error d)
+           (:figwheel.main.schema.cli/error d)
+           (:cljs.main/error d)
+           (::error d))
           (binding [*out* *err*]
             (println (.getMessage e)))
-          (throw e))))))
+          (and (#{:js-eval-exception :js-eval-error} (:type d))
+               (:error d))
+          (let [{:keys [repl-env error form]} d]
+            (#'cljs.repl/display-error repl-env error form {})
+            (throw e))
+          :else (throw e))))))
 
 )
    )

@@ -321,6 +321,52 @@ Defaults to true.
 A String indicating the Node.js executable to launch Node with.
 Defaults to "node"
 
+## :launch-js
+
+Figwheel optionally launches a JavaScript host environment when it
+starts a REPL or runs a script. You see this behavior when it opens a
+browser or starts Nodejs. This behavior can be overridden with the
+`:launch-js` option.
+
+Can take the name of an executable script on your system and will
+pass it either the path to the compiled JavaScript (when the target is
+Nodejs) or the URL to the JavaScript (when the target is the browser).
+
+Script example:
+
+    #! /bin/sh
+    chrome --headless --disable-gpu --repl --remote-debugging-port=9222 $1
+
+If the above script is named `headless-chrome-launcher` and is on your
+path, then you would add this to your config:
+
+    :launch-js `headless-chrome-launcher`
+
+Can also take a vector that represents a shell command to invoke. The
+vector can contain the keywords `:output-to` and `:open-url` which
+will be replaced with the the path or the URL to the compiled
+JavaScript.
+
+Shell command vector example:
+
+    :launch-js ["chrome" "--headless" "--repl" "--disable-gpu" :open-url]
+
+The `:launch-js` option can also take a namespaced symbol
+representing a function to invoke. The function will be passed a map
+containing the keys `:open-url` and `:output-to`.
+
+Symbol example:
+
+    :launch-js user/start-js-environment
+
+and in your user.clj file:
+
+    (defn start-js-environment [{:keys [output-to open-url]}]
+       (clojure.java.shell/sh "headless-chome" open-url))
+
+The `:launch-js` option will take precedence over any node
+configurations like `:node-command` or `:launch-node`.
+
 ## :cljs-devtools
 
 A boolean that indicates whether to include binaryage/devtools into
@@ -486,6 +532,32 @@ specific inputs you want to send to the compiler.
 
 
     :build-inputs [:watch-dirs example.core-tests "extra-src"]
+
+## :auto-testing
+
+Figwheel will automatically discover all the cljs.test based tests
+that you have defined and will provide an endpoint to display them
+with `cljs-test-display`. It will only provide this by default when
+the tests are present in your watched directories and a build is using
+`:optimizations` level `:none`.
+
+You can find these tests at the `/figwheel-extra-main/auto-testing`
+HTTP endpoint on the Figwheel server.
+
+Figwheel will automatically find all the namespaces with tests in
+them.
+
+You can enable this feature by specifying:
+
+    :auto-testing true
+
+You can specify which namespaces to test:
+
+    :auto-testing {:namespaces [example.core-tests example.logic-tests]}
+
+You can also disable `cljs-test-display` with:
+
+    :auto-testing {:cljs-test-display false}
 
 # Rarely used options
 

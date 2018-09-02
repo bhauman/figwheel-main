@@ -15,14 +15,14 @@ background builds. When you provide more than one argument to `start`
 the first argument can optionally be a map of Figwheel Main options.
 
 A `build` arg can be either:
-* the name of a build like "dev" (described in a .cljs.edn file) 
+* the name of a build like "dev" (described in a .cljs.edn file)
 * a map describing a build with the following form
 
 ```clojure
 {
-     :id      "dev"                    ; a required string build id   
-     :options {:main hello-world.core} ; a required map of cljs compile options
-     :config  {:watch-dirs ["src"]}    ; an options map of figwheel.main config options
+     :id      "dev"                   ; a required string build id
+     :options {:main hello-world.core}  ; a required map of cljs compile options
+     :config  {:watch-dirs ["src"]}   ; an options map of figwheel.main config options
 }
 ```
 
@@ -36,18 +36,18 @@ Figwheel options that will be used in place of the options found in
 a `figwheel-main.edn` file if present.
 
 The `background-builds` is a collection of `build` args that will be
-run in the background. 
+run in the background.
 
 Examples:
 
 ```clojure
 ; The simplest and most common case. This will start figwheel just like
 ; `clojure -m figwheel.main -b dev -r`
-(start "dev") 
+(start "dev")
 
 ; With inline build config
-(start {:id "dev" 
-        :options {:main 'example.core} 
+(start {:id "dev"
+        :options {:main 'example.core}
         :config {:watch-dirs ["src"]}})
 
 ; With inline figwheel config
@@ -78,11 +78,11 @@ For example neither of the following will start a REPL:
 ```clojure
 (start {:mode :serve} "dev")
 
-(start {:id "dev" 
-        :options {:main 'example.core} 
+(start {:id "dev"
+        :options {:main 'example.core}
         :config {:watch-dirs ["src"]
                  :mode :serve}})
-```  
+```
 
 The above commands will leave you free to call the `cljs-repl`,
 `repl-env` and `stop` functions without interrupting the server and
@@ -112,10 +112,10 @@ Example:
 
 Args: `([build-id])`
 
-Once you have already started a build in the background with a
-call to `start`, you can supply the `build-id` of the running build to
-this function to fetch the repl-env for the running build. This is helpful in
-environments like **vim-fireplace** that need the repl-env.
+Once you have already started a build in the background with a call
+to `start`, you can supply the `build-id` of the running build to
+this function to fetch the repl-env for the running build. This is
+helpful in environments like **vim-fireplace** that need the repl-env.
 
 Example:
 
