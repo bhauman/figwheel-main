@@ -71,6 +71,8 @@ $ clj -m figwheel.main -co dev.cljs.edn -m example.hello
 
 ## Asynchronous execution and non-zero exits
 
+> Only available in `figwheel.main` >= 0.1.9-SNAPSHOT
+
 This `--main` CLI option behavior is unfortunately hampered in its
 ability to be useful because many ClojureScript tasks (including
 running tests) are asynchonous. Not only that but we'd prefer that if

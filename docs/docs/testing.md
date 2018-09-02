@@ -16,6 +16,8 @@ processes and CI with non-zero test run failures, and provides
 a flexible way to configure an alternative JS environment to run your
 tests in.</p></div>
 
+> Only available in `figwheel.main` >= 0.1.9-SNAPSHOT
+
 ## Testing ClojureScript
 
 If you haven't written tests in ClojureScript yet, see the
