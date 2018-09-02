@@ -107,19 +107,18 @@ extra main. In this case you would have to require the
 Running tests from the command line is an important feature that
 allows you to confirm that your tests are passing without having to
 boot up and kill a REPL. Being able to run tests from the command line
-from a process that will non-zero exit on test failure is an essential
-feature that allows us to integrate easily with modern CI and testing
-solutions.
+in a process that will non-zero exit on test failure is an essential
+feature that allows us to integrate testing into modern CI and Cloud
+testing services.
 
-Up until now most folks have had to rely on using a Node process to
-drive a headless JavaScript environment to run their ClojureScript
-tests. This is a shame considering that we are already using a
-mediating process when we run Clojure to start our ClojureScript
-REPLs and run our scripts.
+Up until now most CLJS developers have had to rely on using a Node
+process to drive a headless JavaScript environment to run their
+ClojureScript tests. This is a shame considering that we are already
+using a mediating process when we run Clojure to start our
+ClojureScript REPLs and run our scripts.
 
-Now that Figwheel supports running an asynchronous
-[main script](main_script) with asynchronous failures we can create a
-test runner that we can run from the command line.
+Figwheel can now run an asynchronous [main script](main_script) and
+report failures with a non-zero exit status.
 
 Here is an example test runner that uses the new asynchronous
 [main script](main_script) functionality.
@@ -202,8 +201,6 @@ different methods.
 
 #### Shell Script method
 
-This is my favorite method for launching an environment.
-
 On my Mac in my `~bin` directory I have an executable shell script named
 `headless-chrome` that has the following content:
 
@@ -238,13 +235,14 @@ clojure -m figwheel.main -co tests.cljs.edn  -m example.test-runner
 #### The command vector method
 
 The command vector method is pretty much the same as the shell script
-method but it allows you to exec arbitrary shell commands.
+method but it allows you to execute arbitrary shell commands without
+needing to write a script.
 
-The follwing will launch headless Chrome on my system:
+The following will launch headless Chrome on my system:
 
 ```clojure
 :launch-js ["/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" 
-                "--headless" "--disable-gpu" "--repl" :open-url]
+            "--headless" "--disable-gpu" "--repl" :open-url]
 ```
 
 #### Using a Clojure function
@@ -267,6 +265,7 @@ Now we will configure `:launch-js` to take a `user/headless-js-env` symbol:
 ```shell
 clojure -m figwheel.main -fwo '{:launch-js user/headless-js-env}'  -m example.test-runner
 ```
+
 
 [cljs-test-display]: https://github.com/bhauman/cljs-test-display
 [auto-testing]: ../config-options#auto-testing
