@@ -25,16 +25,17 @@ If you haven't written tests in ClojureScript yet, see the
 
 ## Auto testing
 
-If you have written tests with [`cljs.test`][cljs-testing] and these tests are in
-namespaces that are being watched and compiled by Figwheel, then you
-can set the Figwheel [`:auto-testing` config option][auto-testing] to `true` and your
-tests will automatically be discovered and displayed with
+The easiest way to start working with tests in Figwheel is to write
+some tests in a namespace that is on your classpath, and set the
+[`:auto-testing` config option][auto-testing] to `true`. Figwheel will
+automatically be discover your tests and display them with
 [cljs-test-display][cljs-test-display] at the HTTP endpoint
-`/figwheel-extra-mains/auto-testing`.
+`/figwheel-extra-mains/auto-testing`. No test runner is required and
+the tests will be re-run every time you save a watched source code
+file.
 
-These tests will be re-run every time you save a watched source file.
-
-The [`:auto-testing` config option][auto-testing] can also take a map with the following keys:
+The [`:auto-testing` config option][auto-testing] can also take a map
+with the following keys:
 
 * `:cljs-test-display` can have a boolean value indicating if you want
   to display the tests
@@ -127,16 +128,16 @@ Here is an example test runner that uses the new asynchronous
 (ns example.test-runner
   (:require 
     [cljs.test :refer-macros [run-tests] :refer [report]]
-	[figwheel.main.async-result :as async-result]
+    [figwheel.main.async-result :as async-result]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
 	
 ;; tests can be asynchronous, we must hook test end
 (defmethod report [:cljs.test/default :end-run-tests] [test-data]
-    (if (cljs.test/successful? test-data)
-      (async-result/send "Tests passed!!")
-      (async-result/throw-ex (ex-info "Tests Failed" test-data))))
+  (if (cljs.test/successful? test-data)
+    (async-result/send "Tests passed!!")
+    (async-result/throw-ex (ex-info "Tests Failed" test-data))))
 	
 (defn -main [& args]
   (run-tests 'example.core-test 'example.other-test)
@@ -162,7 +163,7 @@ Let's repeat the above example using the
 ```clojure
 (ns example.test-runner
   (:require 
-	[figwheel.main.testing :refer-macros [run-tests-async]]
+    [figwheel.main.testing :refer-macros [run-tests-async]]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
