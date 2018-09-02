@@ -14,9 +14,6 @@
 
 (defonce test-result-data (atom nil))
 
-(defn failed? [m]
-  (not (zero? (+ (:fail m 0) (:error m 0)))))
-
 (defn on-finish-listener [ky listener]
   (add-watch test-result-data ky (fn [_ _ _ m] (listener m))))
 
@@ -31,10 +28,10 @@
   (on-finish-listener
    ::exit-on-fail
    #(async-result/send
-     (if (failed? %)
+     (if (cljs.test/successful? %)
+       ::success
        (async-result/throw-ex
-        (ex-info "ClojureScript async test run failed" %))
-       ::success-async))))
+        (ex-info "ClojureScript async test run failed" %))))))
 
 (defn no-auto-tests-display-message [app-id]
   (if (nil? goog/global.document)
@@ -140,12 +137,12 @@
        `(run-tests ~env-or-ns ~@test-nses))))
   ([env-or-ns & namespaces]
    `(do (cljs.test/run-tests ~env-or-ns ~@namespaces)
-        (if (failed? @figwheel.main.testing/test-result-data)
+        (if (cljs.test/successful? @figwheel.main.testing/test-result-data)
+          ::success
           (throw
            (ex-info
             "ClojureScript test run failed"
-            @figwheel.main.testing/test-result-data))
-          ::success))))
+            @figwheel.main.testing/test-result-data))))))
 
 ;; this helps if you are running async tests and you have a custom
 ;; reporter
@@ -261,7 +258,6 @@
             content (if (not-empty namespaces)
                       (testing-file-content args)
                       (no-namespaces-content (assoc args :app-id "app-auto-testing")))]
-        (log/debug "PRE-HOOK")
         (log/debug output-to)
         (log/debug content)
         (let [f (io/file output-to)]
