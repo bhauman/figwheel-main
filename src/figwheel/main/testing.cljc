@@ -94,8 +94,9 @@
   (some :test (vals (get-in @cljs.env/*compiler* [:cljs.analyzer/namespaces ns-sym :defs]))))
 
 (defn get-test-namespaces []
-  (let [sources (:sources @cljs.env/*compiler*)]
-    (vec (doall (filter namespace-has-test? (mapv :ns sources))))))
+  (->> (get @cljs.env/*compiler* :cljs.analyzer/namespaces)
+       (filter (fn [[_ v]] (some :test (vals (:defs v)))))
+       (mapv first)))
 
 (defn ns? [x]
   (and (seq? x) (= (first x) 'quote)))
