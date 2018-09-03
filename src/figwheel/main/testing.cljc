@@ -132,7 +132,7 @@
   ([] `(run-tests (cljs.test/empty-env)))
   ([env-or-ns]
    (if (ns? env-or-ns)
-     `(run-tests (empty-env) ~env-or-ns)
+     `(run-tests (cljs.test.empty-env) ~env-or-ns)
      (when-let [test-nses (get-quoted-test-nses)]
        `(run-tests ~env-or-ns ~@test-nses))))
   ([env-or-ns & namespaces]
@@ -182,7 +182,7 @@
    `(run-tests-async ~timeout (cljs.test/empty-env)))
   ([timeout env-or-ns]
    (if (ns? env-or-ns)
-     `(run-tests-async ~timeout (empty-env) ~env-or-ns)
+     `(run-tests-async ~timeout (cljs.test/empty-env) ~env-or-ns)
      (when-let [test-nses (get-quoted-test-nses)]
        `(run-tests-async ~timeout ~env-or-ns ~@test-nses))))
   ([timeout env-or-ns & namespaces]
