@@ -1736,6 +1736,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
     (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
           (update-config cfg)
           {:keys [pprint-config]} config]
+      (validate-fix-target-classpath! b-cfg)
       (if pprint-config
         (do
           (log/info ":pprint-config true - printing config:")
