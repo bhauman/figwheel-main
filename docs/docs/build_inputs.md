@@ -51,19 +51,25 @@ them and Figwheel will give you feedback on how well they are
 compiling. This feedback is not to be underestimated as it parallels
 the feedback that every decent IDE gives you about your code's syntax.
 
-Also, since when you are developing with `:optimizations` level
-`:none` any extra source files that are being worked on but are not
-required by the running application will not be loaded in the running
-application. The cost of supplying a directory of source files to the
-compiler will only be high if it is expensive when the unrequired
-source files have a long initial compile time, which is a very rare
-situation. Even if that situation occurs the cost is paid only
-once during the initial compile.
+Another major reason to pass your source directories as your build
+inputs is to support the [extra mains](extra_mains) feature. If you
+are simply compiling from a single root namespace, files that you need
+for your extra main entry point will possibly not be compiled.
 
-It is for the above reason that both `figwheel.main` and `cljs.main`
+When you are developing with `:optimizations` level `:none` any extra
+source files that are being worked on but are not required by the
+running application will not be loaded in the running application. The
+cost of supplying a directory of source files to the compiler will
+only be high if it is expensive when the unrequired source files have
+a long initial compile time, which is a very rare situation. Even if
+that situation occurs the cost is paid only once during the initial
+compile.
+
+It is for the above reasons that both `figwheel.main` and `cljs.main`
 supply the watched directories to the compiler. They are being watched
-so there is an expectation of feedback, when there is no feedback it
-is normally assumed that the code you are writing is just fine :)
+so there is an expectation of feedback, when there is no feedback on
+can mistakely assume that the code one is writing has no syntax
+errors.
 
 ## Production
 
@@ -71,11 +77,69 @@ Now when we leave development mode the priority changes. We normally
 do not want to include extra source files in a deployed artifact and
 we have no need for feedback on files that are not getting
 deployed. When we compile one big artifact with in `:optimizations`
-level `:whitespace` we don't want it contain unneeded files.
+level `:whitespace` we don't want it contain unneeded namespaces.
 
-This is why `figwheel.main` uses the file containing your `:main`
-namespace as the single build input when you are not in
-`:optimizations` level `:none`.
+`figwheel.main` uses the file containing your `:main` namespace as the
+single build input when you are not in `:optimizations` level
+`:none`. This will esnure that the deployed bundle of JavaScript only
+contains code that is being depended on.
+
+This is less of a problem when you use the `:advanced` level as it
+will perfom dead code elimination from the final artifact.
+
+## Overriding build inputs
+
+Now that you understand the trade-offs you can safely use the
+[`:build-inputs` config option] to override the default sources passed
+to the compile by Figwheel.
+
+#### Only sending the main namespace
+
+This will probably be the most common build inputs override.
+
+You can accomplish this with the following config:
+
+```clojure
+:build-inputs [:main]
+```
+
+The `:main` keyword will be replaced by the main namespaces.
+
+#### Only sending the watched directories
+
+```clojure
+:build-inputs [:watch-dirs]
+```
+
+The `:watch-dirs` keyword will be replaced by the watched directories.
+
+#### Compiling a directory that you don't want to watch
+
+Assuming that `./src-no-watch` is a source directory that you want to
+compile but don't want to watch.
+
+```clojure
+:build-inputs [:watch-dirs "src-no-watch"]
+```
+
+A string is assumed to be a file or a directory.
+
+#### Watched directories and a specific namespace
+
+```clojure
+:build-inputs [:watch-dirs example.tool.extra]
+```
+
+A symbol is assume to be a ClojureScript namespace.
+
+
+
+[build-inputs]: ../config-options#build-inputs
+
+
+
+
+
 
 
 
