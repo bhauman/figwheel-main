@@ -207,7 +207,7 @@ On my Mac in my `~bin` directory I have an executable shell script named
 
 ```shell
 #!/bin/sh
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --repl $1
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --repl "$@"
 ```
 
 The above script takes a single URL argument.
