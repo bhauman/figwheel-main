@@ -130,6 +130,10 @@ running at the same time with virtually no extra cost:
 You don't have to use all of the main entry points at the same
 time. But they are there, waiting to do your bidding.
 
+Not only does extra mains lighten the compile load, but because they
+are all within a single **build** this also allows for extremely simple
+REPL focus switching.
+
 ## Behavior
 
 The application loaded by the extra main entry point will behave the
@@ -209,6 +213,29 @@ extention. For example, if there is already an `:output-to` file named
 `target/public/cljs-out/dev-main.js`, Figwheel will rename that to
 `target/public/cljs-out/dev-main-tests.js` if the name of the extra
 mains config is `:tests`.
+
+## Simple REPL focus switching
+
+A major question when you have more than one environment is "How do a
+get a REPL into my tests?"
+
+The Figwheel REPL allows you to switch focus between environments
+(think open tabs) as long as they are in the same build.
+
+You can use the `figwheel.repl/conns` and `figwheel.repl/focus` macros
+from the CLJS REPL prompt to do this.
+
+There is a very simple technique for switching the focus of your REPL
+though. Reload the browser tab if you want the focus of your REPL to
+switch to that environment. The Figwheel REPL will focus on the last
+environment to connect to the Websocket. So to switch focus just
+reload the browser tab where you want to focus. 
+
+You verify this with a `(js/console.log "focus is here")`. You will
+see that REPL focus follows that last tab to open **within** a build.
+
+
+
 
 
 
