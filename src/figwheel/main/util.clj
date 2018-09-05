@@ -5,7 +5,7 @@
    [cljs.util]
    [cljs.build.api :as bapi])
   (:import
-   [java.nio.file.Paths]))
+   java.nio.file.Paths))
 
 (defn ->path [s & args]
   (java.nio.file.Paths/get ^String s (into-array String args)))

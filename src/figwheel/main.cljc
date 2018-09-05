@@ -30,10 +30,10 @@
   #?(:clj
      (:import
       [java.io StringReader]
-      [java.net.InetAddress]
-      [java.net.URI]
-      [java.net.URLEncoder]
-      [java.nio.file.Paths]))
+      java.net.InetAddress
+      java.net.URI
+      java.net.URLEncoder
+      java.nio.file.Paths))
   #?(:cljs
      (:require-macros [figwheel.main])))
 
