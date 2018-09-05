@@ -154,8 +154,8 @@ files to the compiler this feature won't work.
 ## Default endpoint
 
 You will be able to find the default endpoint for your extra main at
-`/figwheel-extra-mains/[extra-main-id]`. I.E for `:tests` the endpoint
-would be `/figwheel-extra-mains/tests`.
+`/figwheel-extra-main/[extra-main-id]`. I.E for `:tests` the endpoint
+would be `/figwheel-extra-main/tests`.
 
 There is a div on the default host page where you can mount your
 application. The app div on the page does not have an id `app` but

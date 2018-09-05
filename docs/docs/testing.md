@@ -30,7 +30,7 @@ some tests in a namespace that is on your classpath, and set the
 [`:auto-testing` config option][auto-testing] to `true`. Figwheel will
 automatically be discover your tests and display them with
 [cljs-test-display][cljs-test-display] at the HTTP endpoint
-`/figwheel-extra-mains/auto-testing`. No test runner is required and
+`/figwheel-extra-main/auto-testing`. No test runner is required and
 the tests will be re-run every time you save a watched source code
 file.
 
@@ -75,7 +75,7 @@ Now we'll configure this as an extra main entry point in our `dev.cljs.edn` file
 
 Now when you start your build with the standard `clojure -m
 figwheel.main -b dev -r` command you will now be able to see your
-custom testing at the `/figwheel-extra-mains/testing` endpoint.
+custom testing at the `/figwheel-extra-main/testing` endpoint.
 
 Please note that the `"app-testing"` above refers to the DOM `id` of
 the `DIV` that is available by default on the page served by the extra
