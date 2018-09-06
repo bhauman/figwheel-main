@@ -1,3 +1,18 @@
+# 0.1.9 Testing
+
+This release has focused on making it much easier to integrate testing
+into your workflow. Auto-testing, CLI testing for dev ops integration,
+and headless testing support come together to make testing a major
+feature in figwheel.main.
+
+See the testing documentation here: https://figwheel.org/docs/testing.html
+See the async main script docs here: https://figwheel.org/docs/main_script.html
+
+* auto discovery and display of tests found in your source files with `:auto-testing true`
+* added async support to the `--main` CLi arg that also supports non-zero exit status
+* `:launch-js` option was created to support use of headless environments during testing [Learn more](https://figwheel.org/config-options#launch-js)
+* fixed regresion where `--compile --repl` didn't start a repl
+
 # 0.1.8 Extra Mains, Much better NPM and Global exports support, Smiley!
 
 The new `:extra-main-files` option makes integrating things like tests
