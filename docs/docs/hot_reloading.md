@@ -164,7 +164,7 @@ the first time. For example, to get Reagent to rerender you'd write:
   
 ;; and this is what figwheel calls after each save
 (defn ^:after-load re-render []
-  (run))
+  (mount))
 ```
 
 
