@@ -137,6 +137,37 @@ Here is an example of using reload hooks:
     (println "AFTER reload!!!"))
 ```
 
+## Re-rendering UI after saving a file
+
+Most ClojureScript UI libraries like Reagent, Rum, Re-frame or Om only
+render when some managed state changes. Most of the time, that state
+is defined using `defonce`, so while Figwheel will compile and install
+new versions of the various components, the DOM will stay the same as
+the UI library doesn't have any reason to re-render. This is where the
+aforementioned reload hooks are useful:
+
+First, don't forget to add the `^:figwheel-hooks` annotation to the namespace:
+
+```
+(ns ^:figwheel-hooks example.core)
+```
+
+Then add an `^:after-load` marked function that will render the UI. In
+most cases you can reuse the "mount" function that rendered the UI for
+the first time. For example, to get Reagent to rerender you'd write:
+
+```
+;; this is what you call for the first mount
+(defn ^:export mount []
+  (r/render [my-main-component]
+            (js/document.getElementById "app")))
+  
+;; and this is what figwheel calls after each save
+(defn ^:after-load re-render []
+  (run))
+```
+
+
 ## Reloading Clojure code
 
 If Clojure code is on a watched path Figwheel will reload it when it
