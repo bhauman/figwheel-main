@@ -242,7 +242,7 @@ needing to write a script.
 The following will launch headless Chrome on my system:
 
 ```clojure
-:launch-js ["/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" 
+:launch-js ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" 
             "--headless" "--disable-gpu" "--repl" :open-url]
 ```
 
@@ -256,7 +256,7 @@ we'll place a `headless-js-env` function in our `user.clj` file.
    (:require [clojure.java.shell :as shell]))
    
 (defn headless-js-env [{:keys [open-url]}]
-  (shell/sh "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" 
+  (shell/sh "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" 
             "--headless" "--disable-gpu" "--repl" open-url))
 ```
 
