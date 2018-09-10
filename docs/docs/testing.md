@@ -267,7 +267,6 @@ Now we will configure `:launch-js` to take a `user/headless-js-env` symbol:
 clojure -m figwheel.main -fwo '{:launch-js user/headless-js-env}'  -m example.test-runner
 ```
 
-
 [cljs-test-display]: https://github.com/bhauman/cljs-test-display
 [auto-testing]: ../config-options#auto-testing
 [extra-main-files]: ../config-options#extra-main-files
