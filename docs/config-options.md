@@ -428,6 +428,8 @@ https://clojurescript.org/guides/webpack
 A collection of symbol or strings that represent Clojure functions
 to call just before your ClojureScript sources get built.
 
+These functions will be called before **every** build.
+
 These functions will be passed the current configuration of the
 system. This is a fairly complex data-structure and contains the
 `:options` for the current build among other things.
@@ -438,6 +440,8 @@ system. This is a fairly complex data-structure and contains the
 
 A collection of symbol or strings that represent clojure functions
 to call just after your ClojureScript sources have been built.
+
+These functions will be called after **every** build.
 
 These functions will be passed the current configuration of the
 system. This is a fairly complex data-structure and contains the
