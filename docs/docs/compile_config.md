@@ -32,7 +32,7 @@ Here are the compiler options we'll cover:
 
 ## The `--print-config` option
 
-You can use the `figwheel.main` CLI option `--print-conig` (or `-pc`)
+You can use the `figwheel.main` CLI option `--print-config` (or `-pc`)
 to examine the compile options that Figwheel is sending to the
 ClojureScript compiler. The `--print-config` CLI flag will only print
 out the configuration, it will not run the command.
