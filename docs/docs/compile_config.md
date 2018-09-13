@@ -79,7 +79,7 @@ The above command should print out something like the following:
    [stop-builds start-builds build-once reset clean status]])}
 ```
 
-As you can see there are two sections one displaying the current
+As you can see there are two sections; one displaying the current
 **config options for Figwheel** and one displaying the **final compile
 options** to be sent to the ClojureScript compiler.
 
@@ -102,11 +102,11 @@ server is that the `:output-to` option needs to point to a path that
 is basically the classpath + `public`.
 
 The Figwheel default for this path is in the `target/public` directory
-because we want to seperate files that are compiled (and thus
+because we want to separate files that are compiled (and thus
 temporary) from files that we edit and keep in version control like
 HTML and CSS.
 
-The Figwheel default as metioned before uses the build name and looks
+The Figwheel default as mentioned before uses the build name and looks
 like 
 
 ```shell
@@ -127,7 +127,7 @@ options to obtain different compilation results.
 The `:output-dir` sets the output directory for temporary files used
 during compilation.
 
-Regardless of the `:optimizations` level the compiler will output a
+Regardless of the `:optimizations` level, the compiler will output a
 file for each ClojureScript "namespace" in your project and all of its
 dependencies, as well as the Google Clojure libraries and foreign
 libraries that are utilized.
@@ -154,11 +154,11 @@ target/public/cljs-out/dev
 
 These files also serve as a cache for the compiler which enables
 incremental compiles. If your source file has a timestamp newer than
-the file in the output directory then the compiler will compile the
+the file in the output directory, then the compiler will compile the
 sourcefile. Caches can get stale however and you will want to **delete
 your output directory on a regular basis**.
 
-When no `:output-dir` is defined Figwheel will provide a default
+When no `:output-dir` is defined, Figwheel will provide a default
 `:output-dir` which will have the form:
 
 ```
@@ -173,7 +173,7 @@ contents are available via the classpath. The reason for this is
 because when we use the default `:optimizations` level `:none` many of
 these "temporary files" are directly loaded into our client
 environment. For example, in a web environment when we load our
-`:output-to` file the Google Clojure base code will calculate the
+`:output-to` file, the Google Clojure base code will calculate the
 files that need loading and then load them in order. Hence the browser
 needs to serve these files and this is why they need to be available on
 the classpath.
@@ -208,7 +208,7 @@ does not need to be specified in the configuration options map.
 
 As we noted before the `:none` level does not produce a single
 self-contained compiled artifact, but rather creates an artifact that
-loads all of the seperately compiled namespaces.
+loads all of the separately compiled namespaces.
 
 All the other levels (`:whitespace`, `:simple`, and `:advanced`)
 produce a single compiled artifact to the `:output-to` file. These are
@@ -221,7 +221,7 @@ optimization but it is also the most finicky. This
 
 ## The `:main` option
 
-The `:main` option specifies a entry point (root namespace) for your
+The `:main` option specifies an entry point (root namespace) for your
 compiled artifact. When `:optimizations` is `:none` the `:main` option
 will cause the compiler to generate a file that will in turn load all
 the files that are needed by the `:main` namespace. Actually, it does
@@ -267,13 +267,13 @@ So in our case:
 ```
 
 If your application can't seem to find the files it needs to load, it
-normally means you have a missconfigured `:asset-path`.
+normally means you have a misconfigured `:asset-path`.
 
 
 ## The `:target` option
 
 There are three values for the `:target` option. Actually there are two
-values and the abense of a `:target` option. If you don't specify a
+values and the absence of a `:target` option. If you don't specify a
 `:target` then it will be assumed that our client environment is the
 Browser.
 
@@ -351,7 +351,7 @@ can override these default values in our configuration with the
 Figwheel uses `:closure-defines` to supply the connection url to the
 `figwheel.repl` connection code.
 
-You can see in our example above that it's value is:
+You can see in our example above that its value is:
 
 ```clojure
 :closure-defines 
