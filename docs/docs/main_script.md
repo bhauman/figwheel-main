@@ -13,7 +13,7 @@ provides additional functionality to facilitate asynchronous execution
 and process failure.</div>
 
 If you have a ClojureScript namespace on the classpath with a `-main`
-function in it. You can execute that function from the command line.
+function in it, you can execute that function from the command line.
 
 For example if you have the following namespace:
 
@@ -38,7 +38,7 @@ ARGS: ("hi" "there")
 
 You may wonder why you might need a feature like this in the first
 place. Being able to run one-off arbitrary scripts can be a major boon
-to your tool chain. You will most likely us a main script to **run
+to your tool chain. You will most likely use a main script to **run
 tests**, but it could also be useful for running tooling like
 [Webpack](https://webpack.js.org/api/node/) from Node.
 
@@ -46,9 +46,9 @@ tests**, but it could also be useful for running tooling like
 > line is why CLI option order is important in `clojure.main`,
 > `cljs.main` and `figwheel.main`. I know that this can be confusing
 > at times, but being able to provide scripts and main scripts with
-> arbitrary options including ones that could mistakenly be recognized
-> by `figwheel.main` is very important for flexible expression. And is
-> the reason why `figwheel.main` can reuse the many of the same CLI
+> arbitrary options, including ones that could mistakenly be recognized
+> by `figwheel.main`, is very important for flexible expression. And is
+> the reason why `figwheel.main` can reuse many of the same CLI
 > args as `clojure.main`.
 
 ## Figwheel and compile options when using `--main`
@@ -58,7 +58,7 @@ may be left wondering how to supply the options that you would
 normally supply with the `--build` option to the `--main` option.
 
 You can do this by providing your `[build-id].cljs.edn` file to the `-co`
-option. Figwheel will pick up both the metatdata config along with the CLJS
+option. Figwheel will pick up both the metadata config along with the CLJS
 compiler config. 
 
 For example the following will allow you to use the config in your
@@ -85,7 +85,7 @@ exit with a non-zero exit status.
 
 This means that when you are running test code that is synchronous, you
 can determine if the tests failed at the end of the run and throw an
-error to cause non-zero exit from the Clojure process.
+error to cause a non-zero exit from the Clojure process.
 
 What do we do when the process is asynchronous?
 
@@ -125,7 +125,7 @@ $ clj -m figwheel.main -m example.hello
 
 The Clojure process will block for 5 seconds while it waits for some
 asynchronus result to be sent back. In this example we are not sending
-back a result value, so the process will throw a timed out exception
+back a result value, so the process will throw a timed-out exception
 which will cause a non-zero exit.
 
 Now let's modify the above `-main` function to send back an
@@ -150,7 +150,7 @@ Now the Clojure process will block for 3 seconds and ultimately print
 out the value of `args` sent by the `figwheel.main.async-result/send`
 function.
 
-Let's modify the namespace one more time to send and asynchronus
+Let's modify the namespace one more time to send an asynchronus
 failure:
 
 ```clojure
@@ -162,13 +162,13 @@ failure:
   [:figwheel.main.async-result/wait 5000])
 ```
 
-After you run the above example the Clojure process will block for 3
-seconds and and then fail with an exception.
+After you run the above example, the Clojure process will block for 3
+seconds and then fail with an exception.
 
 ## More details
 
 The `figwheel.main.async-result/send` and
-`figwheel.main.async-result/throw-ex` functions are single use actions
+`figwheel.main.async-result/throw-ex` functions are single-use actions
 that are only intended to be used in a `--main` script. The first
 asynchronous value or exception that is received will unblock the
 process.
