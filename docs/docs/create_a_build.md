@@ -54,8 +54,8 @@ If you're using Leiningen your `project.clj` should be:
 ```clojure
 (defproject example-project "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.9.0"]]
-  :profiles 
-    {:dev 
+  :profiles
+    {:dev
       {:dependencies [[org.clojure/clojurescript "1.10.339"]
                       [com.bhauman/figwheel-main "0.1.9"]
                       ;; optional but recommended
@@ -83,7 +83,7 @@ configure a compile process by simply defining the
 
 We are going to pass this option to Figwheel via a **build file**. A
 build file is a *named* set of compiler configuration options. Figwheel
-utilizes this name to isolate a particular builds REPL connection and
+utilizes this name to isolate a particular build's REPL connection and
 output files from all the other builds.
 
 The build file will sit in our project root directory and the build
@@ -97,8 +97,8 @@ the following content:
 {:main hello-world.core}
 ```
 
-The above `:main` option defines a root namespace for our build. So
-that when we include the compiled artifact on a webpage it will pull in
+The above `:main` option defines a root namespace for our build.
+When we include the compiled artifact on a webpage it will pull in
 all the code that our `:main` namespace depends on.
 
 > Figwheel will only be able to start a REPL and hot reload if
@@ -206,7 +206,7 @@ this:
 {:main hello-world.core}
 ```
 
-The `^` character is not a typo it's a
+The `^` character is not a typo, it's a
 [reader macro][reader-macro-meta] that in this case is adding metadata
 to the map that follows it. Figwheel examines the metadata of your
 build config for its own configuration options.
@@ -220,5 +220,3 @@ You can also specify a map of Figwheel configuration in a
 [cljs-options]: https://clojurescript.org/reference/compiler-options
 [cljs-main-opt]: https://clojurescript.org/reference/compiler-options#main
 [reader-macro-meta]: https://clojure.org/reference/reader#macrochars
-
-
