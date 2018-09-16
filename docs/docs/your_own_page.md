@@ -59,7 +59,7 @@ you can examine Figwheel's start-up messages.
 As you can see in the above start-up messages, Figwheel is compiling
 the build to `target/public/cljs-out/dev-main.js`.
 
-In order to include this file in our host page, we will include
+In order to include this file in our host page, we will
 utilize the path to the output file **minus** the classpath based
 webroot `target/public`. This leaves us with `/cljs-out/dev-main.js`
 as the path to our compiled ClojureScript.
