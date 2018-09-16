@@ -28,7 +28,7 @@ If you haven't written tests in ClojureScript yet, see the
 The easiest way to start working with tests in Figwheel is to write
 some tests in a namespace that is on your classpath, and set the
 [`:auto-testing` config option][auto-testing] to `true`. Figwheel will
-automatically be discover your tests and display them with
+automatically discover your tests and display them with
 [cljs-test-display][cljs-test-display] at the HTTP endpoint
 `/figwheel-extra-main/auto-testing`. No test runner is required and
 the tests will be re-run every time you save a watched source code
