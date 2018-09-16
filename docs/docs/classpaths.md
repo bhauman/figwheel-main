@@ -235,7 +235,7 @@ in a jar and easily access them from inside our web process.
 
 A common pattern in Clojure web development is to serve our public web
 assets from a `public` directory that is on the classpath. This is the
-default for Jetty server Figwheel provides to deliver compiled
+default for the Jetty server Figwheel provides to deliver compiled
 ClojureScript files and other assets.
 
 It is also a Clojure/Java idiom to place a `resources` directory on
