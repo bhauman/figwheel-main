@@ -209,7 +209,7 @@ that looks like this:
 
 Place this code in `src/hello_world/core.cljs`:
 ```clojure
-(ns hello_world/core.cljs)
+(ns hello-world/core.cljs)
 
 (js/console.log "Hello World!")
 ```
@@ -336,7 +336,7 @@ the `target/public` directory. Using the `target` directory for output
 files is a convention that is already used by Leiningen. The major
 reason for this is that compiled files are temporary and need to be
 deleted from time to time. Leiningen has a `lein clean` task
-that deleted the `target` directory and thus cleans out all compiled
+that deletes the `target` directory and thus cleans out all compiled
 and cached assets allowing us to start fresh, and perhaps eliminate
 stale files that are causing problems.
 
@@ -390,12 +390,12 @@ This is just a simple matter as we just need to add `"target"` to the
  :paths ["src" "resources" "target"]}
 ```
 
-If you now call `clj -Spath` you will see the local `target` direcotry
+If you now call `clj -Spath` you will see the local `target` directory
 listed.
 
 When working with CLI Tools we are also going to want to create the
 `target` directory because paths on the classpath that we want to
-resolve files in, need to exist before the JVM starts or file
+resolve files in need to exist before the JVM starts, or file
 resolution will not work.
 
 ## Final classpath and project layout
