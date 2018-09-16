@@ -158,15 +158,17 @@ the first time. For example, to get Reagent to rerender you'd write:
 
 ```
 ;; this is what you call for the first mount
-(defn ^:export mount []
+(defn mount []
   (r/render [my-main-component]
             (js/document.getElementById "app")))
   
 ;; and this is what figwheel calls after each save
 (defn ^:after-load re-render []
   (mount))
-```
 
+;; this only gets called once
+(defonce start-up (do (mount) true))
+```
 
 ## Reloading Clojure code
 
