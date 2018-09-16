@@ -103,7 +103,7 @@ nREPL server.
 Now we can start figwheel:
 
 ```clojure
-user=> (require 'figwheel.main)
+user=> (require 'figwheel.main.api)
 
 user=> (figwheel.main.api/start {:mode :serve} "dev")
 ```
