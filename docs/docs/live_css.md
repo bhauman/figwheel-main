@@ -51,7 +51,7 @@ to which directories to watch for CSS file changes.
 You can do this one of two ways: in the **build file** or in the
 `figwheel-main.edn` file.
 
-As and example let's assuming a `dev.cljs.edn` build file. You can add
+As an example let's assume a `dev.cljs.edn` build file. You can add
 `:css-dirs` config to the metadata in the build file like so:
 
 ```clojure
