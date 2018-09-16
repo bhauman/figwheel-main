@@ -135,7 +135,7 @@ classpath.
 ## Adding additional paths to the Classpath
 
 When you set up your project you will often have one or more source
-directories. Some folks prefer to have a `cljs-src` directory that you
+directories. Some folks prefer to have a `cljs-src` directory that
 only holds files relevant to a local ClojureScript codebase (i.e. a
 front-end application).
 
