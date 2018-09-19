@@ -161,7 +161,7 @@ explicitly add `"src"` to the paths key because once it is defined the
 **Adding the `cljs-src` path with Leiningen**
 
 Let's add the `cljs-src` path to our classpath with CLI Tools. In your
-`deps.edn` file:
+`project.clj` file:
 
 ```clojure
 (defproject example-project "0.1.0-SNAPSHOT"
