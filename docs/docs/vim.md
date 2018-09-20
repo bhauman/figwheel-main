@@ -210,7 +210,7 @@ nREPL server. Place the following in `src/fullstack/helpers.clj`:
 (ns fullstack.helpers
   "Helpers around starting/stopping an nREPL server."
   (:require [clojure.tools.nrepl.server :as nrepl-server]
-            [clojure.java.io :as io]
+            [clojure.java.io :as io]))
 
 (def nrepl-port 7888)
 (defonce nrepl-server (atom nil))
