@@ -5,8 +5,8 @@ it will be most helpful to set up a **build**.
 
 > A **build** is the configuration of a compile task, that determines
 > what files get compiled with a certain set of compile options. A
-> build also optionally configures the which features Figwheel
-> enguages while you are working on your application.
+> build also optionally configures which features Figwheel
+> engages while you are working on your application.
 
 #### deps.edn
 
