@@ -1219,6 +1219,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                    :ring-stack
                    :ring-stack-options
                    :ring-handler
+                   :cljsjs-resources
                    :launch-node
                    :inspect-node
                    :node-command

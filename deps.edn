@@ -49,7 +49,10 @@
            {:extra-deps
             {org.clojure/clojurescript {:mvn/version "1.10.339"}
              com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
-             com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}}
+             com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
+             ;; for testing static cljsjs resources
+             ;  cljsjs/react-vis {:mvn/version "1.11.1-0"}
+             }
             :extra-paths ["target" "devel" "dev"]}}
 
  }

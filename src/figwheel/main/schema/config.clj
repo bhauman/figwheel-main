@@ -652,6 +652,24 @@ You can also disable `cljs-test-display` with:
     :auto-testing {:cljs-test-display false}"
   :group :common)
 
+(s/def ::cljsjs-resources boolean?)
+(def-spec-meta ::cljsjs-resources
+  :doc
+ "When you use libraries from http://cljsjs.github.io they sometimes
+come bundled with static resources (like CSS files) that you would
+like to be served from the Figwheel server.
+
+If you set `:cljsjs-resources` to `true` the Figwheel server will
+serve the resources with the `cljsjs` root.
+
+For example: if there is a CSS file in the `react-vis` jar at
+`cljsjs/react-vis/common/react-vis.inc.css` you will be able to access
+it via the Figwheel server at the path
+`/react-vis/common/react-vis.inc.css`.
+
+    :cljsjs-resources true"
+  :group :un-common)
+
 ;; ------ Uncommon options ----------------------------------
 
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
@@ -817,9 +835,11 @@ be useful for certain docker environments.
      ::build-inputs
      ::auto-testing
      ::launch-js
-     
+     ::cljsjs-resources
+
      ::helpful-classpaths
 
+     
      ::launch-node
      ::inspect-node
      ::node-command
