@@ -892,7 +892,11 @@ classpath. Classpath-relative paths have prefix of @ or @/")
     (log/warn (ansip/format-str [:yellow
                                  (format "Attempting to dynamically add %s to classpath!"
                                  (pr-str (str dir)))]))
-    (fw-util/add-classpath! (.toURL (io/file dir)))))
+    (fw-util/add-classpath! (->> dir
+                                 io/file
+                                 .getCanonicalPath
+                                 io/file
+                                 .toURL))))
 
 (defn- config-main-source-path-on-classpath [{:keys [options] :as cfg}]
   (when-let [main (:ns cfg)]
@@ -953,7 +957,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                  [:yellow
                   "The watch directory "
                   (pr-str (str src-dir))
-                  " is not the classpath! A watch directory is must "
+                  " is not on the classpath! A watch directory is must "
                   "on the classpath and point to the root directory of your namespace "
                   "source tree. A general all encompassing watch directory will not work."]))
       (when (get config :helpful-classpaths true)
