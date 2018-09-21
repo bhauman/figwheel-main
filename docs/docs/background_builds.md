@@ -29,14 +29,14 @@ you to work on both of them at the same time.
 
 ## Difference from foreground build
 
-Background builds are not full fledged citizens like the the build you
+Background builds are not full fledged citizens like the build you
 supply to the `--build` option.
 
 In the above example we'll call the `app` build as the foreground
 build. The foreground build is different because its configuration is
 what gets applied to the Figwheel server when it starts. Practically
 speaking, if both builds have defined their own
-[`:ring-handler`][ring-handler], only the `app` builds ring-handler
+[`:ring-handler`][ring-handler], only the `app` build's ring-handler
 will be installed. The same goes for all server related options like
 `:ring-server-options` etc.
 
@@ -57,7 +57,7 @@ Background builds usually have to define a [`:watch-dirs`][watch-dirs] Figwheel
 configuration option.
 
 Background builds also need to define their own [host page][host-page]
-as both applications need a their own client environment.
+as both applications need their own client environment.
 
 ## Background build for Testing
 
@@ -68,8 +68,3 @@ change a file.
 [host-page]: your_own_page
 [watch-dirs]: ../config-options#watch-dirs
 [ring-handler]: ../config-options#ring-handler
-
-
-
-
-

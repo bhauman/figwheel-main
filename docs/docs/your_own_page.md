@@ -73,7 +73,7 @@ as the path to our compiled ClojureScript.
 > use these settings for development, but for the REPL and Figwheel to
 > work the default `:optimizations` setting of `:none` is required.
 
-When you include the output file on your HTML page you will want place
+When you include the output file on your HTML page you will want to place
 the `<script>` tag as the last tag in your `<body>` content. This is
 the convention for Google Closure compiled projects.
 
@@ -90,7 +90,7 @@ An example host page:
   </head>
   <body>
     <div id="app"></div>
-    <!-- include your ClojureScript at the bottom of body like this -->	
+    <!-- include your ClojureScript at the bottom of body like this -->
     <script src="/cljs-out/dev-main.js" type="text/javascript"></script>
   </body>
 </html>
@@ -108,11 +108,11 @@ your own page:
 * supply a static `index.html` file in a `public` directory on the
   classpath
 * use a page other than `index.html` and change the [`:open-url` config
-  option][open-url] to point to it  
+  option][open-url] to point to it
 * create a Ring handler that handles the root route `/` and supply it
   to the [`:ring-handler` config option][ring-handler]
 
-## Supply a static index.html 
+## Supply a static index.html
 
 The most common way to use your HTML content to host your app is to
 place an `index.html` file in a `public` directory on the
@@ -125,7 +125,7 @@ Another way is to provide a static HTML page other than the
 `index.html` root page. This pattern is very helpful if you need to
 have several different host pages.
 
-As an example, let's say we want our build to use an `admin.html` as
+As an example, let's say we want our build to use `admin.html` as
 the host page. First, we will create a `resources/public/admin.html`
 file and ensure that we are requiring our compiled ClojureScript
 correctly.
@@ -155,7 +155,7 @@ This file will be a Clojure source file rather than a ClojureScript
 source file and it will be running in the Clojure server process.
 
 > We are about to introduce you to some Clojure code. If you have
-> never worked with Clojure up to now, I highly reccomend you
+> never worked with Clojure up to now, I highly recommend you
 > understand how to work with [Clojure at the REPL][clojure-repl]
 > before starting this. If you do want to go ahead with this example,
 > first start your `hello-world.core` example build running with
@@ -222,6 +222,3 @@ return the `home` page when needed.
 [open-url]: ../config-options#open-url
 [classpaths-web-assets]: classpaths#using-the-classpath-to-find-web-assets
 [clojure-repl]: https://clojure.org/guides/repl/introduction
-
-
-

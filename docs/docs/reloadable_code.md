@@ -7,7 +7,7 @@ order: 20
 
 # Writing reloadable code
 
-Figwheel relies on having files that can be reloaded. 
+Figwheel relies on having files that can be reloaded.
 
 Reloading works beautifully on referentially transparent code and
 code that only defines behavior without bundling state with the
@@ -34,9 +34,9 @@ of our running program.
 Reloadable code is code who's **load time side-effects** will not
 interact with our running program in a destructive way.
 
-The good news: 
+The good news:
 
-* it is idiomatic in ClojureScript, to write our functions so that they
+* it is idiomatic in ClojureScript to write our functions so that they
   don't exhibit bad load time side-effects
 * Reactjs makes it trivial to work with the DOM in a declarative way
   that is very reloadable
@@ -62,7 +62,7 @@ state.
 The `state` definition above is holding program state in an atom.
 Every time this definition gets reloaded, the definition will be
 redefined and reset back to the empty map `{}`.  This is normally not
-desirable. 
+desirable.
 
 The way to fix this is to use `defonce`
 
@@ -132,15 +132,15 @@ A trivial example is to add a listener in `setup` and remove it in
 	[goog.events :as events]))
 
 (defn ^:after-load setup []
-  (events/listen 
+  (events/listen
    (dom/getElementByTagNameAndClass "a" "submit-btn")
    "click"
    (fn [e] (handle-submit)))))
-   
+
 (defn ^:before-load teardown []
   (events/removeAll
    (dom/getElementByTagNameAndClass "a" "submit-btn"))
-   
+
 ;; and we'll want to call setup on the first initial load as well.
 (defonce init-block (setup))
 ```
