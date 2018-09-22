@@ -19,7 +19,7 @@ The scripting API isn't quite as general as the command line API. It focuses on
 creating and managing **running** build processes.
 
 To use the API you will need to ensure that you have
-[the dependencies](installation) and the [classpaths](classpath)
+the [dependencies](installation) and the [classpaths](classpath)
 sorted out to use `figwheel.main`. Then you will need to require the
 `figwheel.main.api` namespace and call the `figwheel.main.api/start`
 function.
@@ -125,7 +125,7 @@ nil
 ;; returns us to the Clojure REPL prompt
 user=> (fig/cljs-repl "admin")
 ;; .. figwheel REPL startup output omitted ...
-cljs.user=> 
+cljs.user=>
 ```
 
 We've successfully switched between ClojureScript REPLs for our builds

@@ -45,7 +45,7 @@ out the configuration, it will not run the command.
 > option.
 
 Keeping with our `hello-world.core` example let's print out the
-configuration. 
+configuration.
 
 ```shell
 $ clojure -m figwheel.main -pc -b dev -r
@@ -107,7 +107,7 @@ temporary) from files that we edit and keep in version control like
 HTML and CSS.
 
 The Figwheel default as mentioned before uses the build name and looks
-like 
+like
 
 ```shell
 target/public/cljs-out/[build-name]-main.js
@@ -129,7 +129,7 @@ during compilation.
 
 Regardless of the `:optimizations` level, the compiler will output a
 file for each ClojureScript "namespace" in your project and all of its
-dependencies, as well as the Google Clojure libraries and foreign
+dependencies, as well as the Google Closure libraries and foreign
 libraries that are utilized.
 
 If you have a `hello-world.core` example you can examine the
@@ -173,7 +173,7 @@ contents are available via the classpath. The reason for this is
 because when we use the default `:optimizations` level `:none` many of
 these "temporary files" are directly loaded into our client
 environment. For example, in a web environment when we load our
-`:output-to` file, the Google Clojure base code will calculate the
+`:output-to` file, the Google Closure base code will calculate the
 files that need loading and then load them in order. Hence the browser
 needs to serve these files and this is why they need to be available on
 the classpath.
@@ -194,7 +194,7 @@ will cause major problems.
 
 The `:optimizations` compiler option designates the optimizations
 level that the Google Closure compiler should use. The available
-optimizations levels are:
+optimization levels are:
 
 * `:none` - the default level, no code optimizations
 * `:whitespace` - basically just removes whitespace and comments
@@ -245,7 +245,7 @@ The example we have been using in this documentation has been:
 ```
 ## The `:asset-path` option
 
-Only affects the build if you are using the `:main` option with
+This only affects the build if you are using the `:main` option with
 `:optimizations :none`. The generated bootstrap script in the
 `:output-to` file needs to know the path to your temporary files in
 `:output-dir`. This path is relative to your webroot.
@@ -354,12 +354,10 @@ Figwheel uses `:closure-defines` to supply the connection url to the
 You can see in our example above that its value is:
 
 ```clojure
-:closure-defines 
+:closure-defines
   {figwheel.repl/connect-url
    "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"}
 ```
 
 [advanced-guide]: https://clojurescript.org/reference/advanced-compilation
 [cljs-opts]: https://clojurescript.org/reference/compiler-options
-
-

@@ -43,11 +43,11 @@ your project tree:
 
 ```clojure
 (ns hello-world.core-tests
-  (:require [cljs.test :refer-macros [deftest is run-tests]])
+  (:require [cljs.test :refer-macros [deftest is run-tests]]))
 
 (deftest should-not-pass
   (is (= 1 20)))
-  
+
 (run-tests)
 ```
 
@@ -114,7 +114,7 @@ tests visible in another tab of your browser and you want them to
 re-run after all source code changes, this is an ideal way to do that.
 
 You could do that with a [background build][background-builds] but in
-that case you have two autobuilding processed running in parallel on
+that case you have two autobuilding processes running in parallel on
 the same codebase which is much more taxing on your CPU.
 
 This is much lighter especially if you start to have a lot of extra
@@ -130,7 +130,7 @@ running at the same time with virtually no extra cost:
 You don't have to use all of the main entry points at the same
 time. But they are there, waiting to do your bidding.
 
-Not only does extra mains lighten the compile load, but because they
+Not only do extra mains lighten the compile load, but because they
 are all within a single **build** this also allows for extremely simple
 REPL focus switching.
 
@@ -143,7 +143,7 @@ reloads just like the main build.
 
 This feature will only output the additional ClojureScript bootstrap
 file that you will require on your host page, it will not cause any
-additional files to be compiled. 
+additional files to be compiled.
 
 > You will need to make sure that you have added all the needed source
 > directories to your `:watch-dirs` and to your classpath.
@@ -160,17 +160,17 @@ would be `/figwheel-extra-main/tests`.
 There is a div on the default host page where you can mount your
 application. The app div on the page does not have an id `app` but
 rather `app-[extra-main-id]` (for `:tests` that would be
-`app-tests`). This is so that you can conditionaly mount applications
+`app-tests`). This is so that you can conditionally mount applications
 by testing for the presence of a certain div id. I.E. you can belay
 starting your main application if the `app` div isn't there. This
 would allow you to require the namespace that mounts your main
-application and test the functions in it even if it has a top level
+application and test the functions in it even if it has top level
 code that tries to display itself on the page.
 
 ## Usage
 
 `:extra-main-files` will only work under `:optimizations` level
-`:none`. 
+`:none`.
 
 As you can see from the above example when you configure
 `:extra-main-files` you pass it a map of name keys mapped to
@@ -209,7 +209,7 @@ generated.
 You can supply an explicit `:output-to` path but Figwheel will supply
 one based on the current `:output-to`. It will add an
 `"-[extra-main-id]"` to the end of the file name before the
-extention. For example, if there is already an `:output-to` file named
+extension. For example, if there is already an `:output-to` file named
 `target/public/cljs-out/dev-main.js`, Figwheel will rename that to
 `target/public/cljs-out/dev-main-tests.js` if the name of the extra
 mains config is `:tests`.
@@ -229,7 +229,7 @@ There is a very simple technique for switching the focus of your REPL
 though. Reload the browser tab if you want the focus of your REPL to
 switch to that environment. The Figwheel REPL will focus on the last
 environment to connect to the Websocket. So to switch focus just
-reload the browser tab where you want to focus. 
+reload the browser tab where you want to focus.
 
 You verify this with a `(js/console.log "focus is here")`. You will
 see that REPL focus follows that last tab to open **within** a build.
