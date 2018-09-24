@@ -2,6 +2,9 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
+* editor integration
+* using npm modules
+
 * :extra-main-files testing
 * using an init script to start garden compiles
 
@@ -14,7 +17,7 @@ At first this will be a rough list of subjects.
 
 * usage
 * How to use HTTPS
-* How to override the jetty version (to use with Datomic Cloud)
+
 
 * Command line options detatiled overview
 * REPL session management
