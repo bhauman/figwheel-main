@@ -40,27 +40,27 @@ with the following keys:
 * `:cljs-test-display` can have a boolean value indicating if you want
   to display the tests
 * `:namespaces` takes a vector of namespaces that you want to test
-  
+
 ## Custom testing with `:extra-main-files`
 
 If the testing setup provided by [`:auto-testing`][auto-testing]
 doesn't work for you. The [extra mains](extra_mains) feature has you
 covered. We'll quickly walk through an example of using
 [`:extra-main-files`][extra-main-files] to provide a custom testing
-setup up with relatively little effort.
+setup with relatively little effort.
 
 First you would add a test runner namespace of some sort. I'm going to
 assume we are using [`cljs.test`][cljs-testing] and [cljs-test-display][cljs-test-display].
 
 ```clojure
 (ns example.test-runner
-  (:require 
+  (:require
     [cljs-test-display.core]
     [cljs.test :refer-macros [run-tests]]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
-	
+
 (run-tests (cljs-test-display.core/init! "app-testing")
            'example.core-test
            'example.other-test)
@@ -89,13 +89,13 @@ will automatically find all the testing namespaces in your source files.
 
 ```clojure
 (ns example.test-runner
-  (:require 
+  (:require
     [cljs-test-display.core]
     [figwheel.main.testing :refer-macros [run-tests]]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
-	
+
 (run-tests (cljs-test-display.core/init! "app-testing"))
 ```
 
@@ -126,19 +126,19 @@ Here is an example test runner that uses the new asynchronous
 
 ```clojure
 (ns example.test-runner
-  (:require 
+  (:require
     [cljs.test :refer-macros [run-tests] :refer [report]]
     [figwheel.main.async-result :as async-result]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
-	
+
 ;; tests can be asynchronous, we must hook test end
 (defmethod report [:cljs.test/default :end-run-tests] [test-data]
   (if (cljs.test/successful? test-data)
     (async-result/send "Tests passed!!")
     (async-result/throw-ex (ex-info "Tests Failed" test-data))))
-	
+
 (defn -main [& args]
   (run-tests 'example.core-test 'example.other-test)
   ;; return a message to the figwheel process that tells it to wait
@@ -162,12 +162,12 @@ Let's repeat the above example using the
 
 ```clojure
 (ns example.test-runner
-  (:require 
+  (:require
     [figwheel.main.testing :refer-macros [run-tests-async]]
     ;; require all the namespaces that have tests in them
     [example.core-test]
     [example.other-test]))
-	
+
 (defn -main [& args]
   ;; this needs to be the last statement in the main function so that it can
   ;; return the value `[:figwheel.main.async-result/wait 10000]`
@@ -195,7 +195,7 @@ launch a JavaScript environment.
 * a **vector** representing a shell command. Example: `["headless-chrome" :open-url]`
 * a **namespaced symbol** that represents a Clojure function that will be
   supplied a map. Example: `user/run-test-env`
-  
+
 I'm going to show how you can use the [`:launch-js` config option][launch-js]
 to launch a headless Chrome environment to run your tests using all 3
 different methods.
@@ -242,7 +242,7 @@ needing to write a script.
 The following will launch headless Chrome on my system:
 
 ```clojure
-:launch-js ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" 
+:launch-js ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
             "--headless" "--disable-gpu" "--repl" :open-url]
 ```
 
@@ -254,9 +254,9 @@ we'll place a `headless-js-env` function in our `user.clj` file.
 ```clojure
 (ns user
    (:require [clojure.java.shell :as shell]))
-   
+
 (defn headless-js-env [{:keys [open-url]}]
-  (shell/sh "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" 
+  (shell/sh "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
             "--headless" "--disable-gpu" "--repl" open-url))
 ```
 

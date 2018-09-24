@@ -22,8 +22,8 @@ Among the challenges of working in a hot reloaded environment the
 biggest one is ensuring that you are aware of the
 [load time side-effects][reloadable-code] of your code.
 
-Here we are going to cover the tools available to you to tweak hot
-reloading behavior of Figwheel.
+Here we are going to cover the tools available to you to tweak the
+hot reloading behavior of Figwheel.
 
 ## Configuring which directories to watch
 
@@ -31,7 +31,7 @@ Of all the [Figwheel config options][config-options] the one you will
 use the most often is the [`:watch-dirs` option][watch-dirs]. This
 option determines which directories Figwheel will watch for file
 changes. While Figwheel will guess which directory to watch based on
-your `:main` namespace. It is better to configure this explicitly.
+your `:main` namespace, it is better to configure this explicitly.
 Please take a moment to read the
 [`:watch-dirs` documentation][watch-dirs]. It is very important to
 understand that watched directories need to also be in the list of
@@ -62,7 +62,7 @@ For example:
 There is rarely a need to use this because Figwheel will reload all
 the files that are depending on the changed file that initiated the
 reload. However, in some cases you may want to reload a file on every
-save when it doesn't depend on your current file. 
+save when it doesn't depend on your current file.
 
 Using `:figwheel-always` may make more sense when you
 [disable the reloading of dependents](#disable-reloading-dependent-namespaces).
@@ -117,7 +117,7 @@ It is common to want to provide callbacks to do some housekeeping
 before or after a hot reload has occurred.
 
 You can conveniently configure reload callbacks at runtime by
-first adding `:figwheel-hooks` metatdata to the namespace that
+first adding `:figwheel-hooks` metadata to the namespace that
 contains functions that you want called on reload.
 
 Once the namespace is marked you will then need to add
@@ -142,7 +142,7 @@ Here is an example of using reload hooks:
 Most ClojureScript UI libraries like Reagent, Rum, Re-frame or Om only
 render when some managed state changes. Most of the time, that state
 is defined using `defonce`, so while Figwheel will compile and install
-new versions of the various components, the DOM will stay the same as
+new versions of the various components, the DOM will stay the same so
 the UI library doesn't have any reason to re-render. This is where the
 aforementioned reload hooks are useful:
 
@@ -161,7 +161,7 @@ the first time. For example, to get Reagent to rerender you'd write:
 (defn mount []
   (r/render [my-main-component]
             (js/document.getElementById "app")))
-  
+
 ;; and this is what figwheel calls after each save
 (defn ^:after-load re-render []
   (mount))
@@ -186,7 +186,7 @@ catch errors sooner.
 You may want to disable the reloading of Clojure files if your Clojure
 code has load time side-effects that you don't want to manage. Another
 good reason to do this is when reloading Clojure code is causing a
-good part ClojureScript application to recompile/reload and thus
+mostly ClojureScript application to recompile/reload and thus
 slowing down your workflow.
 
 Use the [`:reload-clj-files` option][reload-clj-files] to disable the
@@ -215,7 +215,7 @@ you make changes. This can be done with the
 when you change them.
 
 Setting `:hot-reload-cljs` to `false` does not stop files from being
-re-compiled on change and will still allow you to get feedback from the
+recompiled on change and will still allow you to get feedback from the
 compile process in the heads-up display.
 
 ## Disable reloading dependent namespaces
@@ -228,18 +228,18 @@ If you are working in a situation where you don't want these dependent
 files reloaded set the
 [`:reload-dependents` option][reload-dependents] to `false`
 
-## Disable re-compiling of dependent namespaces
+## Disable recompiling of dependent namespaces
 
 So far we have been talking about Figwheel options but there is a
 ClojureScript compiler option that you should be aware of in how it
-affects re-compiles.
+affects recompiles.
 
-By default the ClojureScript re-compiles all the dependents along with
+By default the ClojureScript compiler recompiles all the dependents along with
 a changed file. Depending on the size of your dependency tree and the
 compile time of all the dependent files this can significantly slow
 the compile time after each file save.
 
-You can disable the re-compiling of dependent namespaces by setting
+You can disable the recompiling of dependent namespaces by setting
 `:recompile-dependents` in your compile options to `false`.
 
 As we have been talking about Figwheel options so far in on this page,
@@ -261,7 +261,7 @@ reload dependent files even if you stop recompiling dependents.
 ## Slowing reloads down
 
 Depending on your environment Figwheel may reload files too
-quickly. If it does reload to soon it may be reloading the old file
+quickly. If it does reload too soon it may be reloading the old file
 before it has changed. This is not an ideal experience.
 
 For example you may be working with a [Jekyll][jekyll] site where
@@ -277,7 +277,7 @@ You can make each reload wait a second after each compile by setting
 
 ## Reloads are broadcast
 
-Their can be any number of clients (browser tabs) with valid
+There can be any number of clients (browser tabs) with valid
 connections to the Figwheel websocket server. For sanity the Figwheel
 REPL only communicates with one of these clients. However, reloads are
 **broadcast** to all clients that are connected to the current build-id.
