@@ -7,7 +7,7 @@
         :url "https://github.com/bhauman/figwheel-main"}
   :dependencies
   [[org.clojure/clojure "1.9.0"]
-   [org.clojure/clojurescript "1.10.339"]
+   [org.clojure/clojurescript "1.10.339" :exclusions [commons-codec]]
    [com.bhauman/figwheel-repl "0.2.0-SNAPSHOT"]
    [com.bhauman/figwheel-core "0.2.0-SNAPSHOT"]
    [com.bhauman/spell-spec "0.1.1"]
@@ -17,7 +17,17 @@
    [org.eclipse.jetty.websocket/websocket-server "9.2.24.v20180105"]
    [binaryage/devtools "0.9.10"]
    [hawk "0.2.11"]
-   [expound "0.7.1"]]
+   [expound "0.7.1"]
+   [com.datomic/client-cloud "0.8.63"
+    :exclusions [org.eclipse.jetty/jetty-io
+                 org.eclipse.jetty/jetty-util
+                 org.eclipse.jetty/jetty-http
+                 com.cognitect/transit-java
+                 com.cognitect/transit-clj
+                 commons-logging
+                 com.fasterxml.jackson.core/jackson-core]]
+   ]
+
   :resource-paths ["helper-resources"]
   :profiles {:dev {:dependencies [[cider/piggieback "0.3.9"]
                                   #_[com.bhauman/rebel-readline-cljs "0.1.4"]]

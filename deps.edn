@@ -1,6 +1,6 @@
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         ;org.clojure/clojure {:mvn/version "1.10.0-alpha7"}
-        org.clojure/clojurescript {:mvn/version "1.10.238"}
+        org.clojure/clojurescript {:mvn/version "1.10.339" :exclusions [commons-codec]}
         ;; DEV for now its easier to use cider with top level deps
         ;; com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
         ;; com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
@@ -51,7 +51,15 @@
              com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
              com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
              ;; for testing static cljsjs resources
-             ;  cljsjs/react-vis {:mvn/version "1.11.1-0"}
+             ;;  cljsjs/react-vis {:mvn/version "1.11.1-0"}
+             
+             ;; for verifying conflict resolution
+             #_com.datomic/client-cloud #_{:mvn/version "0.8.63"
+                                           :exclusions
+                                           [org.eclipse.jetty/jetty-http
+                                            org.eclipse.jetty/jetty-util
+                                            org.eclipse.jetty/jetty-io]}
+
              }
             :extra-paths ["target" "devel" "dev"]}}
 
