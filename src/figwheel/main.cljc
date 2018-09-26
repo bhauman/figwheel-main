@@ -1323,14 +1323,38 @@ classpath. Classpath-relative paths have prefix of @ or @/")
    (dissoc (alter-output-to (name nm) options) :modules)
    em-options))
 
+(defn- compile-resource-helper [res opts]
+  (let [parts (-> res
+                  (string/replace #"\.cljs$" ".js")
+                  (string/split #"/"))]
+    (when-not (.exists (apply io/file (:output-dir opts) parts))
+      (cljs.closure/-compile (io/resource res)
+                             (assoc opts
+                                    :output-file
+                                    (str (apply io/file parts)))))))
+
 (defn extra-main-fn [nm em-options options]
   ;; TODO modules??
   (let [opts (extra-main-options nm em-options options)]
     (fn [_]
       (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
-      (cljs.closure/output-main-file
-       (cljs.closure/add-implicit-options
-        opts)))))
+      (let [switch-to-node? (and (= :nodejs (:target em-options)) (not= :nodejs (:target options)))
+            ;; fix asset-path for nodejs to output-dir if the original options are not nodejs
+            ;; and if the asset path isn't set in the extra-main options
+            opts (if (and switch-to-node? (not (:asset-path em-options)))
+                   (assoc opts :asset-path (:output-dir opts))
+                   opts)]
+        (cljs.closure/output-main-file
+         (cljs.closure/add-implicit-options
+          opts))
+        (when switch-to-node?
+          (compile-resource-helper "cljs/nodejs.cljs" opts)
+          (compile-resource-helper "cljs/nodejscli.cljs" opts)
+          (spit (io/file (:output-dir opts) "cljs_deps.js")
+                (str "goog.addDependency(\"../cljs/nodejs.js\", ['cljs.nodejs'], []);\n"
+                     "goog.addDependency(\"../cljs/nodejscli.js\", ['cljs.nodejscli'], ['goog.object', 'cljs.nodejs']);\n")
+                :append true)
+          (cljs.closure/output-bootstrap opts))))))
 
 (defn config-extra-mains [{:keys [::config options] :as cfg}]
   (let [{:keys [extra-main-files]} config]

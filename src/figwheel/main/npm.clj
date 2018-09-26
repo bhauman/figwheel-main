@@ -68,7 +68,7 @@
   (->> file-content
        string/split-lines
        (map string/trim)
-       (keep #(re-find #"^window(?:\.(\w+)|\[['\"]([^'\"\s]+)['\"]\])" %))
+       (keep #(re-find #"^(window|goog.global)(?:\.(\w+)|\[['\"]([^'\"\s]+)['\"]\])" %))
        (mapcat rest)
        (keep identity)
        distinct))
