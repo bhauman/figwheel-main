@@ -56,7 +56,7 @@ namespace tree `src/cljs`.
 
 A list of CSS source directories to be watched and reloaded into the browser.
 
-    :css-dirs ["resource/public/css"]
+    :css-dirs ["resources/public/css"]
 
 ## :ring-handler
 
