@@ -71,4 +71,4 @@ Now you should be able to edit and save the
 live in your application.
 
 [css-dirs]: //figwheel.org/config-options#css-dirs
-[host-page]: //figwheel.org/docs/your_host_page
+[host-page]: //figwheel.org/docs/your_own_page
