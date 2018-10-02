@@ -7,7 +7,7 @@ order: 19
 
 # Cursive
 
-Once you have become comfortable with figwheel-main, you may want to put some effort into integrating it with your preferred editor. This document will discusss how to get your project working nicely with Cursive for a few different configurations.
+Once you have become comfortable with figwheel-main, you may want to put some effort into integrating it with your preferred editor. This document will discuss how to get your project working nicely with Cursive for a few different configurations.
 
 
 # CLJS Only 

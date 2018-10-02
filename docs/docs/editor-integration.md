@@ -31,7 +31,7 @@ Why does this complexity exist? The main reason that there is
 complexity in connecting a ClojureScript REPL to your editor is that
 the environment is just well ... complex. 
 
-The typical path of code that will ultimatedly evaluated in a Browser
+The typical path of code that will ultimately evaluated in a Browser
 and eventually returned to an editor.
 
 ```
@@ -58,7 +58,7 @@ travel to Compiler and then to the browser and back.
 ## The Major Players
 
 Because of this complexity it is best if we start and understand the
-peices. In practice you will not often have to set these up yourself
+pieces. In practice you will not often have to set these up yourself
 but things can become very confusing very quickly if you don't
 understand what they are.
 
@@ -85,15 +85,15 @@ messages.
 
 Piggieback is nREPL middleware that intercepts `:eval` messages and
 re-directs them to a ClojureScript REPL for evaluation. So Piggieback
-is an extention of nREPL and we have to extend nREPL because it knows
+is an extension of nREPL and we have to extend nREPL because it knows
 nothing about ClojureScript.
 
 Their are two main parts to using Piggieback. First it has to be
 inserted into the middleware of the nREPL server that you are going to
 be using. Second, you have to start your ClojureScript REPL with a
 call `cider.piggieback/cljs-repl`. You have to start your REPL this
-way so that it can do the bookkeeping neccessary to re-direct `:eval`
-messages to the ClojureSript REPL.
+way so that it can do the bookkeeping necessary to re-direct `:eval`
+messages to the ClojureScript REPL.
 
 ### ClojureScript REPL
 
@@ -102,7 +102,7 @@ evaluate ClojureScript code in the first place.
 
 You can run a ClojureScript REPL locally and this is what happens when
 you run `clojure -m figwheel.main -b dev -r`. This is pretty simple to
-accompish. However, it is when you wan to run it remotely over nREPL
+accomplish. However, it is when you wan to run it remotely over nREPL
 that things get more difficult.
 
 The ClojureScript REPL is responsible for compiling ClojureScript code
@@ -123,19 +123,19 @@ result of the evaluation.
 ## Editors and nREPL
 
 Almost all editor integrations in the ClojureScript eco-system can
-utilize nREPL for communication. This is why understaning it and its
+utilize nREPL for communication. This is why understanding it and its
 role as a REPL server is important.
 
 There are other ways for editors to connect to Clojure remotely but
 currently nREPL integrations tend to provide the most editor
-functionality (i.e. documentation, autocomplete, jump to
+functionality (i.e. documentation, auto-complete, jump to
 definition). You can opt to connect to a REPL by another means but the
 nREPL integrations are by far the most used.
 
 ## Editors and Stream REPLs
 
 A traditional way for editors to communicate with a REPL is to pipe
-forms (Clojure expressions in this case), to the STDIN of the repl and
+forms (Clojure expressions in this case), to the STDIN of the REPL and
 capture the STDOUT as a response. This form of communication is much
 simpler.
 

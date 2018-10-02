@@ -10,16 +10,17 @@ published: true
 
 <div class="lead-in"> Regardless of how you feel about using <a
 href="https://www.gnu.org/software/emacs">Emacs</a> as an editor, it
-is one of the oldest actively devloped text editors. Emacs is also
-LISP centric and as such its native features mirror the interations we
-want when we work with a LISP language like Clojure.</div>
+is one of the oldest actively developed text editors. Emacs is also
+LISP centric and because of this its native features support the
+interactions we want when we work with a LISP language like
+Clojure.</div>
 
 Learn more about why [Emacs is sexy][emacs-sexy].
 
-Emacs can support lisp editing and REPL interation natively, without
-installing any extra packages or libraries. But the experience is no
-where near what [CIDER][cider] currently provides, so I'm going to
-focus on setting up CIDER from scratch in this guide.
+While Emacs can support LISP editing and REPL interaction natively,
+without installing any extra packages or libraries. But the experience
+is no where near what [CIDER][cider] currently provides, so I'm going
+to focus on setting up CIDER from scratch in this guide.
 
 ## Installing Emacs
 
@@ -75,7 +76,7 @@ If you are editing `init.el` in Emacs you can now either restart Emacs
 or you can `Ctrl-x Ctrl-e` at the end of each of these expressions one
 at a time. Either way will work to execute the code.
 
-Now that we have initilized the package system we can install and
+Now that we have initialized the package system we can install and
 setup some packages.
 
 If you are using MacOS you will want to install a handy package to
@@ -112,7 +113,7 @@ my `init.el`:
   (exec-path-from-shell-initialize))
 ```
 
-Now let's install `cider` following a similar proceedure.
+Now let's install `cider` following a similar procedure.
 
 Type `M-x` then `package-install` then `ENTER` then `cider` and
 finally hit enter. This will install `cider` and `clojure-mode`.
@@ -120,7 +121,7 @@ finally hit enter. This will install `cider` and `clojure-mode`.
 Now to try CIDER with ClojureScript integration (in Emacs) you should
 navigate to a ClojureScript source file in one of your ClojureScript
 source directories (For example `src/hello/core.cljs`). Now we will
-start our figwheel build from inside Emacs, with our cursor in the
+start our Figwheel build from inside Emacs, with our cursor in the
 ClojureScript buffer type `M-x cider-jack-in-cljs`. When you type this
 it will prompt you for the type of Clojure REPL you want to start. If
 you are using leiningen type `lein` if you are using the Clojure tools
@@ -166,7 +167,7 @@ my opinion much better than editing languages that have an irregular
 approach to delimiting expressions or that favor statements over
 expressions.
 
-Learning paraedit is an essential part of understanding the LISP
+Learning Paredit is an essential part of understanding the LISP
 programming experience.
 
 You will want to install `paredit` just like you installed `cider`
