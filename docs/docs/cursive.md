@@ -2,7 +2,7 @@
 title: Cursive
 layout: docs
 category: docs
-order: 21
+order: 16
 ---
 
 # Cursive
@@ -17,7 +17,7 @@ Support for deps.edn and the CLI is currently only available in the Early Access
 We're going to start with the same build that we used in the [create-a-build] documentation. Set up your project as described there and confirm that you can run it using
  
 ```shell
-$ lein fig -- -b -r
+$ lein fig -- -b dev -r
 ```
 > These instructions should work for any project that is able to run figwheel from the command line using a `lein run` command
 
