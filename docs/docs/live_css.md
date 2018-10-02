@@ -78,4 +78,4 @@ Now you should be able to edit and save the
 live in your application.
 
 [css-dirs]: ../config-options#css-dirs
-[host-page]: your_host_page
+[host-page]: your_own_page
