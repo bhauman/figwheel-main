@@ -2,7 +2,7 @@
 title: Main Script
 layout: docs
 category: docs
-order: 20
+order: 15
 ---
 
 # Main Scripts

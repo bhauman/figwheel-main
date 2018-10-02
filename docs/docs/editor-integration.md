@@ -2,7 +2,7 @@
 title: Editor Integration
 layout: docs
 category: docs
-order: 14
+order: 17
 published: true
 ---
 

@@ -2,7 +2,7 @@
 title: Reloadable Code
 layout: docs
 category: docs
-order: 20
+order: 23
 ---
 
 # Writing reloadable code

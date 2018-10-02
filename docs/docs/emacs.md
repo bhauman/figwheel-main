@@ -2,7 +2,7 @@
 title: Emacs
 layout: docs
 category: docs
-order: 15
+order: 18
 published: true
 ---
 

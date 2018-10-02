@@ -2,7 +2,7 @@
 title: Code Splitting
 layout: docs
 category: docs
-order: 20
+order: 17
 ---
 
 # Code Splitting
