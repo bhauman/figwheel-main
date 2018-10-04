@@ -2,25 +2,23 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
-* editor integration
+* update Emacs.md so that folks understand the libs need to be top level
+  in deps.edn
+
 * using npm modules
-
-* :extra-main-files testing
-* using an init script to start garden compiles
-
 * ring handler
 * seperate server
 
-* setting up emacs
 * setting up vscode
 * setting up vi fireplace
 
 * usage
 * How to use HTTPS
 
-
 * Command line options detatiled overview
 * REPL session management
-* Testing patterns
+
+* using an init script to start garden compiles
+
 
 

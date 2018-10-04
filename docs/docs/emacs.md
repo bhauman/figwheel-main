@@ -2,7 +2,7 @@
 title: Emacs
 layout: docs
 category: docs
-order: 18
+order: 19
 published: true
 ---
 
@@ -49,6 +49,9 @@ save files and how to switch from one editor buffer to another. With
 this small bit of information you will be able to do a lot of editing.
 
 [Some good visual guides on how to learn Emacs](http://emacs.sexy/#learn).
+
+[Emacs rocks][emacs-rocks] is a great resource of helpful videos once
+you want to do more advanced editing.
 
 ## Installing CIDER
 
@@ -201,7 +204,8 @@ will most likely lead to thrashing about and not having anything work.
 
 [inf-clojure]: https://github.com/clojure-emacs/inf-clojure
 [paredit-anim]:http://danmidwood.com/content/2014/11/21/animated-paredit.html
-[emacs-sexy]: http://emacs.sexy [emacs-rocks]: http://emacsrocks.com
+[emacs-sexy]: http://emacs.sexy
+[emacs-rocks]: http://emacsrocks.com
 [nrepl]: https://nrepl.readthedocs.io/en/latest/
 [nrepl-ops]: https://nrepl.readthedocs.io/en/latest/ops/
 [cider]: https://github.com/clojure-emacs/cider
