@@ -2,7 +2,7 @@
 title: NPM Modules
 layout: docs
 category: docs
-order: 10
+order: 12
 ---
 
 # NPM Modules

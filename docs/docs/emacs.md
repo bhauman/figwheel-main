@@ -2,7 +2,7 @@
 title: Emacs
 layout: docs
 category: docs
-order: 19
+order: 21
 published: true
 ---
 
@@ -237,7 +237,7 @@ configuration simple at first. Trying to add a ton of functionality to
 Emacs without understanding the ramifications of what your are doing
 will most likely lead to thrashing about and not having anything work.
 
-At first, focus on getting things to work, not on getting them to work
+At first focus on getting things to work, not on getting them to work
 perfectly.
 
 

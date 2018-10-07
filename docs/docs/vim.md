@@ -2,7 +2,7 @@
 title: Vim
 layout: docs
 category: docs
-order: 21
+order: 23
 ---
 
 # Vim

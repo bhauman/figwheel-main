@@ -2,7 +2,7 @@
 title: Jetty Conflicts (Datomic Cloud)
 layout: docs
 category: docs
-order: 23
+order: 25
 published: true
 ---
 

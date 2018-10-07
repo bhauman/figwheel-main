@@ -2,12 +2,10 @@ A rough outline to track the documentation I'd like to write.
 
 At first this will be a rough list of subjects.
 
-* update Emacs.md so that folks understand the libs need to be top level
-  in deps.edn
-
-* using npm modules
-* ring handler
+* porting a lein figwheel app to figwheel.main
+* connecting remotely
 * seperate server
+* ring handler
 
 * setting up vscode
 * setting up vi fireplace
