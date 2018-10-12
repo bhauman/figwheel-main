@@ -6,5 +6,7 @@ for filename in ARGV do
                                           hard_wrap: false,
                                           coderay_line_numbers: nil})
   new_name = filename.split("/").last.split(".").first + ".html"
-  File.write('helper-resources/public/com/bhauman/figwheel/helper/content/' + new_name , doc.to_html)
+  content = "<!-- DO NOT EDIT: File generated from Markdown source found in #{filename} -->\n" + doc.to_html 
+  
+  File.write('helper-resources/public/com/bhauman/figwheel/helper/content/' + new_name , content)
 end

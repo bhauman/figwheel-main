@@ -29,7 +29,10 @@
     (string/join "\n" (map sym->markdown-doc syms))))
 
 (defn build-api-docs []
-  (spit "docs/_includes/main-api-docs.md" (api-docs)))
+  (spit "docs/_includes/main-api-docs.md"
+        (str "<!-- DO NOT EDIT: File generated from defn string docs in src/figwheel/main/api.clj -->\n"
+             "<!-- Generation code can be found in user.clj -->\n"
+             (api-docs))))
 
 (defn build-option-docs []
   (doseq [dir ["doc/figwheel-main-options.md" "docs/config-options.md"]]
