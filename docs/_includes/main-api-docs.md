@@ -1,3 +1,5 @@
+<!-- DO NOT EDIT: File generated from defn string docs in src/figwheel/main/api.clj -->
+<!-- Generation code can be found in user.clj -->
 ## `figwheel.main.api/start`
 
 Args: `([build] [figwheel-options-or-build build & background-builds])`

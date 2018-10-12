@@ -2,6 +2,9 @@
 layout: config-options
 ---
 
+<!-- DO NOT EDIT: File generated from specs defined in figwheel/main/schema/config.clj -->
+<!-- Generation code can be found in figwheel/main/schema/core.clj -->
+
 # Figwheel Main Configuration Options
 
 This page is a reference for all of the Figwheel configuration options.
@@ -565,6 +568,22 @@ You can also disable `cljs-test-display` with:
 
 # Rarely used options
 
+## :cljsjs-resources
+
+When you use libraries from http://cljsjs.github.io they sometimes
+come bundled with static resources (like CSS files) that you would
+like to be served from the Figwheel server.
+
+If you set `:cljsjs-resources` to `true` the Figwheel server will
+serve the resources with the `cljsjs` root.
+
+For example: if there is a CSS file in the `react-vis` jar at
+`cljsjs/react-vis/common/react-vis.inc.css` you will be able to access
+it via the Figwheel server at the path
+`/react-vis/common/react-vis.inc.css`.
+
+    :cljsjs-resources true
+
 ## :client-print-to
 
 The `figwheel.repl` client can direct printed (via pr) output to the
@@ -609,6 +628,7 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
  {:figwheel.server.ring/fix-index-mime-type true,
   :figwheel.server.ring/resource-root-index true,
   :figwheel.server.ring/wrap-no-cache true,
+  :figwheel.server.ring/cljsjs-resources false,
   :ring.middleware.not-modified/wrap-not-modified true,
   :co.deps.ring-etag-middleware/wrap-file-etag true,
   :ring.middleware.cors/wrap-cors true,
