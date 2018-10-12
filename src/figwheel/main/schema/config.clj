@@ -44,7 +44,7 @@ namespace tree `src/cljs`.
   :doc
   "A list of CSS source directories to be watched and reloaded into the browser.
 
-    :css-dirs [\"resource/public/css\"]"
+    :css-dirs [\"resources/public/css\"]"
   :group :common)
 
 (s/def ::ring-handler (s/or :non-blank-string non-blank-string?
