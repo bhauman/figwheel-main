@@ -556,15 +556,15 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                        (when-let [id (-> cfg ::build :id)]
                          (str "/" id)))))))
 
+(defn pwd-likely-project-root-dir? []
+  (or (some #(.isFile (clojure.java.io/file %))
+            ["project.clj" "deps.edn" "figwheel-main.edn"])
+      (->> (seq (.listFiles (clojure.java.io/file ".")))
+           (map #(.getName %))
+           (some #(.endsWith % ".cljs.edn")))))
+
 (defn should-add-temp-dir? [cfg]
-  (let [target-on-classpath?
-        (when-let [target-dir (get-edn-file-key
-                               "figwheel-main.edn"
-                               :target-dir
-                               default-target-dir)]
-          (fw-util/dir-on-classpath? target-dir))]
-    (and (nil? (:target (:options cfg)))
-         (not target-on-classpath?))))
+  (not (pwd-likely-project-root-dir?)))
 
 (defn helper-ring-app [handler html-body output-to & [force-index?]]
   (figwheel.server.ring/default-index-html
