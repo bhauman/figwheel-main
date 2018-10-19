@@ -21,7 +21,7 @@ $ lein fig -- -b dev -r
 ```
 > These instructions should work for any project that is able to run figwheel from the command line using a `lein run` command
 
-Add a `dev` folder to your project, then add a `user.clj` file in that folder and copy this code into it 
+Add a `dev` folder to the root of your project, then add a `user.clj` file in that folder and copy this code into it 
 
 ```
 (require '[figwheel.main.api :as fig])
