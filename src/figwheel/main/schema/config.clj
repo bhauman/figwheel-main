@@ -758,7 +758,7 @@ since the figwheel process has started. Set `:broadcast-reload` to
 REPL eval occurs.
 Default: true
 
-    :broadast-reload false"
+    :broadcast-reload false"
 
   :group :un-common)
 
