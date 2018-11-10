@@ -36,15 +36,14 @@
   (is (temp-dir? output-to))
   (is (temp-dir? output-dir)))
 
-(deftest noargs-uses-temp-dir-when-not-present-target-dir
-  (with-edn-files
-    {:figwheel-main.edn {:target-dir "never-gonna-find-me"}
-     :scripty-test.cljs "(println (+ 1 2 3))"}
-    (uses-temp-dir? (:options (main->config)))
-    (uses-temp-dir? (:options (main->config "-r")))
-    (uses-temp-dir? (:options (main->config "-m" "figwheel.main")))
-    (uses-temp-dir? (:options (main->config "scripty-test.cljs")))
-    (uses-temp-dir? (:options (main->config "-")))))
+(deftest noargs-uses-temp-dir-when-not-in-root-dir
+  (with-redefs [fm/should-add-temp-dir? (fn [_] true)]
+    (with-edn-files {:scripty-test.cljs "(println (+ 1 2 3))"}
+     (uses-temp-dir? (:options (main->config)))
+     (uses-temp-dir? (:options (main->config "-r")))
+     (uses-temp-dir? (:options (main->config "-m" "figwheel.main")))
+     (uses-temp-dir? (:options (main->config "scripty-test.cljs")))
+     (uses-temp-dir? (:options (main->config "-"))))))
 
 ;; FIX logging output capture
 (deftest auto-adds-target-classpath-for-compile
