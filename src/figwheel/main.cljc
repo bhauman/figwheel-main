@@ -1778,7 +1778,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
          (let [stolen-repl-env (promise)
                result-prom (promise)]
            (async-result/listen result-prom)
-           (try 
+           (try
              (with-redefs [cljs.repl/tear-down (partial deliver stolen-repl-env)]
                (let [res (cljs.cli/default-main repl-env-fn b-cfg)
                      parsed-result (try
@@ -1864,7 +1864,12 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                 (try
                   (build config options cenv)
                   (catch Throwable t
-                    (log/error t)))
+                    (log/error t)
+                    ;; when not watching throw build errors
+                    (when-not (and (not build-once)
+                                   (= :none (:optimizations options :none))
+                                   (not-empty (:watch-dirs config)))
+                      (throw t))))
                 (log/trace "Figwheel.core config:" (pr-str figwheel.core/*config*))
                 (when-not build-once
                   (register-build!
@@ -2193,7 +2198,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     cljs.cli/load-edn-opts load-edn-opts]
         (apply cljs.main/-main args')))
     (catch Throwable e
-      (let [d (ex-data e)]
+      (let [d (ex-data e)
+            build-once? (some (set orig-args) ["--build-once" "-bo"])]
         (cond
           (or
            (:figwheel.main.schema.core/error d)
@@ -2201,16 +2207,15 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
            (:cljs.main/error d)
            (::error d))
           (binding [*out* *err*]
-            (println (.getMessage e)))
+            (if build-once?
+              (throw e)
+              (println (.getMessage e))))
           (and (#{:js-eval-exception :js-eval-error} (:type d))
                (:error d))
           (let [{:keys [repl-env error form]} d]
             (#'cljs.repl/display-error repl-env error form {})
             (throw e))
-          :else (throw e))))))
-
-)
-   )
+          :else (throw e))))))))
 
 #_(def test-args
   (concat ["-co" "{:aot-cache false :asset-path \"out\"}" "-b" "dev" "-e" "(figwheel.core/start-from-repl)"]
