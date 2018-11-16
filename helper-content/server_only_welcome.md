@@ -3,7 +3,7 @@
 You are here because you launched `figwheel.main` in server only mode
 **and** you have not provided a default `index.html` file.
 
-**Server only mode** is entered when specify `--server` or
+**Server only mode** is entered when specify `--serve` or
 `-s` as the only **main option** to `figwheel.main`.
 
 **Server only mode** only serve files and ring endpoints defined

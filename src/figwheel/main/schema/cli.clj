@@ -731,7 +731,7 @@ main options:
    -c, --compile [ns]         Run a compile. If optional namespace specified,
                               use as the main entry point. If --repl follows,
                               will launch a REPL after the compile completes.
-                              If --server follows, will start a web server that
+                              If --serve follows, will start a web server that
                               serves the current directory after the compile
                               completes.
    -h, --help, -?             Print this help message and exit
