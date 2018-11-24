@@ -193,13 +193,13 @@ we want it to.
 ```shell
 $clj -Spath | sed -e 's/:/\'$'\n/g' | head -n 5
 src
-cljs-dev
+cljs-src
 /Users/bhauman/.m2/repository/com/cognitect/transit-java/0.8.332/transit-java-0.8.332.jar
 /Users/bhauman/.m2/repository/org/clojure/data.json/0.2.6/data.json-0.2.6.jar
 /Users/bhauman/.m2/repository/org/clojure/clojure/1.9.0/clojure-1.9.0.jar
 ```
 
-and there we see `cljs-dev` is now on the classpath.
+and there we see `cljs-src` is now on the classpath.
 
 ## Checkpoint: Project layout
 
