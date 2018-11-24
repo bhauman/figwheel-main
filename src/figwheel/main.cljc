@@ -686,10 +686,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                      "The --build option will make an "
                      "extra attempt to "
                      "initialize a figwheel live reloading workflow. "
-                     "May be followed buy either --repl or --server. "
+                     "May be followed buy either --repl or --serve. "
                      "If --repl follows, "
                      "will launch a REPL (along with a server) after the compile completes. "
-                     "If --server follows, will only start a web server according to "
+                     "If --serve follows, will only start a web server according to "
                      "current configuration after the compile "
                      "completes.")}
           ["-bo" "--build-once"]
@@ -699,7 +699,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                      "Looks for build EDN files just like the --build command. "
                      "This will not inject Figwheel or REPL functionality into your build. "
                      "It will still inject devtools if you are using :optimizations :none. "
-                     "If --server follows, will start a web server according to "
+                     "If --serve follows, will start a web server according to "
                      "current configuration after the compile "
                      "completes.")}
           ["-r" "--repl"]
