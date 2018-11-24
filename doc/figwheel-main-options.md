@@ -293,7 +293,7 @@ Default: true
 A String that specifies the target directory component of the path
 where figwheel.main outputs compiled ClojureScript
 
-The default `:output-dir` is composed of:
+The default [`:output-dir`](https://figwheel.org/docs/compile_config) is composed of:
 
     [[:target-dir]]/public/cljs-out/[[build-id]]
 
