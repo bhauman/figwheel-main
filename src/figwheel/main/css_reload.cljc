@@ -179,9 +179,9 @@
              (json/write-str files)))))
 
 (defn prep-css-file-path [file]
-  (->> file
-       fw-util/relativized-path-parts
-       (string/join "/")))
+  (-> file
+      .getCanonicalPath
+      (string/replace java.io.File/separator "/")))
 
 ;; repl-env needs to be bound
 (defn start* [paths]
