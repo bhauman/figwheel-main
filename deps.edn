@@ -52,7 +52,7 @@
              com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
              ;; for testing static cljsjs resources
              ;;  cljsjs/react-vis {:mvn/version "1.11.1-0"}
-             
+
              ;; for verifying conflict resolution
              #_com.datomic/client-cloud #_{:mvn/version "0.8.63"
                                            :exclusions
@@ -64,6 +64,8 @@
             :extra-paths ["target" "devel" "dev"]}
            :beta1 {:override-deps
                    {org.clojure/clojure {:mvn/version "1.10.0-beta1"}}}
+           :cljfmt {:extra-deps {cljfmt {:mvn/version "0.6.3"}}
+                    :main-opts ["-m" "cljfmt.main"]}
            }
 
  }

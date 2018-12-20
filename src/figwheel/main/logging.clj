@@ -177,7 +177,7 @@
             (fn [[k n s]]
               (condp = k
                 :code-line [:yellow (number-fn n) s "\n"]
-                :error-in-code [:line [:yellow (number-fn n) ] [:bright s] "\n"]
+                :error-in-code [:line [:yellow (number-fn n)] [:bright s] "\n"]
                 :error-message [:yellow (number-fn "") (first (string/split s #"\^---")) "^---\n"]))
             ;; only one error message
             (let [[pre post] (split-with #(not= :error-message (first %)) data)]
@@ -212,7 +212,7 @@
     [:line
      (apply str (repeat pad-len \space))
      [:cyan cls-method]
-     " at " file-name "("line ")\n"]))
+     " at " file-name "(" line ")\n"]))
 
 (defn format-stacktrace-ex [e]
   (when-let [tm (-> e meta :figwheel.tools.exceptions/orig-throwable)]
@@ -221,10 +221,10 @@
        [:line [:yellow (str type)] "\n"]
        (vec (cons
              :lines
-                  (map
-                   format-trace-line
-                   (take 30
-                         (:trace tm)))))])))
+             (map
+              format-trace-line
+              (take 30
+                    (:trace tm)))))])))
 
 (defn syntax-exception [e]
   (let [ex (exception-with-excerpt e)]

@@ -35,73 +35,67 @@
          (figwheel.repl/respond-to-connection msg)))
 
      (defn eval-cljs [form callback]
-       (eval-string (pr-str form) callback))
-
-)
+       (eval-string (pr-str form) callback)))
 
    :clj
    (do
 
-(def timeout-val (Object.))
+     (def timeout-val (Object.))
 
-(defrecord EvalOnConnectionEnv []
-  cljs.repl/IJavaScriptEnv
-  (-setup [this opts])
-  (-evaluate [this _ _  js]
-    (when-let [conn (::connection this)]
-      (let [prom (promise)
-            _ (frepl/send-for-response* prom conn {:op :eval :code js})]
-        {:status :success :value prom})))
-  (-load [this provides url])
-  (-tear-down [_]))
+     (defrecord EvalOnConnectionEnv []
+       cljs.repl/IJavaScriptEnv
+       (-setup [this opts])
+       (-evaluate [this _ _  js]
+         (when-let [conn (::connection this)]
+           (let [prom (promise)
+                 _ (frepl/send-for-response* prom conn {:op :eval :code js})]
+             {:status :success :value prom})))
+       (-load [this provides url])
+       (-tear-down [_]))
 
-(defn read-cljs-string [form-str]
-  (when-not (string/blank? form-str)
-    (try
-      {:form (binding [*ns* (create-ns ana/*cljs-ns*)
-                       reader/resolve-symbol ana/resolve-symbol
-                       reader/*data-readers* tags/*cljs-data-readers*
-                       reader/*alias-map*
-                       (apply merge
-                              ((juxt :requires :require-macros)
-                               (ana/get-namespace ana/*cljs-ns*)))]
-                 (reader/read {:read-cond :allow :features #{:cljs}}
-                              (readers/source-logging-push-back-reader
-                               (java.io.StringReader. form-str))))}
-      (catch Exception e
-        {:exception (Throwable->map e)}))))
+     (defn read-cljs-string [form-str]
+       (when-not (string/blank? form-str)
+         (try
+           {:form (binding [*ns* (create-ns ana/*cljs-ns*)
+                            reader/resolve-symbol ana/resolve-symbol
+                            reader/*data-readers* tags/*cljs-data-readers*
+                            reader/*alias-map*
+                            (apply merge
+                                   ((juxt :requires :require-macros)
+                                    (ana/get-namespace ana/*cljs-ns*)))]
+                    (reader/read {:read-cond :allow :features #{:cljs}}
+                                 (readers/source-logging-push-back-reader
+                                  (java.io.StringReader. form-str))))}
+           (catch Exception e
+             {:exception (Throwable->map e)}))))
 
-(defn eval-cljs [repl-env form]
-  (cljs.repl/evaluate-form
-   repl-env
-   (assoc (ana/empty-env) :ns (ana/get-namespace ana/*cljs-ns*))
-   "<cljs repl>"
-   form
-   (#'cljs.repl/wrap-fn form)))
+     (defn eval-cljs [repl-env form]
+       (cljs.repl/evaluate-form
+        repl-env
+        (assoc (ana/empty-env) :ns (ana/get-namespace ana/*cljs-ns*))
+        "<cljs repl>"
+        form
+        (#'cljs.repl/wrap-fn form)))
 
 ;; XXX this doesn't work very well in an environment with multiple connections
 ;; needs to obtain the compiler-env for the individual build process
 ;; if we add a build-id to the messages or find a way to look up a build-id
 ;; from a session id we can get the compiler-env from the build-registry
-(let [repl-env (EvalOnConnectionEnv.)]
-  (defn eval-back-atcha [{:keys [session-id response] :as msg} cenv]
-    (try
-      (when-let [conn (get @figwheel.repl/*connections* session-id)]
-        (binding [cljs.env/*compiler* cenv]
-          (when-let [form (:form (read-cljs-string (:form-string response)))]
-            (let [repl-env (assoc repl-env ::connection conn)]
-              (eval-cljs repl-env form)))))
-      (catch Throwable e
-        (log/error "Error in eval back"  e)))))
+     (let [repl-env (EvalOnConnectionEnv.)]
+       (defn eval-back-atcha [{:keys [session-id response] :as msg} cenv]
+         (try
+           (when-let [conn (get @figwheel.repl/*connections* session-id)]
+             (binding [cljs.env/*compiler* cenv]
+               (when-let [form (:form (read-cljs-string (:form-string response)))]
+                 (let [repl-env (assoc repl-env ::connection conn)]
+                   (eval-cljs repl-env form)))))
+           (catch Throwable e
+             (log/error "Error in eval back"  e)))))
 
-(defn setup []
-  (let [cenv cljs.env/*compiler*]
-    (figwheel.repl/add-listener
-     ::evalback
-     (fn [{:keys [response] :as msg}]
-       (when (= "eval-back" (:figwheel-event response))
-         (#'eval-back-atcha msg cenv))))))
-
-
-
-))
+     (defn setup []
+       (let [cenv cljs.env/*compiler*]
+         (figwheel.repl/add-listener
+          ::evalback
+          (fn [{:keys [response] :as msg}]
+            (when (= "eval-back" (:figwheel-event response))
+              (#'eval-back-atcha msg cenv))))))))

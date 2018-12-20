@@ -53,8 +53,8 @@
 
 (defn has-cljs-source-files? [dir]
   (not-empty (clojure.set/intersection
-               #{"cljs" "cljc"}
-               (util/source-file-types-in-dir dir))))
+              #{"cljs" "cljc"}
+              (util/source-file-types-in-dir dir))))
 
 (exp/def ::unquoted-symbol unquoted-symbol?
   "should be a symbol WITHOUT an initial quote. Quoted symbols are not needed in EDN")
@@ -66,6 +66,7 @@
 ;; ------------------------------------------------------------
 ;; Validate
 ;; ------------------------------------------------------------
+
 
 (defn key-meta-for-problem [{:keys [via :spell-spec.alpha/likely-misspelling-of] :as prob}]
   (or
@@ -88,7 +89,7 @@
            (when doc
              (str
               "\n\n-- Doc for " (pr-str (keyword (name key)))  " -----\n\n"
-             (printer/indent doc)))))))
+              (printer/indent doc)))))))
 
 (defn expound-string [spec form]
   (when-let [explain-data (s/explain-data spec form)]
@@ -193,7 +194,6 @@ options in the `figwheel-main.edn` file.
   (require 'figwheel.server.ring)
   (.mkdirs (.getParentFile (io/file output-to)))
   (spit output-to (markdown-docs)))
-
 
 #_(validate-config! :figwheel.main.schema.config/edn (read-string (slurp "figwheel-main.edn")) "")
 

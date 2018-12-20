@@ -171,7 +171,6 @@ code in nodejs.
 
   :target :nodejs")
 
-
 (s/def ::infer-externs boolean?)
 (def-spec-meta ::infer-externs
   :doc
@@ -192,22 +191,20 @@ You must add type hints to your code as such:
 Please see:
 https://gist.github.com/swannodette/4fc9ccc13f62c66456daf19c47692799")
 
-
-
 (s/def ::foreign-libs (s/every
-                         (spell/keys
-                          :req-un [::file]
-                          :opt-un [::file-min
-                                   ::provides
-                                   ::requires
-                                   ::module-type
-                                   ::preprocess
-                                   ::global-exports])
-                         :into []
-                         :kind sequential?))
+                       (spell/keys
+                        :req-un [::file]
+                        :opt-un [::file-min
+                                 ::provides
+                                 ::requires
+                                 ::module-type
+                                 ::preprocess
+                                 ::global-exports])
+                       :into []
+                       :kind sequential?))
 (def-spec-meta ::foreign-libs
   :doc
-   "Adds dependencies on foreign libraries. Be sure that the url returns a
+  "Adds dependencies on foreign libraries. Be sure that the url returns a
 HTTP Code 200
 
 Defaults to the empty vector []
@@ -248,8 +245,6 @@ keys have these semantics:
                   library can be used idiomatically when required,
                   i.e. support for :refer, :rename, :as, etc.")
 
-
-
 (s/def ::file        non-blank-string?)
 (s/def ::provides    (s/every non-blank-string? :min-count 1 :into [] :kind sequential?))
 (s/def ::file-min    non-blank-string?)
@@ -261,7 +256,7 @@ keys have these semantics:
 (s/def ::externs     (s/every non-blank-string? :min-count 1 :into [] :kind sequential?))
 (def-spec-meta ::externs
   :doc
-   "Configure externs files for external libraries.
+  "Configure externs files for external libraries.
 
 For this option, and those below, you can find a very good explanation at:
 http://lukevanderhart.com/2011/09/30/using-javascript-and-clojurescript.html
@@ -271,14 +266,14 @@ Defaults to the empty vector [].
   :externs [\"jquery-externs.js\"]")
 
 (s/def ::modules (s/map-of
-                    keyword?
-                    (spell/keys
-                     :opt-un [::entries
-                              :cljs.options-schema.modules/output-to
-                              ::depends-on])))
+                  keyword?
+                  (spell/keys
+                   :opt-un [::entries
+                            :cljs.options-schema.modules/output-to
+                            ::depends-on])))
 (def-spec-meta ::modules
   :doc
-   "A new option for emitting Google Closure Modules. Closure Modules
+  "A new option for emitting Google Closure Modules. Closure Modules
 supports splitting up an optimized build into N different modules. If
 :modules is supplied it replaces the single :output-to. A module needs
 a name, an individual :output-to file path, :entries a set of
@@ -326,6 +321,8 @@ single source map to name.")
 
 ;; ** TODO name collision don't want docs to collide
 ;; this is the only name collision in this
+
+
 (s/def :cljs.options-schema.modules/output-dir    non-blank-string?)
 (s/def ::entries       (s/every ::string-or-symbol :min-count 1 :into [] :kind  (some-fn sequential? set?)))
 (s/def ::depends-on    (s/every ::string-or-named :min-count 1 :into [] :kind (some-fn sequential? set?)))
@@ -333,7 +330,7 @@ single source map to name.")
 (s/def ::source-map-path string?)
 (def-spec-meta ::source-map-path
   :doc
-   "Set the path to source files references in source maps to avoid
+  "Set the path to source files references in source maps to avoid
 further web server configuration.
 
   :source-map-path \"public/js\"")
@@ -341,7 +338,7 @@ further web server configuration.
 (s/def ::source-map-asset-path string?)
 (def-spec-meta ::source-map-asset-path
   :doc
-   "Provides fine grained control over the sourceMappingURL comment that
+  "Provides fine grained control over the sourceMappingURL comment that
 is appended to generated JavaScript files when source mapping is enabled.
 further web server configuration.
 
@@ -350,7 +347,7 @@ further web server configuration.
 (s/def ::source-map-timestamp       boolean?)
 (def-spec-meta ::source-map-timestamp
   :doc
-   "Add cache busting timestamps to source map urls. This is helpful for
+  "Add cache busting timestamps to source map urls. This is helpful for
 keeping source maps up to date when live reloading code.
 
   :source-map-timestamp true")
@@ -358,7 +355,7 @@ keeping source maps up to date when live reloading code.
 (s/def ::cache-analysis             boolean?)
 (def-spec-meta ::cache-analysis
   :doc
-   "Experimental. Cache compiler analysis to disk. This enables faster
+  "Experimental. Cache compiler analysis to disk. This enables faster
 cold build and REPL start up times.
 
 For REPLs, defaults to true. Otherwise, defaults to true if and only
@@ -366,11 +363,10 @@ if :optimizations is :none.
 
   :cache-analysis true")
 
-
 (s/def ::recompile-dependents       boolean?)
 (def-spec-meta ::recompile-dependents
   :doc
-   "For correctness the ClojureScript compiler now always recompiles
+  "For correctness the ClojureScript compiler now always recompiles
 dependent namespaces when a parent namespace changes. This prevents
 corrupted builds and swallowed warnings. However this can impact
 compile times depending on the structure of the application. This
@@ -381,7 +377,7 @@ option defaults to true.
 (s/def ::static-fns                 boolean?)
 (def-spec-meta ::static-fns
   :doc
-   "Employs static dispatch to specific function arities in emitted
+  "Employs static dispatch to specific function arities in emitted
 JavaScript, as opposed to making use of the call construct. Defaults
 to false except under advanced optimizations. Useful to have set to
 false at REPL development to facilitate function redefinition, and
@@ -395,7 +391,7 @@ compiled with :static-fns implicitly set to true.
 (s/def ::load-tests              boolean?)
 (def-spec-meta ::load-tests
   :doc
-   "This flag will cause deftest from cljs.test to be ignored if false.
+  "This flag will cause deftest from cljs.test to be ignored if false.
 
 Useful for production if deftest has been used in the production classpath.
 
@@ -406,7 +402,7 @@ Default is true. Has the same effect as binding cljs.analyzer/*load-tests*.
 (s/def ::elide-asserts              boolean?)
 (def-spec-meta ::elide-asserts
   :doc
-   "This flag will cause all (assert x) calls to be removed during
+  "This flag will cause all (assert x) calls to be removed during
 compilation, including implicit asserts associated with :pre and :post
 conditions. Useful for production. Default is always false even in
 advanced compilation. Does NOT specify goog.asserts.ENABLE_ASSERTS,
@@ -421,7 +417,7 @@ the elision.
 (s/def ::pseudo-names               boolean?)
 (def-spec-meta ::pseudo-names
   :doc
-   "With :advanced mode optimizations, determines whether readable names
+  "With :advanced mode optimizations, determines whether readable names
 are emitted. This can be useful when debugging issues in the optimized
 JavaScript and can aid in finding missing externs. Defaults to false.
 
@@ -430,7 +426,7 @@ JavaScript and can aid in finding missing externs. Defaults to false.
 (s/def ::print-input-delimiter      boolean?)
 (def-spec-meta ::print-input-delimiter
   :doc
-   "Determines whether comments will be output in the JavaScript that can
+  "Determines whether comments will be output in the JavaScript that can
 be used to determine the original source of the compiled code.
 
 Defaults to false.
@@ -440,16 +436,15 @@ Defaults to false.
 (s/def ::output-wrapper             boolean?)
 (def-spec-meta ::output-wrapper
   :doc
-   "Wrap the JavaScript output in (function(){...};)() to avoid clobbering
+  "Wrap the JavaScript output in (function(){...};)() to avoid clobbering
 globals. Defaults to false.
 
   :output-wrapper false")
 
-
 (s/def ::libs  (s/every string? :min-count 1 :into [] :kind sequential?))
 (def-spec-meta ::libs
   :doc
-   "Adds dependencies on external js libraries, i.e. Google
+  "Adds dependencies on external js libraries, i.e. Google
 Closure-compatible javascript files with correct goog.provides() and
 goog.requires() calls. Note that files in these directories will be
 watched and a rebuild will occur if they are modified.
@@ -463,22 +458,20 @@ Defaults to the empty vector []
          \"src/js\"
          \"src/org/example/example.js\"]")
 
-
 (s/def ::preamble  (s/every non-blank-string? :min-count 1 :into [] :kind sequential?))
 (def-spec-meta ::preamble
   :doc
-   "Prepends the contents of the given files to each output file. Only
+  "Prepends the contents of the given files to each output file. Only
 valid with optimizations other than :none.
 
 Defaults to the empty vector []
 
   :preamble [\"license.js\"]")
 
-
 (s/def ::hashbang                   boolean?)
 (def-spec-meta ::hashbang
   :doc
-   "When using :target :nodejs the compiler will emit a shebang as the
+  "When using :target :nodejs the compiler will emit a shebang as the
 first line of the compiled source, making it executable. When your
 intention is to build a node.js module, instead of executable, use
 this option to remove the shebang.
@@ -488,7 +481,7 @@ this option to remove the shebang.
 (s/def ::compiler-stats             boolean?)
 (def-spec-meta ::compiler-stats
   :doc
-   "Report basic timing measurements on compiler activity.
+  "Report basic timing measurements on compiler activity.
 
 Defaults to false.
 
@@ -531,7 +524,7 @@ Defaults to :ecmascript5
 (s/def ::language-out        ::closure-language-in-out-opts)
 (def-spec-meta ::language-out
   :doc
-   "Configure the input and output languages for the closure library. May be:
+  "Configure the input and output languages for the closure library. May be:
 
 * :ecmascript-next identical to :es-next
 * :ecmascript-2017 identical to :es-2017
@@ -550,13 +543,13 @@ Defaults to :no-transpile
   :language-out  :ecmascript3")
 
 (s/def ::closure-defines (s/map-of
-                            ::string-or-symbol
-                            (some-fn number?
-                                     string?
-                                     boolean?)))
+                          ::string-or-symbol
+                          (some-fn number?
+                                   string?
+                                   boolean?)))
 (def-spec-meta ::closure-defines
   :doc
-   "Set the values of Closure libraries' variables annotated with @define
+  "Set the values of Closure libraries' variables annotated with @define
 or with the cljs.core/goog-define helper macro. A common usage is
 setting goog.DEBUG to false:
 
@@ -573,10 +566,10 @@ to work, and only goog-define defines are affected. :closure-defines
 currently does not have any effect with :optimization :whitespace.")
 
 (s/def ::npm-deps (s/or :map   (s/map-of ::string-or-named string?)
-                          :false false?))
+                        :false false?))
 (def-spec-meta ::npm-deps
   :doc
-   "Declare NPM dependencies. A map of NPM package names to the desired
+  "Declare NPM dependencies. A map of NPM package names to the desired
 versions or the Boolean value false. If false then any existing
 node_modules directory will not be indexed nor used. See also
 :install-deps.
@@ -586,7 +579,7 @@ node_modules directory will not be indexed nor used. See also
 (s/def ::install-deps boolean?)
 (def-spec-meta ::install-deps
   :doc
-   "When set to true, the Clojurescript compiler will handle downloading
+  "When set to true, the Clojurescript compiler will handle downloading
 the Javascript dependencies defined in the :npm-deps section of the config.
 
   :install-deps true")
@@ -595,7 +588,7 @@ the Javascript dependencies defined in the :npm-deps section of the config.
   (s/every non-blank-string? :min-count 1 :into [] :kind sequential?))
 (def-spec-meta ::closure-extra-annotations
   :doc
-   "Define extra JSDoc annotations that a closure library might use so
+  "Define extra JSDoc annotations that a closure library might use so
 that they don't trigger compiler warnings.
 
   :closure-extra-annotations #{\"api\"}")
@@ -603,7 +596,7 @@ that they don't trigger compiler warnings.
 (s/def ::anon-fn-naming-policy #{:off :unmapped :mapped})
 (def-spec-meta ::anon-fn-naming-policy
   :doc
-   "Strategies for how the Google Closure compiler does naming of
+  "Strategies for how the Google Closure compiler does naming of
 anonymous functions that occur as r-values in assignments and variable
 declarations. Defaults to :off.
 
@@ -621,11 +614,10 @@ The following values are supported:
           them back to a more meaningful name that's based on the
           left-hand side of the assignment.")
 
-
 (s/def ::optimize-constants         boolean?)
 (def-spec-meta ::optimize-constants
   :doc
-   "When set to true, constants, such as keywords and symbols, will only
+  "When set to true, constants, such as keywords and symbols, will only
 be created once and will be written to a separate file called
 constants_table.js. The compiler will emit a reference to the constant
 as defined in the constants table instead of creating a new object for
@@ -638,19 +630,19 @@ Defaults to true under :advanced optimizations otherwise to false.
 (s/def ::parallel-build             boolean?)
 (def-spec-meta ::parallel-build
   :doc
-   "When set to true, compile source in parallel, utilizing multiple cores.
+  "When set to true, compile source in parallel, utilizing multiple cores.
 
 :parallel-build true")
 
 ;; XXX TODO
 #_(s/def ::devcards boolean?)
 #_(def-spec-meta :doc
-  ` "Whether to include devcard 'defcard' definitions in the output of the compile.")
+    `"Whether to include devcard 'defcard' definitions in the output of the compile.")
 
 (s/def ::watch-fn fn?)
 (def-spec-meta ::watch-fn
   :doc
-   "Is a function that will be called after a successful build.
+  "Is a function that will be called after a successful build.
 
 Only available for cljs.build.api/watch
 
@@ -659,7 +651,7 @@ Only available for cljs.build.api/watch
 (s/def ::process-shim boolean?)
 (def-spec-meta ::process-shim
   :doc
-   "Defaults to true. Automatically provide a shim for Node.js process.env
+  "Defaults to true. Automatically provide a shim for Node.js process.env
 containing a single Google Closure define, NODE_ENV with \"development\"
 as the default value. In production NODE_ENV will be set to \"production\".
 If set to false all of the stated behavior is disabled.
@@ -683,7 +675,7 @@ If set to false all of the stated behavior is disabled.
 (s/def ::fn-invoke-direct boolean?)
 (def-spec-meta ::fn-invoke-direct
   :doc
-   "Requires :static-fns true. This option emits slightly different
+  "Requires :static-fns true. This option emits slightly different
 code that can speed up your code around 10-30%. Higher order
 function  that don’t implement the IFn protocol are normally called
 with f.call(null, arg0, arg1 …​).
@@ -696,7 +688,7 @@ f(arg0, arg1 …​ instead.)
 (s/def ::rewrite-polyfills boolean?)
 (def-spec-meta ::rewrite-polyfills
   :doc
-   "If set to true, the google closure compiler will add polyfills (for example
+  "If set to true, the google closure compiler will add polyfills (for example
 when you use native javascript Promise). This requires :language-in to be set
 to :es6 or higher or it will silently be ignored!
 
@@ -706,16 +698,16 @@ to :es6 or higher or it will silently be ignored!
 (s/def ::aot-cache boolean?)
 (def-spec-meta ::aot-cache
   :doc
-   "A boolean value to disable or enable global caching of compiled assets.
+  "A boolean value to disable or enable global caching of compiled assets.
 
   :aot-cache false")
 
 (s/def ::checked-arrays (s/or :keyval #{:warn :error}
-                                :false   false?
-                                :nil    nil?))
+                              :false   false?
+                              :nil    nil?))
 (def-spec-meta ::checked-arrays
   :doc
-   "If set to :warn or :error, checks inferred types and runtime values passed
+  "If set to :warn or :error, checks inferred types and runtime values passed
 to aget and aset. Inferred type mismatches will result in the
 :invalid-array-access warning being triggered. Logs when incorrect values
 are passed if set to :warn, throws if set to :error. May be set to a
@@ -771,7 +763,7 @@ This setting does not apply if :optimizations is set to :advanced.
 
 (def-spec-meta ::warnings
   :doc
-   "This flag will turn on/off compiler warnings for references to
+  "This flag will turn on/off compiler warnings for references to
 undeclared vars, wrong function call arities, etc. Can be a boolean
 for enabling/disabling common warnings, or a map of specific warning
 keys with associated booleans. Defaults to true.
@@ -917,12 +909,11 @@ The following warnings are supported:
     ::unused-private-property
     ::use-of-goog-base
     ::violated-module-dep
-    ::visiblity])
+    ::visiblity]))
 
-  )
 (def-spec-meta ::closure-warnings
   :doc
-   "Configure warnings generated by the Closure compiler. A map from
+  "Configure warnings generated by the Closure compiler. A map from
 Closure warning to configuration value, only :error, :warning and :off
 are supported.
 
@@ -1128,7 +1119,4 @@ See the Closure Compiler Warning wiki for detailed descriptions.")
     ::cache-analysis-format
     ::rename-prefix-namespace
     ::closure-variable-map-in
-    ::use-only-custom-externs
-
-    ]
-   ))
+    ::use-only-custom-externs]))

@@ -21,8 +21,7 @@
                      :ua-product (figwheel.repl/get-ua-product)
                      :stacktrace (.-stack ex)}}]
            (figwheel.repl/debug [:async-throw (pr-str msg)])
-           (figwheel.repl/respond-to-connection msg))))
-     )
+           (figwheel.repl/respond-to-connection msg)))))
    :clj (defn listen [prom]
           (figwheel.repl/add-listener
            ::listener

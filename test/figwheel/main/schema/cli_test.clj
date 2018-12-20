@@ -51,7 +51,6 @@
         "^^^^^"
         "is being interpreted"))
 
-
 (deftest ignored-args
   (incl (validate-cli-extra ["-c" "figwheel.main" "-s" "asdf:asdf" "asd"])
         "Ignored Extra CLI arguments"
@@ -87,7 +86,6 @@
         "Incompatible flag for main options:  -s"
         "--repl")
 
-
   (incl (validate-cli-extra ["-O" "advanced" "-r"])
         "Incompatible flag for main options:  -r"
         "should have the correct main option for the -O"
@@ -99,30 +97,27 @@
     (incl (validate-cli-extra ["-b" "decent"])
           "Build file decent.cljs.edn not found"
           "should refer to an existing build"
-          "\"downtown\"" "\"clowntown\"")
-    )
+          "\"downtown\"" "\"clowntown\""))
 
   (with-edn-files {:downtown.cljs.edn '{:main downtown.core}
                    :clowntown.cljs.edn '{:main clowntown.core}}
-    (incl (validate-cli-extra ["-bo" "decent" ])
+    (incl (validate-cli-extra ["-bo" "decent"])
           "Build file decent.cljs.edn not found"
           "should refer to an existing build"
-          "\"downtown\"" "\"clowntown\"")
-    )
+          "\"downtown\"" "\"clowntown\""))
 
   (with-edn-files {:downtown.cljs.edn '{:main downtown.core}
                    :clowntown.cljs.edn '{:main clowntown.core}}
-    (incl (validate-cli-extra ["-bb" "decent" ])
+    (incl (validate-cli-extra ["-bb" "decent"])
           "Build file decent.cljs.edn not found"
           "should refer to an existing build"
-          "\"downtown\"" "\"clowntown\"")
-    )
+          "\"downtown\"" "\"clowntown\""))
 
   (with-edn-files {:devver.cljs.edn :delete
                    :helper.cljs.edn :delete
                    :dev.cljs.edn    :delete
                    :docs.cljs.edn   :delete
                    :mod.cljs.edn    :delete}
-    (incl (validate-cli-extra ["-bb" "decent" ])
+    (incl (validate-cli-extra ["-bb" "decent"])
           "Build file decent.cljs.edn not found"
           "there are no build files in the current directory")))

@@ -39,11 +39,11 @@
 (deftest noargs-uses-temp-dir-when-not-in-root-dir
   (with-redefs [fm/should-add-temp-dir? (fn [_] true)]
     (with-edn-files {:scripty-test.cljs "(println (+ 1 2 3))"}
-     (uses-temp-dir? (:options (main->config)))
-     (uses-temp-dir? (:options (main->config "-r")))
-     (uses-temp-dir? (:options (main->config "-m" "figwheel.main")))
-     (uses-temp-dir? (:options (main->config "scripty-test.cljs")))
-     (uses-temp-dir? (:options (main->config "-"))))))
+      (uses-temp-dir? (:options (main->config)))
+      (uses-temp-dir? (:options (main->config "-r")))
+      (uses-temp-dir? (:options (main->config "-m" "figwheel.main")))
+      (uses-temp-dir? (:options (main->config "scripty-test.cljs")))
+      (uses-temp-dir? (:options (main->config "-"))))))
 
 ;; FIX logging output capture
 (deftest auto-adds-target-classpath-for-compile
@@ -86,10 +86,7 @@
     (is (asset-path-relative? (main->config "-m" "figwheel.main")))
     (is (asset-path-relative? (main->config "-c" "figwheel.main" "-r")))
     (is (asset-path-relative? (main->config "-b" "dev" "-r")))
-    (is (asset-path-relative? (main->config "-bo" "dev"))))
-
-
-  )
+    (is (asset-path-relative? (main->config "-bo" "dev")))))
 
 (deftest dont-infer-watch-directory-for-compile-without-repl-or-serve
   (with-edn-files
@@ -103,15 +100,6 @@
                        :figwheel.main/config :watch-dirs)))
 
     (is (not-empty (-> (main->config "-co" "dev.cljs.edn" "-c" "-s")
-                       :figwheel.main/config :watch-dirs)))
+                       :figwheel.main/config :watch-dirs)))))
 
-
-
-    )
-
-  )
-
-
-
-
-#_(main-to-print-config "-pc" "-r" )
+#_(main-to-print-config "-pc" "-r")

@@ -28,7 +28,7 @@
 
 (defmacro with-added-formatters [formatter-map & body]
   `(binding [*formatters* (merge *formatters* ~formatter-map)]
-    ~@body))
+     ~@body))
 
 (defn- setup-ansi-table [ansi-code-map]
   (->> ansi-code-map

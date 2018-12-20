@@ -86,7 +86,7 @@
   (-> (exports->foreign-libs (content->window-exports file-content))
       (assoc :file webpack-entity-output-path)))
 
-#_ (import-file->foreign-lib [nil index-file])
+#_(import-file->foreign-lib [nil index-file])
 
 (defn bundle->foreign-lib [[bundle-file js-index-file]]
   (import-file->foreign-lib [bundle-file (slurp (io/file js-index-file))]))
@@ -124,12 +124,11 @@
                      {:bundles
                       {"target-webpack/dev/index.bundle.js" "devel/webpack/index.js"}}}})
 
-
 (comment
   ;; example data
 
-(def index-file
-  "import React from 'react';
+  (def index-file
+    "import React from 'react';
 import ReactDom from 'react-dom';
 import CreateReactClass from 'create-react-class';
 import SlatePlainSerializer from 'slate-plain-serializer';
@@ -145,8 +144,7 @@ window[\"ouchy-ouch\"] = Change;
 window['ouchy-oucher'] = Change;
 ")
 
-(def index-data
-  {:react 'react
-   :react-dom 'react-dom
-   [[:change :as :slate-change]] 'slate})
-)
+  (def index-data
+    {:react 'react
+     :react-dom 'react-dom
+     [[:change :as :slate-change]] 'slate}))

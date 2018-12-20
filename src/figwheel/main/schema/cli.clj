@@ -178,6 +178,7 @@ resource paths should start with @")
 
 ;; TODO
 
+
 (s/def ::script (s/cat :script-name ::file-exists
                        :args (s/* any?)))
 
@@ -189,7 +190,9 @@ resource paths should start with @")
 
 
 ;; if there is extra input before a main option then it is an unknown flag
-#_ (validate-cli ["-e" "(list)" "-asdf" "-r"])
+
+
+#_(validate-cli ["-e" "(list)" "-asdf" "-r"])
 
 (s/def ::stdin  #{"-"})
 
@@ -434,19 +437,19 @@ resource paths should start with @")
            (when doc
              (str
               "\n\n__ Doc for " (string/join " " flags)  " _____\n\n"
-             (printer/indent (string/join "\n" (#'cljs.cli/auto-fill doc 65)))))))))
+              (printer/indent (string/join "\n" (#'cljs.cli/auto-fill doc 65)))))))))
 
 #_(defn validate-cli [cli-options]
-  (when-let [data' (s/explain-data ::cli-options cli-options)]
-    (let [data (update-problems
-                (add-problem-types
-                 data'))]
-      #_(clojure.pprint/pprint data)
-      (with-redefs [exp/expected-str expected-str-with-doc]
-        (with-out-str
-          ((exp/custom-printer {:print-specs? false
-                                :show-valid-values? true})
-           data))))))
+    (when-let [data' (s/explain-data ::cli-options cli-options)]
+      (let [data (update-problems
+                  (add-problem-types
+                   data'))]
+        #_(clojure.pprint/pprint data)
+        (with-redefs [exp/expected-str expected-str-with-doc]
+          (with-out-str
+            ((exp/custom-printer {:print-specs? false
+                                  :show-valid-values? true})
+             data))))))
 
 ;; ----------------------------------------------------------------------
 ;; ensure the opts respect group
@@ -497,7 +500,7 @@ resource paths should start with @")
                     (cond
                       (empty? mains) res
                       (and (#{:compile :compile-ns :build} (first mains))
-                           (-> mains second :repl-serve nil? ))
+                           (-> mains second :repl-serve nil?))
                       (assoc res ::should-have-main-opt ["--repl" "-r"])
                       :else
                       (assoc res
@@ -567,8 +570,7 @@ resource paths should start with @")
                                 :show-valid-values? true})
            data))))))
 
-#_ (validate-cli-extra ["-co" "dev.cljs.edn" "-O" "advanced"])
-
+#_(validate-cli-extra ["-co" "dev.cljs.edn" "-O" "advanced"])
 
 (defn validate-cli! [cli-args context-msg]
   (if-let [explained (validate-cli-extra cli-args)]
@@ -605,7 +607,7 @@ resource paths should start with @")
          unknown-script
          " is not a file")))
 
-#_ (validate-cli ["-e" "(list)" "ee" "-r"])
+#_(validate-cli ["-e" "(list)" "ee" "-r"])
 
 (defmethod exp/problem-group-str ::ignored-args [_type spec-name val path problems opts]
   (spell-exp/exp-formated "Ignored Extra CLI arguments"  _type spec-name val path problems opts))
@@ -646,7 +648,7 @@ resource paths should start with @")
 (defmethod exp/problem-group-str ::missing-build-file [_type spec-name val path problems opts]
   (spell-exp/exp-formated
    (str "Build file " (first (::missing-files (first problems)))
-        ".cljs.edn not found" )
+        ".cljs.edn not found")
    _type spec-name val path problems opts))
 
 (defmethod exp/expected-str ::missing-build-file
@@ -659,8 +661,7 @@ resource paths should start with @")
       (str prefix "should refer to an existing build," (spell-exp/format-correction-list pred))
       (str prefix "should refer to a build file but there are no build files in the current directory"))))
 
-
-#_ (print (validate-cli ["-b" "dev:devr" "-r" ]))
+#_(print (validate-cli ["-b" "dev:devr" "-r"]))
 
 #_(exp/expound-str ::cli-options ["-i" "asdf" "-i" "asdf" "-e" "15"])
 

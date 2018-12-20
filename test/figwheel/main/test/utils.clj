@@ -59,7 +59,7 @@ Example:
      (fn [] ~@body)))
 
 #_(with-edn-files
-  {"hithere" {:hi :there}}
+    {"hithere" {:hi :there}}
     (slurp "hithere"))
 
 (defmacro with-err-str

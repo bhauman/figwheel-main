@@ -67,7 +67,7 @@ Default: none
 
 (def-spec-meta ::ring-server-options
   :doc
- "All the options to forward to the `ring-jetty-adapter/run-jetty` function
+  "All the options to forward to the `ring-jetty-adapter/run-jetty` function
 which figwheel.main uses to run its ring server.
 
 All the available options are documented here:
@@ -138,7 +138,7 @@ and Figwheel will call `emacsclient` with the correct args."
 (s/def ::figwheel-core boolean?)
 (def-spec-meta ::figwheel-core
   :doc
- "Whether to include the figwheel.core library in the build. This
+  "Whether to include the figwheel.core library in the build. This
  enables hot reloading and client notification of compile time errors.
  Default: true
 
@@ -148,7 +148,7 @@ and Figwheel will call `emacsclient` with the correct args."
 (s/def ::hot-reload-cljs boolean?)
 (def-spec-meta ::hot-reload-cljs
   :doc
- "Whether or not figwheel.core should hot reload compiled
+  "Whether or not figwheel.core should hot reload compiled
 ClojureScript. Only has meaning when :figwheel is true.
 Default: true
 
@@ -158,7 +158,7 @@ Default: true
 (s/def ::reload-dependents boolean?)
 (def-spec-meta ::reload-dependents
   :doc
- "Whether or not figwheel.core should reload the namespaces that
+  "Whether or not figwheel.core should reload the namespaces that
 `depend` on the changed namespaces in addition to the changed
 namespaces themselves. Only has meaning when :figwheel is true.
 Default:true
@@ -169,7 +169,7 @@ Default:true
 (s/def ::connect-url non-blank-string?)
 (def-spec-meta ::connect-url
   :doc
- "The url that the figwheel REPL client will use to connect back to
+  "The url that the figwheel REPL client will use to connect back to
 the server.
 
 This url is actually a template that will be filled in.  For example
@@ -200,7 +200,7 @@ connection will be established. If the url starts with an http scheme
                         :false false?))
 (def-spec-meta ::open-url
   :doc
- "Either a boolean value `false` or a string that indicates the url
+  "Either a boolean value `false` or a string that indicates the url
 that the figwheel REPL will open in the browser after the source code
 has been compiled. A `false` value will disable this behavior.
 
@@ -221,7 +221,7 @@ For the server side:
                                 :extension-coll (s/coll-of #{:clj :cljc})))
 (def-spec-meta ::reload-clj-files
   :doc
- "Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
+  "Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
 It doesn't reload clj dependent files like tools.namspace.
 
 Figwheel does note if there is a macro in the changed `clj` or `cljc` file
@@ -241,7 +241,7 @@ Or you can specify which suffixes will cause the reloading
 (s/def ::log-file non-blank-string?)
 (def-spec-meta ::log-file
   :doc
- "The name of a file to redirect the figwheel.main logging to. This
+  "The name of a file to redirect the figwheel.main logging to. This
 will only take effect when a REPL has been started.
 
     :log-file \"figwheel-main.log\""
@@ -250,7 +250,7 @@ will only take effect when a REPL has been started.
 (s/def ::log-level #{:error :info :debug :trace :all :off})
 (def-spec-meta ::log-level
   :doc
- "The level to set figwheel.main java.util.logger to.
+  "The level to set figwheel.main java.util.logger to.
 Can be one of: `:error` `:info` `:debug` `:trace` `:all` `:off`
 
     :log-level :error"
@@ -259,7 +259,7 @@ Can be one of: `:error` `:info` `:debug` `:trace` `:all` `:off`
 (s/def ::client-log-level  #{:severe :warning :info :config :fine :finer :finest})
 (def-spec-meta ::client-log-level
   :doc
- "The log level to set the client side goog.log.Logger to for
+  "The log level to set the client side goog.log.Logger to for
 figwheel.repl and figwheel.core. Can be one of:
 `:severe` `:warning` `:info` `:config` `:fine` `:finer` `:finest`
 
@@ -269,7 +269,7 @@ figwheel.repl and figwheel.core. Can be one of:
 (s/def ::log-syntax-error-style #{:verbose :concise})
 (def-spec-meta ::log-syntax-error-style
   :doc
- "figwheel.main logging prints out compile time syntax errors which
+  "figwheel.main logging prints out compile time syntax errors which
 includes displaying the erroneous code.
 Setting `:log-syntax-error-style` to `:concise` will cause the logging to
 not display the erroneous code.
@@ -282,7 +282,7 @@ Default: `:verbose`
 (s/def ::load-warninged-code boolean?)
 (def-spec-meta ::load-warninged-code
   :doc
- "If there are warnings in your code emitted from the compiler, figwheel
+  "If there are warnings in your code emitted from the compiler, figwheel
 does not refresh. If you would like Figwheel to load code even if
 there are warnings generated set this to true.
 Default: false
@@ -293,7 +293,7 @@ Default: false
 (s/def ::ansi-color-output boolean?)
 (def-spec-meta ::ansi-color-output
   :doc
-   "Figwheel makes an effort to provide colorful text output. If you need
+  "Figwheel makes an effort to provide colorful text output. If you need
 to prevent ANSI color codes in figwheel output set `:ansi-color-output`
 to false.  Default: true
 
@@ -303,7 +303,7 @@ to false.  Default: true
 (s/def ::validate-config boolean?)
 (def-spec-meta ::validate-config
   :doc
- "Whether to validate the figwheel-main.edn and build config (i.e.\".cljs.edn\") files.
+  "Whether to validate the figwheel-main.edn and build config (i.e.\".cljs.edn\") files.
 Default: true
 
     :validate-config false"
@@ -312,7 +312,7 @@ Default: true
 (s/def ::validate-cli boolean?)
 (def-spec-meta ::validate-cli
   :doc
- "Whether to validate the figwheel-main command line options
+  "Whether to validate the figwheel-main command line options
 Default: true
 
     :validate-cli false"
@@ -321,7 +321,7 @@ Default: true
 (s/def ::target-dir non-blank-string?)
 (def-spec-meta ::target-dir
   :doc
- "A String that specifies the target directory component of the path
+  "A String that specifies the target directory component of the path
 where figwheel.main outputs compiled ClojureScript
 
 The default `:output-dir` is composed of:
@@ -583,7 +583,7 @@ on a Nodejs app in parallel with your main build.
 
 (def-spec-meta ::build-inputs
   :doc
- "Build inputs are passed as the first argument to the CLJS compiler.
+  "Build inputs are passed as the first argument to the CLJS compiler.
 
 Build inputs are normally a list of sources (files and directories)
 for the compiler to compile.
@@ -655,7 +655,7 @@ You can also disable `cljs-test-display` with:
 (s/def ::cljsjs-resources boolean?)
 (def-spec-meta ::cljsjs-resources
   :doc
- "When you use libraries from http://cljsjs.github.io they sometimes
+  "When you use libraries from http://cljsjs.github.io they sometimes
 come bundled with static resources (like CSS files) that you would
 like to be served from the Figwheel server.
 
@@ -675,7 +675,7 @@ it via the Figwheel server at the path
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
 (def-spec-meta ::client-print-to
   :doc
- "The `figwheel.repl` client can direct printed (via pr) output to the
+  "The `figwheel.repl` client can direct printed (via pr) output to the
 REPL and/or the console. `:client-print-to` is a list of where you
 want print output directed. The output choices are `:console` and `:repl`
 Default: [:console :repl]
@@ -688,7 +688,7 @@ Default: [:console :repl]
 
 (def-spec-meta ::ring-stack
   :doc
- "The figwheel server has a notion of a `:ring-stack`. The
+  "The figwheel server has a notion of a `:ring-stack`. The
 `:ring-stack` is a composition of basic ring-middleware (think
 sessions) to wrap around a supplied `:ring-handler`.
 
@@ -699,7 +699,7 @@ The default `:ring-stack` is a slightly modified
 (s/def ::ring-stack-options map?)
 (def-spec-meta ::ring-stack-options
   :doc
- (str "The figwheel.repl server has a notion of a `:ring-stack`. The
+  (str "The figwheel.repl server has a notion of a `:ring-stack`. The
 `:ring-stack` is a composition of basic ring-middleware to wrap around
 a supplied `:ring-handler`.
 
@@ -714,7 +714,7 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
 ```
 " (when-let [opt (resolve 'figwheel.server.ring/default-options)]
     (with-out-str (clojure.pprint/pprint (deref opt))))
-"```
+       "```
 
 You can override these options by suppling your own to `:ring-stack-options`
 
@@ -737,7 +737,7 @@ Default: 50
 (s/def ::mode #{:build-once :repl :serve})
 (def-spec-meta ::mode
   :doc
- "The `:mode` indicates the behavior that occurs after a compile.
+  "The `:mode` indicates the behavior that occurs after a compile.
 Options: `:repl` `:serve` or `:build-once`
 
 * `:repl` indicates that a REPL will be started
@@ -747,7 +747,7 @@ Options: `:repl` `:serve` or `:build-once`
 This is mainly intended for use when you are launching figwheel.main from a script.
 
 Normally defaults to `:repl`"
- :group :un-common)
+  :group :un-common)
 
 (s/def ::broadcast-reload boolean?)
 (def-spec-meta ::broadcast-reload
@@ -798,8 +798,6 @@ be useful for certain docker environments.
     :hawk-options {:watcher :polling}"
   :group :un-common)
 
-
-
 (s/def ::edn
   (ensure-all-registered-keys-included
    #{::edn ::bundles}
@@ -839,7 +837,6 @@ be useful for certain docker environments.
 
      ::helpful-classpaths
 
-     
      ::launch-node
      ::inspect-node
      ::node-command
@@ -854,5 +851,4 @@ be useful for certain docker environments.
      ::broadcast
      ::broadcast-reload
      ::repl-eval-timeout
-     ::hawk-options
-     ])))
+     ::hawk-options])))
