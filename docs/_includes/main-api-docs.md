@@ -23,7 +23,7 @@ A `build` arg can be either:
 ```clojure
 {
      :id      "dev"                   ; a required string build id
-     :options {:main hello-world.core}  ; a required map of cljs compile options
+     :options {:main 'hello-world.core} ; a required map of cljs compile options
      :config  {:watch-dirs ["src"]}   ; an options map of figwheel.main config options
 }
 ```

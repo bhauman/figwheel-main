@@ -498,7 +498,7 @@ If you don't want to use the default host page you will need to create
 a your own host page for it. See
 https://figwheel.org/docs/your_own_page for help.
 
-This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display) 
+This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display)
 and [devcards](https://github.com/bhauman/devcards) to your workflow.
 
 Also keep in mind that you can insert extra behavior with `:preloads`

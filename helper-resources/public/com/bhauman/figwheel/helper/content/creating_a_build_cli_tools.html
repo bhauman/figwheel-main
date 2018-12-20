@@ -35,7 +35,7 @@ create a configuration file for a build named <code>dev</code>.</p>
 <p>In <code>dev.cljs.edn</code>:</p>
 
 <div class="language-clojure highlighter-coderay"><div class="CodeRay">
-  <div class="code"><pre>{<span style="color:#A60">:main</span> hello.core}
+  <div class="code"><pre>{<span style="color:#A60">:main</span> hello-world.core}
 </pre></div>
 </div>
 </div>
@@ -48,14 +48,14 @@ build, i.e. the top level namespace for your build.</p>
 that you can configure in this file. For most cases however all you
 will need is the above.</p>
 
-<h3 id="srchellocorecljs">src/hello/core.cljs</h3>
+<h3 id="srchello_worldcorecljs">src/hello_world/core.cljs</h3>
 
 <p>Next let’s create an initial ClojureScript file for our project.</p>
 
-<p>In <code>src/hello/core.cljs</code> put:</p>
+<p>In <code>src/hello_world/core.cljs</code> put:</p>
 
 <div class="language-clojure highlighter-coderay"><div class="CodeRay">
-  <div class="code"><pre>(<span style="color:#080;font-weight:bold">ns</span> <span style="color:#707;font-weight:bold">hello.core</span>)
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">ns</span> <span style="color:#707;font-weight:bold">hello-world.core</span>)
 
 (enable-console-print!)
 
@@ -127,4 +127,3 @@ is attached to the browser.</p>
 
 <p>From here you will be able to edit the ClojureScript file and have it
 hot loaded into the browser on save.</p>
-
