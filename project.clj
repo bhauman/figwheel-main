@@ -17,17 +17,7 @@
    [org.eclipse.jetty.websocket/websocket-server "9.2.24.v20180105"]
    [binaryage/devtools "0.9.10"]
    [hawk "0.2.11"]
-   [expound "0.7.1"]
-   [com.datomic/client-cloud "0.8.63"
-    :exclusions [org.eclipse.jetty/jetty-io
-                 org.eclipse.jetty/jetty-util
-                 org.eclipse.jetty/jetty-http
-                 com.cognitect/transit-java
-                 com.cognitect/transit-clj
-                 commons-logging
-                 com.fasterxml.jackson.core/jackson-core]]
-   ]
-
+   [expound "0.7.1"]]
   :resource-paths ["helper-resources"]
   :profiles {:dev {:dependencies [[cider/piggieback "0.3.9"]
                                   #_[com.bhauman/rebel-readline-cljs "0.1.4"]]
