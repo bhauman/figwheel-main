@@ -228,7 +228,7 @@
 
 (defn syntax-exception [e]
   (let [ex (exception-with-excerpt e)]
-    (info
+    (warn
      (format-str
       (if (and (nil? (:message ex))
                (nil? (:file-excerpt ex)))
@@ -239,4 +239,4 @@
   (-> (figwheel.core/warning-info warning)
       format-ex
       format-str
-      info))
+      warn))
