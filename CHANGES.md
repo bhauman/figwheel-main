@@ -1,3 +1,17 @@
+# 0.2.0 Minor updates
+
+So nothing groundbreaking in this release, just firming things up and
+pushing out changes because they have sat in the repo long enough.
+
+* bump up to ring 0.1.7
+* optionaly serve static cljsjs resources see https://figwheel.org/config-options#cljsjs-resources
+* experimental - support for a cross over :nodejs Extra Main target to compile a project for the browser and node -- this more than likely wont work in many cases
+* change the way that figwheel.main detects whether clj is launching figwheel from a project directory
+* CSS reloading improvement
+* ensure not zero exit when not watching or building once
+* make syntax errors log at level :warn
+
+
 # 0.1.9 Testing
 
 This release has focused on making it much easier to integrate testing
