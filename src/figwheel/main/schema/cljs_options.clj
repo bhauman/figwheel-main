@@ -566,7 +566,7 @@ to work, and only goog-define defines are affected. :closure-defines
 currently does not have any effect with :optimization :whitespace.")
 
 (s/def ::npm-deps (s/or :map   (s/map-of ::string-or-named string?)
-                        :false false?))
+                        :bool boolean?))
 (def-spec-meta ::npm-deps
   :doc
   "Declare NPM dependencies. A map of NPM package names to the desired
