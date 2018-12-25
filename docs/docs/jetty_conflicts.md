@@ -8,26 +8,26 @@ published: true
 
 # Jetty Conflicts
 
+> This should be fixed if you upgrade to `figwheel-main 0.2.1-SNAPSHOT`
+> or later.
+
 <div class="lead-in"> Figwheel currently uses the same Jetty webserver
 version that the <a href="https://github.com/ring-clojure/ring/tree/master/ring-jetty-adapter">Ring Jetty Adapter</a> uses. Unfortunately Jetty is
 packaged in a way that is prone to version conflicts.</div>
 
 Moving to Jetty means that Figwheel is using the same server that many
 Clojure applications are already using. While this can be helpful in
-terms of consistent behavior, supporting HTTPS and miniming
-dependencies, this also leads to inevitable version conflicts because
-of the way Jetty is packeged. The most common conflict that folks
-experience is when they include the
-[Datomic Cloud](https://docs.datomic.com/cloud/index.html) client.
+terms of consistent behavior, supporting HTTPS and minimizing
+dependencies. This unfortunately also leads to version conflicts
+because of the way Jetty is packaged. The most common conflict that
+folks seem to experience is when they include the [Datomic
+Cloud](https://docs.datomic.com/cloud/index.html) client.
 
-The ultimate solution to this problem may be turning away from Jetty
-entirely and writing a simpler server based on
-[Netty](https://netty.io), or perhaps using
-[Undertow](https://github.com/undertow-io/undertow).
+This also can happen if you update your version of Ring to `1.7.1`.
 
-## Fixing the Datomic Cloud Conflict
+## Fixing the conflict by specifying explicit Jetty deps
 
-Currently if I add `com.datomic/client-cloud {:mvn/version "0.8.63"}`
+Currently if I add `com.datomic/client-cloud {:mvn/version "0.8.71"}`
 to a `deps.edn` file along with `com.bhauman/figwheel-main`, trying to
 start a build with `figwheel.main` with fail with 
 
@@ -35,16 +35,25 @@ start a build with `figwheel.main` with fail with
 java.lang.NoClassDefFoundError: org/eclipse/jetty/http/HttpParser$ProxyHandler
 ```
 
-This is due to a dependency missmatch.
+This is due to a dependency missmatch between Jetty deps.
 
-You can fix this by excluding the conflicting dependencies from the
-`com.datomic/client-cloud` dependenciy in your `deps.edn` file:
+The most sure fire way to fix this error is to explicitly specify all
+the Jetty dependencies in your project and ensure they are all the
+same version.
 
-```
-com.datomic/client-cloud {:mvn/version "0.8.63"
-                          :exclusions [org.eclipse.jetty/jetty-http
-                                       org.eclipse.jetty/jetty-util
-                                       org.eclipse.jetty/jetty-io]}
+In your `deps.edn` this would look like this:
+
+```clojure
+{:deps {org.clojure/clojurescript {:mvn/version "1.10.339"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+		com.datomic/client-cloud {:mvn/version "0.8.71"}
+	    
+		;; directly specify all jetty dependencies
+		;; ensure all the dependencies have the same version
+		org.eclipse.jetty/jetty-server                {:mvn/version "9.4.12.v20180830"}
+		org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "9.4.12.v20180830"}
+		org.eclipse.jetty.websocket/websocket-server  {:mvn/version "9.4.12.v20180830"}
+		}}
 ```
 
 The next time you start Figwheel the error should be gone.
