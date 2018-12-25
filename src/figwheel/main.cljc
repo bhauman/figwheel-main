@@ -4,12 +4,15 @@
       [cljs.analyzer :as ana]
       [cljs.analyzer.api :as ana-api]
       [cljs.build.api :as bapi]
+      [cljs.compiler]
+      [cljs.closure]
       [cljs.cli :as cli]
       [cljs.env]
       [cljs.main :as cm]
       [cljs.repl]
       [cljs.repl.figwheel]
       [cljs.util]
+      [clojure.data.json :as json]
       [clojure.java.io :as io]
       [clojure.pprint :refer [pprint]]
       [clojure.string :as string]
@@ -1364,6 +1367,26 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                                extra-main-files))
            cfg)))
 
+     (defn config-cljsc-opts-json [cfg]
+       (letfn [(munge-nses [opts]
+                 (cond-> opts
+                   (:closure-defines opts)
+                   (update :closure-defines cljs.closure/normalize-closure-defines)
+                   (:preloads opts)
+                   (update :preloads #(map cljs.compiler/munge %))
+                   (:main opts)
+                   (update :main cljs.compiler/munge)))]
+         (update cfg ::post-build-hooks conj
+                 (fn [{:keys [::config options] :as cfg}]
+                   (let [f (io/file (:output-dir options) "cljsc_opts.edn")]
+                     (when (.isFile f)
+                       (some->>
+                        (slurp f)
+                        (#(try (read-string %) (catch Throwable t nil)))
+                        munge-nses
+                        json/write-str
+                        (spit (io/file (:output-dir options) "cljsc_opts.json")))))))))
+
      (defn expand-build-inputs [{:keys [watch-dirs build-inputs] :as config} {:keys [main] :as options}]
        (doall
         (distinct
@@ -1426,6 +1449,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             npm/config
             testing/plugin
             config-pre-post-hooks
+            config-cljsc-opts-json
             config-repl-connect
             config-cljs-devtools
             config-open-file-command
