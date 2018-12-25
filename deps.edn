@@ -8,9 +8,9 @@
         com.bhauman/figwheel-core {:mvn/version "0.2.1-SNAPSHOT"}
 
         ;; server
-        ring {:mvn/version "1.7.0"}
-        org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "9.2.24.v20180105"}
-        org.eclipse.jetty.websocket/websocket-server {:mvn/version "9.2.24.v20180105"}
+        ring {:mvn/version "1.7.1"}
+        org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "9.4.12.v20180830"}
+        org.eclipse.jetty.websocket/websocket-server {:mvn/version "9.4.12.v20180830"}
 
         ;; file watching
         hawk {:mvn/version "0.2.11"}
