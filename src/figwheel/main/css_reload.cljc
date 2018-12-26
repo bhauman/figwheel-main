@@ -3,7 +3,9 @@
    [clojure.string :as string]
    #?@(:cljs [[goog.Uri :as guri]
               [goog.log :as glog]
-              [goog.object :as gobj]]
+              [goog.object :as gobj]
+              [goog.cssom :as gcss]
+              [goog.events :as gevent]]
        :clj [[clojure.data.json :as json]
              [cljs.env]
              [cljs.repl]
@@ -47,11 +49,6 @@
      (defn add-cache-buster [url]
        (.makeUnique (guri/parse url)))
 
-     (defn current-links []
-       (->> (.getElementsByTagName js/document "link")
-            (.call (.. js/Array -prototype -slice))
-            (remove (comp #{"preload"} #(.-rel %)))))
-
      (defn truncate-url [url]
        (-> (first (string/split url #"\?"))
            (string/replace-first (str (.-protocol js/location) "//") "")
@@ -60,20 +57,25 @@
            (string/replace-first #"[^\/]*" "")))
 
      (defn matches-file?
-       [file link]
-       (when-let [link-href (.-href link)]
+       [file stylesheet]
+       (when-let [href (.-href stylesheet)]
          (let [match (string/join "/"
                                   (take-while identity
                                               (map #(if (= %1 %2) %1 false)
                                                    (reverse (string/split file "/"))
-                                                   (reverse (string/split (truncate-url link-href) "/")))))
+                                                   (reverse (string/split (truncate-url href) "/")))))
                match-length (count match)
                file-name-length (count (last (string/split file "/")))]
            (when (>= match-length file-name-length) ;; has to match more than the file name length
-             {:link link
-              :link-href link-href
+             {:stylesheet stylesheet
+              :link-href href
               :match-length match-length
-              :current-url-length (count (truncate-url link-href))}))))
+              :current-url-length (count (truncate-url href))}))))
+
+     (defn root-stylesheet [stylesheet]
+       (if-let [parent-stylesheet (.-parentStyleSheet stylesheet)]
+         (recur parent-stylesheet)
+         stylesheet))
 
      (defn get-correct-link [file]
        (when-let [res (first
@@ -81,8 +83,8 @@
                         (fn [{:keys [match-length current-url-length]}]
                           (- current-url-length match-length))
                         (keep #(matches-file? file %)
-                              (current-links))))]
-         (:link res)))
+                              (gcss/getAllCssStyleSheets))))]
+         (-> res :stylesheet root-stylesheet .-ownerNode)))
 
      (defn clone-link [link url]
        (let [clone (.createElement js/document "link")]
@@ -92,22 +94,17 @@
          (set! (.-href clone)     (add-cache-buster url))
          clone))
 
-     (defn create-link [url]
-       (let [link (.createElement js/document "link")]
-         (set! (.-rel link)      "stylesheet")
-         (set! (.-href link)     (add-cache-buster url))
-         link))
-
      (defn add-link-to-document [orig-link klone finished-fn]
        (let [parent (.-parentNode orig-link)]
+         ;; prevent css removal flash
+         (gevent/listenOnce klone
+                            "load"
+                            (fn []
+                              (.removeChild parent orig-link)
+                              (finished-fn)))
          (if (= orig-link (.-lastChild parent))
            (.appendChild parent klone)
-           (.insertBefore parent klone (.-nextSibling orig-link)))
-    ;; prevent css removal flash
-         (js/setTimeout #(do
-                           (.removeChild parent orig-link)
-                           (finished-fn))
-                        300)))
+           (.insertBefore parent klone (.-nextSibling orig-link)))))
 
      (defonce reload-css-deferred-chain (atom (Promise. #(%1 []))))
 
@@ -145,7 +142,7 @@
                            (dispatch-on-css-load loaded-files))
                          (when-let [not-loaded (not-empty (remove (set loaded-files) (set files)))]
                            (glog/warning logger (str "Unable to reload " (pr-str not-loaded))))
-                    ;; reset
+                         ;; reset
                          [])))))
 
      (defn reload-css-files [{:keys [on-cssload]} files]
@@ -153,7 +150,7 @@
          (when-let [files' (not-empty (distinct files))]
            (reload-css-files* files' on-cssload))))
 
-;;takes an array of css files, relativized with forward slash path-separators
+     ;;takes an array of css files, relativized with forward slash path-separators
      (defn ^:export reload-css-files-remote [files-array]
        (reload-css-files {} files-array)
        true))
