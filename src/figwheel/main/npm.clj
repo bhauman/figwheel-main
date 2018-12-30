@@ -68,16 +68,21 @@
   (->> file-content
        string/split-lines
        (map string/trim)
-       (keep #(re-find #"^(window|goog.global)(?:\.(\w+)|\[['\"]([^'\"\s]+)['\"]\])" %))
-       (mapcat rest)
-       (keep identity)
+       (keep #(re-find #"^(cljsExports|window\.cljsExports|this\.cljsExports|window|goog.global)(?:\.(\w+)|\[['\"]([^'\"\s]+)['\"]\])\s{0,3}\=" %))
+       (map rest)
+       (keep (fn [[kind change as-is]]
+               (when-let [export (and kind (if change (kebab-case change) as-is))]
+                 (let [exp-orig (or change as-is)]
+                   {:export-name export
+                    :export (if (.contains kind "cljsExports")
+                              (str "cljsExports." exp-orig)
+                              exp-orig)}))))
        distinct))
 
 (defn exports->foreign-libs [exports]
-  (let [provides (mapv kebab-case
-                       exports)
-        global-exports (into {} (map (juxt (comp symbol kebab-case)
-                                           symbol))
+  (let [provides (distinct (mapv :export-name exports))
+        global-exports (into {} (map (juxt (comp symbol :export-name)
+                                           (comp symbol :export)))
                              exports)]
     {:provides provides
      :global-exports global-exports}))
@@ -142,9 +147,22 @@ window.SlatePlainSerializer = SlatePlainSerializer;
 window.SlateChange = Change;
 window[\"ouchy-ouch\"] = Change;
 window['ouchy-oucher'] = Change;
+window.Margin=Margin;
+window[\"margine\"]=Margine;
+cljsExports.React = React;
+cljsExports.ReactDom = ReactDom;
+window.cljsExports.CreateReactClass = CreateReactClass;
+window.cljsExports.SlateReact = SlateReact;
+window.cljsExports.SlatePlainSerializer = SlatePlainSerializer;
+window.cljsExports.SlateChange = Change;
+cljsExports[\"ouchy-ouch\"] = Change;
+window.cljsExports['ouchy-oucher'] = Change;
 ")
+
 
   (def index-data
     {:react 'react
      :react-dom 'react-dom
-     [[:change :as :slate-change]] 'slate}))
+     [[:change :as :slate-change]] 'slate})
+
+  )
