@@ -313,17 +313,33 @@ Ensure your `project.clj` file has `figwheel.main` dependencies:
 ```clojure
 :dependencies [[com.bhauman/figwheel-main "0.2.0"]
                [com.bhauman/rebel-readline-cljs "0.1.4"]]
- ;; setup target as a resource path
-:resource-paths ["target" "resources"]
 ;; set up an alias to invoke your figwheel build
 :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]
           "build-dev" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]}
 ```
 
+If you worked with the "old" figwheel, remember that it placed all
+compiled files into `resources/public/js`? Figwheel-main puts these in
+`target` instead.
+
+To serve these through the development web server of figwheel-main,
+they need to be on the resource path.
+
+In Leiningen, this leaves us with two options: The first idea would be
+to add `target` to the `:resource-paths` in your `project.clj`. This
+however creates a problem when compiling an uberjar: It would be
+infinitely large! That's because an uberjar includes all resources
+which are in target and the half-baked uberjar is in target, too!
+
+The better way is to configure figwheel-main to output compiled files
+into `resources`, for example to `resources/public/js`, like old
+figwheel.
+
 Create a `dev.cljs.edn` build file:
 
 ```clojure
-{:main example.core}
+{:main example.core
+ :output-dir "resources/public/js}
 ```
 
 In `src/example/core.cljs`, place the following ClojureScript code:
