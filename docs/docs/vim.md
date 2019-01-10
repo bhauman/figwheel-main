@@ -117,6 +117,12 @@ Open your browser to this URL. This is the default Figwheel dev host
 page.  A green "Connected" image should appear at the top-left
 indicating a successful connection between the browser and figwheel.
 
+> On Linux, the above function will automatically open your default
+> browser with the URL but it will block the REPL.  There are two possible
+> work around: 1) launch your default browser before running the above
+> function, or 2) close the automatically launched browser and re-open
+> the URL in a separate browser session.
+
 Back in the Clojure REPL, we're now ready to start a ClojureScript REPL
 within.
 
