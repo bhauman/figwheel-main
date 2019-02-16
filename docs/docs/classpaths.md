@@ -353,11 +353,11 @@ Unfortunately I'm not going to fully explain the changes to your
 
 
 The following config is going to add a path to your classpath in
-developement mode so that the files don't get added to your deployed
+development mode so that the files don't get added to your deployed
 uberjar. It's going to use the `:resource-paths` because it seems to
 be the most appropriate considering how we are using it. We are also
 making an adjustment so that we can call `lein clean` without
-violating a Leiningen failsafe.
+violating a Leiningen fail-safe.
 
 ```clojure
 (defproject example-project "0.1.0-SNAPSHOT"

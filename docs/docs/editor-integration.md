@@ -122,7 +122,7 @@ result of the evaluation.
 
 ## Editors and nREPL
 
-Almost all editor integrations in the ClojureScript eco-system can
+Almost all editor integrations in the ClojureScript ecosystem can
 utilize nREPL for communication. This is why understanding it and its
 role as a REPL server is important.
 

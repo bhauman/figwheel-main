@@ -99,7 +99,7 @@ the `defonce` is only invoked the first time it is evaluated. If
 `add-body-listeners` returns a truthy value we don't have to provide
 the `true` at the end.
 
-Running your initialization code the first time the a page loads can
+Running your initialization code the first time the page loads can
 also be accomplished by registering a `load` handler on window.
 
 ```clojure

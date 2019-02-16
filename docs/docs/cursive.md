@@ -19,7 +19,7 @@ We're going to start with the same build that we used in the [create-a-build] do
 ```shell
 $ lein fig -- -b dev -r
 ```
-> These instructions should work for any project that is able to run figwheel from the command line using a `lein run` command
+> These instructions should work for any project that is able to run Figwheel from the command line using a `lein run` command
 
 Add a `dev` folder to the root of your project, then add a `user.clj` file in that folder and copy this code into it 
 

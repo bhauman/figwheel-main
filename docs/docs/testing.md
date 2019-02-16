@@ -10,7 +10,7 @@ order: 19
 <div class="lead-in"><p>Testing is an important part of any
 programming workflow. Having tests that run after every code change is
 essential and should not be hard to set up.</p> <p>Figwheel now
-provides <a href="#auto-testing">automatic test discovery and display</a>, faciliates custom
+provides <a href="#auto-testing">automatic test discovery and display</a>, facilitates custom
 testing with <a href="extra_mains">Extra Main</a> entry points, complements build
 processes and CI with non-zero test run failures, and provides
 a flexible way to configure an alternative JS environment to run your
@@ -44,7 +44,7 @@ with the following keys:
 ## Custom testing with `:extra-main-files`
 
 If the testing setup provided by [`:auto-testing`][auto-testing]
-doesn't work for you. The [extra mains](extra_mains) feature has you
+doesn't work for you, the [extra mains](extra_mains) feature has you
 covered. We'll quickly walk through an example of using
 [`:extra-main-files`][extra-main-files] to provide a custom testing
 setup with relatively little effort.

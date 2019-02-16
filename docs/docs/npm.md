@@ -343,7 +343,7 @@ If you want, Figwheel will try to read your `index.js` file and
 generate a `:foreign-libs` entry for you. This is intended to help cut
 out some of the pain of consuming NPM libraries.
 
-The [`:npm` figwheel option](../config-options#npm) will do this for
+The [`:npm` Figwheel option](../config-options#npm) will do this for
 you. Here is an example of the configuration in our `dev.cljs.edn`
 before and after using the `:npm` key.
 
