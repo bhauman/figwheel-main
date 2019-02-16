@@ -155,7 +155,7 @@ target/public/cljs-out/dev
 These files also serve as a cache for the compiler which enables
 incremental compiles. If your source file has a timestamp newer than
 the file in the output directory, then the compiler will compile the
-sourcefile. Caches can get stale however and you will want to **delete
+source file. Caches can get stale however and you will want to **delete
 your output directory on a regular basis**.
 
 When no `:output-dir` is defined, Figwheel will provide a default
@@ -302,7 +302,7 @@ runtime environment.
 
 Figwheel takes advantage of this to inject its code into your
 environment. You can see this in the `hello-world.core` example
-project above. Fighweel appended several `:preloads` to the
+project above. Figwheel appended several `:preloads` to the
 configuration:
 
 ```clojure
@@ -318,7 +318,7 @@ All of these namespaces add additional functionality to your
 application. Notice that this is how we add `devtools` and the
 `figwheel.repl` connection to your build.
 
-You can add preloads as well to add behavior to your development or
+You can add pre-loads as well to add behavior to your development or
 production builds.
 
 ## The `:closure-defines` option
@@ -348,7 +348,7 @@ can override these default values in our configuration with the
                   hello-world.core/LOCALE "fr"}
 ```
 
-Figwheel uses `:closure-defines` to supply the connection url to the
+Figwheel uses `:closure-defines` to supply the connection URL to the
 `figwheel.repl` connection code.
 
 You can see in our example above that its value is:

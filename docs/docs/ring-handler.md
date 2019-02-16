@@ -56,7 +56,7 @@ provides a good summary of how Ring works.
 ## The last handler
 
 The Figwheel server has a chain of middleware that helps it do its
-job, this chain of middlewared is composed on top of the popular
+job, this chain of middleware is composed on top of the popular
 [`ring-defaults`](https://github.com/ring-clojure/ring-defaults)
 middleware stack.
 

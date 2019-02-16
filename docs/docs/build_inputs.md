@@ -28,8 +28,8 @@ initial sources, the compiler will then attempt to find it on the
 classpath.
 
 If you provide a single file to the compiler like
-`src/example/core.cljs` only that file will in the intial sources and
-all it's depedencies will be resovled via the classpath.
+`src/example/core.cljs` only that file will in the initial sources and
+all it's dependencies will be resolved via the classpath.
 
 This behavior has various trade-offs that need to be understood in the
 context of compiling for development and production.
@@ -41,7 +41,7 @@ code base will only include code that is needed by the application.
 
 Its a temptingly simple heuristic that works for many cases. But let
 me make an argument why it is better to pass a directory or set of
-directories to the compiler during developement when you are using a
+directories to the compiler during development when you are using a
 hot reloading workflow.
 
 The biggest reason to have all you files under watch while you are
@@ -68,7 +68,7 @@ compile.
 It is for the above reasons that both `figwheel.main` and `cljs.main`
 supply the watched directories to the compiler. They are being watched
 so there is an expectation of feedback, when there is no feedback on
-can mistakely assume that the code one is writing has no syntax
+can mistakenly assume that the code one is writing has no syntax
 errors.
 
 ## Production
@@ -81,11 +81,11 @@ level `:whitespace` we don't want it contain unneeded namespaces.
 
 `figwheel.main` uses the file containing your `:main` namespace as the
 single build input when you are not in `:optimizations` level
-`:none`. This will esnure that the deployed bundle of JavaScript only
+`:none`. This will ensure that the deployed bundle of JavaScript only
 contains code that is being depended on.
 
 This is less of a problem when you use the `:advanced` level as it
-will perfom dead code elimination from the final artifact.
+will perform dead code elimination from the final artifact.
 
 ## Overriding build inputs
 

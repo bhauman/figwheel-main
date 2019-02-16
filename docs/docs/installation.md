@@ -90,7 +90,7 @@ First we will want to [install][cli-tools] the `clj` and `clojure` [command line
 tools][cli-tools].
 
 If you are on Mac OSX and you can quickly install the Clojure tools
-via [homebrew][brew].
+via [Homebrew][brew].
 
 In the terminal at the shell prompt enter:
 
@@ -256,7 +256,7 @@ $ lein fig
 ```
 
 One thing that is very important to remember is that if you want to
-pass additional figwheel CLI options to the `lein fig` command above
+pass additional Figwheel CLI options to the `lein fig` command above
 you will have to add a `--` before the additional arguments.
 
 Let's display the Figwheel help documentation with the `-h` (or `--help`) option:

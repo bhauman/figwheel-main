@@ -35,7 +35,7 @@ start a build with `figwheel.main` with fail with
 java.lang.NoClassDefFoundError: org/eclipse/jetty/http/HttpParser$ProxyHandler
 ```
 
-This is due to a dependency missmatch between Jetty deps.
+This is due to a dependency mismatch between Jetty deps.
 
 The most sure fire way to fix this error is to explicitly specify all
 the Jetty dependencies in your project and ensure they are all the
@@ -63,7 +63,7 @@ The next time you start Figwheel the error should be gone.
 You can detect these conflicts by looking at the dependency tree of
 your application.
 
-Leinigen has excellent support for pointing out these conflicts.
+Leiningen has excellent support for pointing out these conflicts.
 
 If you are using Leiningen then you can run the `lein deps :tree`
 command.
@@ -76,7 +76,7 @@ time to examine that as well.
 
 ### with Clojure CLI tools
 
-Clojure CLI tools doesn't have the helpful output that Leinigen
+Clojure CLI tools doesn't have the helpful output that Leiningen
 currently supplies. It can print out the dependency tree:
 
 ```
