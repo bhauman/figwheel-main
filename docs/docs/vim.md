@@ -138,6 +138,11 @@ user=> (js/alert "Hello from the ClojureScript REPL")
 
 If you see a pop-up dialog in your browser, it worked!
 
+> You *must* start this ClojureScript REPL before Piggieback can connect.
+> Unlike other ClojureScript REPLs that Piggieback can start entirely on its
+> own given just an nREPL port, the ClojureScript REPL within Vim relies on
+> *both* nREPL and this primary ClojureScript REPL.
+
 Now let's connect fireplace. Run this command in Vim while in a
 ClojureScript buffer:
 
