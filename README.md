@@ -559,7 +559,7 @@ The reload hooks will be called before and after every hot code reload.
 
 ## Quick way to understand the command line options
 
-If you supply a `-pc` or `--pprint-config` flag to `figwheel.main`, it
+If you supply a `-pc` or `--print-config` flag to `figwheel.main`, it
 will not execute the command. It will instead print out the computed
 configuration.
 

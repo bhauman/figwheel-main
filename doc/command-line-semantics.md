@@ -83,7 +83,7 @@ So when you use the `--build` flag you will normally get a server as well.
 
 #### How do I better determine the behavior of a set of command line args?
 
-There is a `--pprint-config` or `-pc` *init* arg which when added to
+There is a `--print-config` or `-pc` *init* arg which when added to
 the command line like so:
 
     -pc -co dev.cljs.edn -c example.core -s
