@@ -8,7 +8,7 @@ order: 18
 # Main Scripts
 
 <div class="lead-in">Just like <code>cljs.main</code>, the Figwheel allows you to
-run a <code>-main</code> function in a namesapce from the command line. Figwheel
+run a <code>-main</code> function in a namespace from the command line. Figwheel
 provides additional functionality to facilitate asynchronous execution
 and process failure.</div>
 
@@ -74,7 +74,7 @@ $ clj -m figwheel.main -co dev.cljs.edn -m example.hello
 
 This `--main` CLI option behavior is unfortunately hampered in its
 ability to be useful because many ClojureScript tasks (including
-running tests) are asynchonous. Not only that, but we'd prefer that if
+running tests) are asynchronous. Not only that, but we'd prefer that if
 a command line task execution fails in ClojureScript we'd like that
 failure to be communicated by returning a non-zero exit status from
 the `clj` process.
@@ -90,7 +90,7 @@ error to cause a non-zero exit from the Clojure process.
 What do we do when the process is asynchronous?
 
 `figwheel.main` extends the `cljs.main` behavior to provide a means of
-waiting for an asynchronus process to complete or throw an error.
+waiting for an asynchronous process to complete or throw an error.
 
 The following 3 tools help you do this:
 
@@ -124,7 +124,7 @@ $ clj -m figwheel.main -m example.hello
 ```
 
 The Clojure process will block for 5 seconds while it waits for some
-asynchronus result to be sent back. In this example we are not sending
+asynchronous result to be sent back. In this example we are not sending
 back a result value, so the process will throw a timed-out exception
 which will cause a non-zero exit.
 
@@ -150,7 +150,7 @@ Now the Clojure process will block for 3 seconds and ultimately print
 out the value of `args` sent by the `figwheel.main.async-result/send`
 function.
 
-Let's modify the namespace one more time to send an asynchronus
+Let's modify the namespace one more time to send an asynchronous
 failure:
 
 ```clojure

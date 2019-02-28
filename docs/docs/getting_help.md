@@ -43,9 +43,9 @@ try to learn ClojureScript.
 ### Trying to learn to much
 
 First, folks try to learn too many things in parallel. They try to
-learn functional programming, persistent datastructures, ClojureScript
+learn functional programming, persistent data structures, ClojureScript
 tooling, hot reloading, using a browser connected REPL, Reactjs, a
-ClojureScript React wrapper like Reagent, Javascript, Ring(ie. Rack
+ClojureScript React wrapper like Reagent, Javascript, Ring (i.e. Rack
 for Clojure), setting up a Clojure webserver all at the same time.
 
 This layering strategy may be an efficient way to learn when one is
@@ -62,7 +62,7 @@ The solution is to keep things as simple as possible when you start
 out. Choose finite challenges like learning enough of the
 ClojureScript language to where you can
 [express complex things](http://www.4clojure.com/) before you attempt
-to manipulate a web page. From there attempt to simply manipuate the
+to manipulate a web page. From there attempt to simply manipulate the
 DOM with the
 [`goog.dom` API](https://google.github.io/closure-library/api/goog.dom.html). Once
 you have a handle on that start exploring

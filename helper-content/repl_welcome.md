@@ -26,5 +26,5 @@ read the
 [ClojureScript Quick Start](https://clojurescript.org/guides/quick-start){:target="_blank"}. It
 will be time well spent.
 
-The main difference between `figwheel.main` and `cljs.main` in that it
+The main difference between `figwheel.main` and `cljs.main` is that it
 will hot reload your code as you work on it.

@@ -40,7 +40,7 @@ and folders:
         └── main.cljs
 ```
 
-The following is a minimal figwheel dev config, `dev.cljs.edn`:
+The following is a minimal Figwheel dev config, `dev.cljs.edn`:
 
 ```clojure
 ^{:watch-dirs ["src"]}
@@ -99,7 +99,7 @@ cursor over a symbol in Vim and press `K` to see its doc string. If
 you get an immediate result, you have successfully connected to the
 nREPL server.
 
-Now we can start figwheel:
+Now we can start Figwheel:
 
 ```clojure
 user=> (require 'figwheel.main.api)
@@ -115,7 +115,7 @@ Some log messages will appear including something like:
 
 Open your browser to this URL. This is the default Figwheel dev host
 page.  A green "Connected" image should appear at the top-left
-indicating a successful connection between the browser and figwheel.
+indicating a successful connection between the browser and Figwheel.
 
 Back in the Clojure REPL, we're now ready to start a ClojureScript REPL
 within.
@@ -137,6 +137,11 @@ user=> (js/alert "Hello from the ClojureScript REPL")
 ```
 
 If you see a pop-up dialog in your browser, it worked!
+
+> You *must* start this ClojureScript REPL before Piggieback can connect.
+> Unlike other ClojureScript REPLs that Piggieback can start entirely on its
+> own given just an nREPL port, the ClojureScript REPL within Vim relies on
+> *both* nREPL and this primary ClojureScript REPL.
 
 Now let's connect fireplace. Run this command in Vim while in a
 ClojureScript buffer:

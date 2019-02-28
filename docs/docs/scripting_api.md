@@ -81,7 +81,7 @@ REPL via `:cljs/quit` and then restart it by calling
 
 ## REPL switching example
 
-For this example to work, one will need to set up the normal figwheel
+For this example to work, one will need to set up the normal Figwheel
 dependencies along with `com.bhauman/rebel-readline-cljs`.
 
 We'll start off by starting a Rebel Readline Clojure REPL.

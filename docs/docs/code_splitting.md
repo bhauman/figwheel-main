@@ -98,7 +98,7 @@ Edit this file to look like the following:
 > I altered the original example to make it
 > [reloadable][reloadable-code] and so that it works with the DOM on
 > the Figwheel default dev page. I also added [`^:figwheel-load`
-> metatdata][figwheel-load] to the namespace so that I can easily load the file into
+> metadata][figwheel-load] to the namespace so that I can easily load the file into
 > my environment by saving it.
 
 Create the `bar.core` namespace:

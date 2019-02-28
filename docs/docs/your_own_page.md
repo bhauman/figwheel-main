@@ -16,7 +16,7 @@ host page, but sooner or later you will want to supply your own.</div>
 Figwheel starts a server when it launches a build and/or a REPL. The
 primary purpose of this server is to provide websocket communication
 between the REPL and the client environment. Figwheel not only uses
-this connection to evalute compiled REPL expressions, it also uses it
+this connection to evaluate compiled REPL expressions, it also uses it
 to communicate hot reloads, compile errors, and other things.
 
 The secondary use of this server is as an initial development HTTP
@@ -200,7 +200,7 @@ page.
 
 Fancy eh?
 
-Now we'll configure figwheel to embed the handler with the
+Now we'll configure Figwheel to embed the handler with the
 [`:ring-handler` config option][ring-handler] in our build file.
 
 Let's configure the ring handler in our example `dev.cljs.edn`:
