@@ -209,7 +209,7 @@ that looks like this:
 
 Place this code in `src/hello_world/core.cljs`:
 ```clojure
-(ns hello-world/core.cljs)
+(ns hello-world.core)
 
 (js/console.log "Hello World!")
 ```
