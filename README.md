@@ -539,7 +539,7 @@ It is common to want to provide callbacks to do some housekeeping
 before or after a hot reload has occurred.
 
 You can conveniently configure hot reload callbacks at runtime with
-metadata. You can see and example of providing callbacks below:
+metadata. You can see an example of providing callbacks below:
 
 ```clojure
 ;; first notify figwheel that this ns has callback defined in it
