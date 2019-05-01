@@ -87,8 +87,8 @@ utilizes this name to isolate a particular build's REPL connection and
 output files from all the other builds.
 
 The build file will sit in our project root directory and the build
-file's name will take the form `[[build-name]].cljs.edn` where you
-will substitute `[[build-name]]` with a name of your choosing.
+file's name will take the form `[build-name].cljs.edn` where you
+will substitute `[build-name]` with a name of your choosing.
 
 Let's create a build called `dev`. Create a `dev.cljs.edn` file with
 the following content:
