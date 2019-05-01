@@ -603,8 +603,8 @@ The first thing of note is this warning:
 ![target classpath warning](https://s3.amazonaws.com/bhauman-blog-images/figwheel-main/fm-cruel-world-compile-warning.png)
 
 This is expected. When we started the `figwheel.main` REPL without any
-arguments, the compiled ClojureScript files are output into a
-temporary directory. This directory is automatically added to the
+arguments, the compiled ClojureScript files are output to the `target`
+directory. This directory is automatically added to the
 classpath so that the compiled assets can be found and served by the
 built-in webserver.
 
@@ -644,9 +644,8 @@ $ clojure -m figwheel.main --compile hello.cruel-world --repl
 You should see the familiar output when starting a `figwheel.main`
 REPL minus the warning about `target`.
 
-You should also see that your ClojureScript source code is now being
-compiled to the local `target` directory and not to a temporary
-directory.
+You should also see that your ClojureScript source code is still being
+compiled to the local `target` directory.
 
 You will also notice this line:
 
