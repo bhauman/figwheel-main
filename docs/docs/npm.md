@@ -216,7 +216,7 @@ Let's look at our entry in `:foreign-libs` and see how this plays out.
 
 Well it's pretty obvious that we need a `:file` key as we are adding
 meta information to a specific JavaScript file. The ClojureScript
-compiler does not need to this file to be on the classpath and it will
+compiler does not need for this file to be on the classpath, and it will
 copy the file into the `:output-dir` at `dist/index.bundle.js`.
 
 Next let's look at the `:provides` key. The `:provides` key tells the
