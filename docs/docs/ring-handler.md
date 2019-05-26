@@ -83,7 +83,7 @@ In `src/hello_world/app_server.clj`:
 ```clojure
 (ns hello-world.app-server
   (:require 
-	[ring.util.response :refer [resource-response content-type not-found]]))
+    [ring.util.response :refer [resource-response content-type not-found]]))
 
 ;; the routes that we want to be resolved to index.html
 (def route-set #{"/" "/contact" "/menu" "/about"})
@@ -110,8 +110,8 @@ for the following `:ring-handler` to work.
 (ns hello-world.app-server
   (:require 
     [compojure.core :refer [defroutes GET]]
-	[compojure.route :as route]
-	[hiccup.page :refer [html5 include-js include-css]]))
+    [compojure.route :as route]
+    [hiccup.page :refer [html5 include-js include-css]]))
 
 (defn index-html []
   (html5
