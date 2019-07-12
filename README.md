@@ -1,6 +1,6 @@
 # Figwheel Main
 
-[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main) [![Documentation](https://img.shields.io/badge/documentation-incomplete-yellow.svg)](http://figwheel.org/docs)
+[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/figwheel-main.svg)](https://clojars.org/com.bhauman/figwheel-main) [![Documentation](https://img.shields.io/badge/documentation-complete-green.svg)](http://figwheel.org/docs)
 
 Figwheel Main builds your ClojureScript code and hot loads it as you are coding!
 
