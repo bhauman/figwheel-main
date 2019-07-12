@@ -22,7 +22,6 @@
   (prn "hello")
   (is false))
 
-
 #_(d)
 
 ;; stable reference

@@ -80,7 +80,7 @@ So in our new `hello-cljs` directory, we'll create a `deps.edn` file with
 the following contents:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}}}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.1"}}}
 ```
 
 ## Starting a ClojureScript REPL
@@ -157,7 +157,7 @@ To use Rebel Readline let's add `com.bhauman/rebel-readline-cljs
 0.1.4` as another dependency in the `deps.edn` file:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.1"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
 ```
 
@@ -625,7 +625,7 @@ We can fix this classpath warning by adding both `"src"` and
 `"target"` to the `:paths` key in our `deps.edn` file:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.1"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  :paths ["src" "target"]}
 ```
@@ -1074,7 +1074,7 @@ to the `:paths` key in you `deps.edn` file. When you finish the file
 should look like this:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.1"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  :paths ["src" "target" "resources"]}
 ```
