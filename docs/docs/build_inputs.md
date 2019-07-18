@@ -28,7 +28,7 @@ initial sources, the compiler will then attempt to find it on the
 classpath.
 
 If you provide a single file to the compiler like
-`src/example/core.cljs` only that file will be in the initial sources, and
+`src/example/core.cljs`, only that file will be in the initial sources and
 all of it's dependencies will be resolved via the classpath.
 
 This behavior has various trade-offs that need to be understood in the

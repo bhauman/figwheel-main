@@ -53,7 +53,7 @@ I.E. If your `example.core` namespace is located at
 `:watch-dirs`, you must use the path to the root directory of the
 namespace tree `src/cljs`.
 
-    :watch-dirs ["cljs-src"]
+    :watch-dirs ["src/cljs"]
 
 ## :css-dirs
 
