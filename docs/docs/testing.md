@@ -202,7 +202,7 @@ different methods.
 
 #### Shell Script method
 
-On my Mac in my `~bin` directory I have an executable shell script named
+On my Mac in my `~/bin` directory I have an executable shell script named
 `headless-chrome` that has the following content:
 
 ```shell

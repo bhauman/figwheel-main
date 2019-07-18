@@ -39,7 +39,7 @@ better to supply the compiler with a single build input that
 represents the root namespace of your application. This way the final
 code base will only include code that is needed by the application.
 
-Its a temptingly simple heuristic that works for many cases. But let
+It's a temptingly simple heuristic that works for many cases. But let
 me make an argument why it is better to pass a directory or set of
 directories to the compiler during development when you are using a
 hot reloading workflow.
@@ -56,19 +56,19 @@ inputs is to support the [extra mains](extra_mains) feature. If you
 are simply compiling from a single root namespace, files that you need
 for your extra main entry point will possibly not be compiled.
 
-When you are developing with `:optimizations` level `:none` any extra
+When you are developing with `:optimizations` level `:none`, any extra
 source files that are being worked on but are not required by the
 running application will not be loaded in the running application. The
 cost of supplying a directory of source files to the compiler will
-only be high if it is expensive when the unrequired source files have
-a long initial compile time, which is a very rare situation. Even if
-that situation occurs the cost is paid only once during the initial
-compile.
+only be high if the unrequired source files have
+a long initial compile time. This is a very rare situation. Even if
+that situation does occur the cost of compiling is paid only once 
+during the initial compile.
 
 It is for the above reasons that both `figwheel.main` and `cljs.main`
 supply the watched directories to the compiler. They are being watched
-so there is an expectation of feedback, when there is no feedback on
-can mistakenly assume that the code one is writing has no syntax
+so that there is an expectation of feedback.  When there is no feedback,
+one can mistakenly assume that the code one is writing has no syntax
 errors.
 
 ## Production

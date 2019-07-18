@@ -53,7 +53,7 @@ I.E. If your `example.core` namespace is located at
 `:watch-dirs`, you must use the path to the root directory of the
 namespace tree `src/cljs`.
 
-    :watch-dirs ["cljs-src"]
+    :watch-dirs ["src/cljs"]
 
 ## :css-dirs
 
@@ -146,7 +146,7 @@ Whether to include the figwheel.core library in the build. This
 ## :hot-reload-cljs
 
 Whether or not figwheel.core should hot reload compiled
-ClojureScript. Only has meaning when :figwheel is true.
+ClojureScript. Only has meaning when :figwheel-core is true.
 Default: true
 
     :hot-reload-cljs false
@@ -155,7 +155,7 @@ Default: true
 
 Whether or not figwheel.core should reload the namespaces that
 `depend` on the changed namespaces in addition to the changed
-namespaces themselves. Only has meaning when :figwheel is true.
+namespaces themselves. Only has meaning when :figwheel-core is true.
 Default:true
 
     :reload-dependents false

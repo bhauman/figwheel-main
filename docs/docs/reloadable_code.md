@@ -105,7 +105,7 @@ also be accomplished by registering a `load` handler on window.
 ```clojure
 (ns example.core
   (:require
-	[goog.events :as events]))
+    [goog.events :as events]))
 
 (events/listen js/window "load"
                (fn [_]
@@ -129,7 +129,7 @@ A trivial example is to add a listener in `setup` and remove it in
 (ns ^:figwheel-hooks example.core
   (:require
     [goog.dom :as dom]
-	[goog.events :as events]))
+    [goog.events :as events]))
 
 (defn ^:after-load setup []
   (events/listen

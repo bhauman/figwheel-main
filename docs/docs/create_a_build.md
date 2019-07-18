@@ -43,7 +43,7 @@ The contents of the `deps.edn` file should be:
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.339"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.2"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}
  :paths ["src" "resources" "target"]}
@@ -57,7 +57,7 @@ If you're using Leiningen your `project.clj` should be:
   :profiles
     {:dev
       {:dependencies [[org.clojure/clojurescript "1.10.339"]
-                      [com.bhauman/figwheel-main "0.2.0"]
+                      [com.bhauman/figwheel-main "0.2.2"]
                       ;; optional but recommended
                       [com.bhauman/rebel-readline-cljs "0.1.4"]]
        :resource-paths ["target"]

@@ -1688,7 +1688,9 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                          figwheel.core/*config*
                          (select-keys config [:hot-reload-cljs
                                               :broadcast-reload
-                                              :reload-dependents])]
+                                              :reload-dependents
+                                              :watch-dirs
+                                              :build-inputs])]
                  (doseq [init-fn (::initializers cfg)] (init-fn))))))))
 
      (defn start-background-builds [{:keys [::background-builds] :as cfg}]
@@ -1880,7 +1882,9 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                (binding [cljs.repl/*repl-env* repl-env
                          figwheel.core/*config* (select-keys config [:hot-reload-cljs
                                                                      :broadcast-reload
-                                                                     :reload-dependents])]
+                                                                     :reload-dependents
+                                                                     :build-inputs
+                                                                     :watch-dirs])]
                  (try
                    (let [fw-mode? (figwheel-mode? b-cfg)]
                      (try
