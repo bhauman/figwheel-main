@@ -59,7 +59,7 @@ Place the following in `project.clj`:
   :plugins [[cider/cider-nrepl "0.18.0"]]
   :profiles {:dev
              {:dependencies [[org.clojure/clojurescript "1.10.339"]
-                             [com.bhauman/figwheel-main "0.2.1"]
+                             [com.bhauman/figwheel-main "0.2.2"]
                              [cider/piggieback "0.3.8"]]
               :resource-paths ["target"]
               :clean-targets ^{:protect false} ["target"]
@@ -199,7 +199,7 @@ So here's a minimal `deps.edn` (analogous to the previous `project.clj`):
  :deps
  {org.clojure/clojure {:mvn/version "1.9.0"}
   org.clojure/clojurescript {:mvn/version "1.10.339"}
-  com.bhauman/figwheel-main {:mvn/version "0.2.1"}
+  com.bhauman/figwheel-main {:mvn/version "0.2.2"}
   com.bhauman/rebel-readline {:mvn/version "0.1.4"}
   com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
   org.clojure/tools.nrepl {:mvn/version "0.2.13"}
