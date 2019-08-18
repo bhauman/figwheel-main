@@ -217,6 +217,16 @@ For the server side:
     [[server-port]]      the port supplied in :ring-server-options > :port or the default port 9500"
   :group :common)
 
+(s/def ::open-url-wait-ms integer?)
+(def-spec-meta ::open-url-wait-ms
+  :doc
+  "The number of milliseconds to wait before launching the browser.
+
+Default: none
+
+    :open-url-wait-ms 1000"
+  :group :un-common)
+
 (s/def ::reload-clj-files (s/or :bool boolean?
                                 :extension-coll (s/coll-of #{:clj :cljc})))
 (def-spec-meta ::reload-clj-files
@@ -815,6 +825,7 @@ be useful for certain docker environments.
      ::reload-dependents
      ::connect-url
      ::open-url
+     ::open-url-wait-ms
      ::reload-clj-files
      ::log-file
      ::log-level
