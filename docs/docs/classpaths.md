@@ -191,7 +191,7 @@ Now that we've added a new path let's verify that its working the way
 we want it to.
 
 ```shell
-$clj -Spath | sed -e 's/:/\'$'\n/g' | head -n 5
+$ clj -Spath | sed -e 's/:/\'$'\n/g' | head -n 5
 src
 cljs-src
 /Users/bhauman/.m2/repository/com/cognitect/transit-java/0.8.332/transit-java-0.8.332.jar
