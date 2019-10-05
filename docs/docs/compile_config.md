@@ -21,6 +21,7 @@ options so that they serve you better.
 
 Here are the compiler options we'll cover:
 
+* `--print-config`
 * `:output-to`
 * `:output-dir`
 * `:target`
