@@ -51,8 +51,8 @@ important that the `-O` flag and its options is before the final `-bo` option.
 > the `:output-to` config option.
 
 The above command should have advanced compiled your code one time. If
-you examine the `target/public/cljs-out/dev-main.js` file you will the
-compressed output of your program.
+you examine the `target/public/cljs-out/dev-main.js` file you will see 
+the compressed output of your program.
 
 Now something to notice here is that the `:output-to` path
 `target/public/cljs-out/dev-main.js` has not changed. This means that
