@@ -1187,17 +1187,18 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                         (fn [p] (vec (distinct (concat p '[figwheel.main.evalback #_figwheel.main.testing]))))))
          cfg))
 
-     (defn watch-css [css-dirs]
+     (defn watch-css [css-dirs & [reload-config]]
        (when-let [css-dirs (not-empty css-dirs)]
          (when-let [start-css (fw-util/require-resolve-var 'figwheel.main.css-reload/start*)]
-           (start-css css-dirs))))
+           (start-css css-dirs reload-config))))
 
      (defn config-watch-css [{:keys [::config options] :as cfg}]
        (cond-> cfg
          (and (not-empty (:css-dirs config))
               (repl-connection? cfg))
          (->
-          (update ::initializers (fnil conj []) #(watch-css (:css-dirs config)))
+          (update ::initializers (fnil conj [])
+                  #(watch-css (:css-dirs config) (config->reload-config config)))
           (update-in [:options :preloads]
                      (fn [p] (vec (distinct (conj p 'figwheel.main.css-reload))))))))
 
