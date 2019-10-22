@@ -148,7 +148,7 @@ aforementioned reload hooks are useful:
 
 First, don't forget to add the `^:figwheel-hooks` annotation to the namespace:
 
-```
+```clojure
 (ns ^:figwheel-hooks example.core)
 ```
 
@@ -156,7 +156,7 @@ Then add an `^:after-load` marked function that will render the UI. In
 most cases you can reuse the "mount" function that rendered the UI for
 the first time. For example, to get Reagent to re-render you'd write:
 
-```
+```clojure
 ;; this is what you call for the first mount
 (defn mount []
   (r/render [my-main-component]

@@ -177,16 +177,18 @@
            (string/replace java.io.File/separator "/")))
 
 ;; repl-env needs to be bound
-     (defn start* [paths]
-       (fww/add-watch!
-        [::watcher paths]
-        {:paths paths
-         :filter (fww/suffix-filter #{"css"})
-         :handler (fww/throttle
-                   50
-                   (bound-fn [evts]
-                     (when-let [files (not-empty (mapv (comp prep-css-file-path :file) evts))]
-                       (reload-css-files files))))}))
+     (defn start* [paths & [reload-config]]
+       (binding
+         [fww/*hawk-options* (:hawk-options reload-config nil)]
+         (fww/add-watch!
+           [::watcher paths]
+           {:paths paths
+            :filter (fww/suffix-filter #{"css"})
+            :handler (fww/throttle
+                       50
+                       (bound-fn [evts]
+                         (when-let [files (not-empty (mapv (comp prep-css-file-path :file) evts))]
+                           (reload-css-files files))))})))
 
      (defn stop* [paths]
        (let [remove-watch! (resolve 'figwheel.main/remove-watch!)]

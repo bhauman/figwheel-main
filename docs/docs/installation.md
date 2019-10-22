@@ -38,7 +38,7 @@ Leiningen is doing what it is doing.
 [Clojure CLI Tools][cli-tools] takes the opposite approach. It is
 minimal and it requires you to add functionality with different
 libraries as you need it. This simplicity gives [CLI Tools][cli-tools]
-the immediate advantage of a fast start up time. This simplicity is
+the immediate advantage of a fast start up time. This simplicity
 also means that you can be fairly certain how the Java Environment is
 created when you run something with [CLI Tools][cli-tools], which
 makes environmental problems easier to understand. The downside of
