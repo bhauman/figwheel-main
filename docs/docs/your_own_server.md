@@ -106,7 +106,8 @@ file at `scripts/server.clj` with the following content:
 
 (run-jetty
  (wrap-defaults handler site-defaults)
- {:port 4000})
+ {:port 4000
+  :join? false})
 ```
 
 The above Clojure file defines a Ring handler and runs the server when
