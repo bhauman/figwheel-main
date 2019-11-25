@@ -391,7 +391,7 @@ disable this option.
 
 ## :npm
 
-Support for importing webpack bundles.
+Support for importing Webpack bundles.
 
 > Experimental feature! This feature may change or be removed entirely.
 > Only available in `0.1.8-SNAPSHOT` or higher
