@@ -77,8 +77,9 @@ Default: none
 All the options to forward to the `ring-jetty-adapter/run-jetty` function
 which figwheel.main uses to run its ring server.
 
-All the available options are documented here:
-https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/adapter/jetty.clj#L127
+All the available options are documented in [Ring's Jetty adapter][ring-jetty].
+
+[ring-jetty]: https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/adapter/jetty.clj#L127
 
 This will normally be used to set the `:port` and `:host` of the server.
 
