@@ -499,8 +499,10 @@ config above you would be able to find the `:tests` main at
 div on the default host page will be `app-[id]`.
 
 If you don't want to use the default host page you will need to create
-a your own host page for it. See
-https://figwheel.org/docs/your_own_page for help.
+a your own host page for it. See the [documentation about creating your
+own host page][host-page-doc] for help.
+
+[host-page-doc]: https://figwheel.org/docs/your_own_page
 
 This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display)
 and [devcards](https://github.com/bhauman/devcards) to your workflow.
