@@ -345,7 +345,7 @@ directory by default and we want them to be served as static assets by
 the webserver we will need to add the `target` directory (NOT
 `target/public`) to our classpath.
 
-**Adding the `target` directory to with Leiningen**
+**Adding the `target` directory with Leiningen**
 
 Unfortunately I'm not going to fully explain the changes to your
 `project.clj` file as it would require introducing quite a few ideas.
