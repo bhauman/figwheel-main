@@ -211,7 +211,7 @@ For the server side:
 ## :reload-clj-files
 
 Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
-It doesn't reload clj dependent files like tools.namspace.
+It doesn't reload clj dependent files like `tools.namespace`.
 
 Figwheel does note if there is a macro in the changed `clj` or `cljc` file
 and then marks any cljs namespaces that depend on the `clj` file for
