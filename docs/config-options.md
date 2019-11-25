@@ -504,8 +504,12 @@ own host page][host-page-doc] for help.
 
 [host-page-doc]: https://figwheel.org/docs/your_own_page
 
-This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display)
-and [devcards](https://github.com/bhauman/devcards) to your workflow.
+This feature is perfect for adding [cljs-test-display][] and [devcards][]
+to your workflow.
+
+[cljs-test-display]: https://github.com/bhauman/cljs-test-display
+
+[devcards]: https://github.com/bhauman/devcards
 
 Also keep in mind that you can insert extra behavior with `:preloads`
 and you can even change the `:target` to `:nodejs` if you want to work
