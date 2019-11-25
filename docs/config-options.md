@@ -89,7 +89,7 @@ own server outside of figwheel.main.
 
 ## :rebel-readline
 
-By default Figwheel engauges a Rebel readline editor when it starts
+By default Figwheel engages a Rebel readline editor when it starts
 the ClojureScript REPL in the terminal that it is launched in.
 
 This will only work if you have `com.bhauman/rebel-readline-cljs` in
