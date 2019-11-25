@@ -465,7 +465,7 @@ configured in your ClojureScript options.
 
 For example this will output a dev-main-test.js file for your tests:
 
-    ::extra-main-files {:tests {:main example.tests.test-runner}}
+    :extra-main-files {:tests {:main example.tests.test-runner}}
 
 This file will be created in addition to the `dev-main.js` file.
 
