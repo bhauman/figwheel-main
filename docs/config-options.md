@@ -95,8 +95,9 @@ the ClojureScript REPL in the terminal that it is launched in.
 This will only work if you have `com.bhauman/rebel-readline-cljs` in
 your dependencies.
 
-More about Rebel readline:
-https://github.com/bhauman/rebel-readline
+More about Rebel readline is available in the [GitHub repository][rebel-repo].
+
+[rebel-repo]: https://github.com/bhauman/rebel-readline
 
 Default: true
 
