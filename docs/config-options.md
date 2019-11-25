@@ -425,8 +425,10 @@ This will set `:npm-deps` to `false` if it hasn't been previously set.
 This will set `:infer-externs` to `true` if it hasn't been
 previously set.
 
-You can learn more about ClojureScript and Webpack here:
-https://clojurescript.org/guides/webpack
+You can learn more about ClojureScript and Webpack here in 
+[this guide][guide-webpack] on the official ClojureScript site.
+
+[guide-webpack]: https://clojurescript.org/guides/webpack
 
 ## :pre-build-hooks
 
