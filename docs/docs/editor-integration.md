@@ -32,7 +32,7 @@ complexity in connecting a ClojureScript REPL to your editor is that
 the environment is just well ... complex. 
 
 The typical path of code that will ultimately evaluated in a Browser
-and eventually returned to an editor.
+and eventually returned to an editor:
 
 ```
 Editor Buffer
