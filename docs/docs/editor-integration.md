@@ -53,7 +53,7 @@ Browser                         - Figwheel REPL Client code evaluates JavaScript
 The main problem here is that a lot is going on. When we evaluate
 Clojure remotely the message just needs to travel to the Clojure
 runtime and back. When we are using ClojureScript the code has to
-travel to Compiler and then to the browser and back.
+travel to the compiler and then to the browser and back.
 
 ## The Major Players
 
