@@ -117,14 +117,14 @@ You could do that with a [background build][background-builds] but in
 that case you have two autobuilding processes running in parallel on
 the same codebase which is much more taxing on your CPU.
 
-This is much lighter especially if you start to have a lot of extra
+This is much lighter, especially if you start to have a lot of extra
 main entry points. For example, you could have all of the following
 running at the same time with virtually no extra cost:
 
 * cljs-test-display
 * devcards
 * backend admin
-* tests that run on node (to keep a part of your app node compatible)
+* tests that run on node (to keep a part of your app node-compatible)
 * node server
 
 You don't have to use all of the main entry points at the same
