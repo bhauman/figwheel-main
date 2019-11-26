@@ -216,7 +216,7 @@ mains config is `:tests`.
 
 ## Simple REPL focus switching
 
-A major question when you have more than one environment is "How do a
+A major question when you have more than one environment is "How do I
 get a REPL into my tests?"
 
 The Figwheel REPL allows you to switch focus between environments
