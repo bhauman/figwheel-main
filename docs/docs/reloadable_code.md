@@ -31,7 +31,7 @@ file is loaded, we are going to have to put some thought into how we
 can safely make these things happen so that we can protect the state
 of our running program.
 
-Reloadable code is code who's **load time side-effects** will not
+Reloadable code is code where **load time side-effects** will not
 interact with our running program in a destructive way.
 
 The good news:
