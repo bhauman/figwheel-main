@@ -580,9 +580,11 @@ You can also disable `cljs-test-display` with:
 
 ## :cljsjs-resources
 
-When you use libraries from http://cljsjs.github.io they sometimes
+When you use libraries from [CLJSJS][] they sometimes
 come bundled with static resources (like CSS files) that you would
 like to be served from the Figwheel server.
+
+[CLJSJS]: https://cljsjs.github.io
 
 If you set `:cljsjs-resources` to `true` the Figwheel server will
 serve the resources with the `cljsjs` root.
