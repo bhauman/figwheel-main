@@ -38,7 +38,7 @@ The good news:
 
 * it is idiomatic in ClojureScript to write our functions so that they
   don't exhibit bad load time side-effects
-* Reactjs makes it trivial to work with the DOM in a declarative way
+* ReactJS makes it trivial to work with the DOM in a declarative way
   that is very reloadable
 
 The upshot is: if you are using React or one of the ClojureScript
@@ -150,9 +150,9 @@ specify functions to call before and after a reload. The
 `^:figwheel-hooks` marker is required to let Figwheel know that there
 are reload hooks in the namespace.
 
-## Use Reactjs
+## Use ReactJS
 
-When you use Reactjs, state is mediated and managed for you. Your code
+When you use ReactJS, state is mediated and managed for you. Your code
 describes what should be there and then React takes care of all the
 state changes needed to bring the DOM inline with your
 description. For this reason React is a prime candidate for writing
