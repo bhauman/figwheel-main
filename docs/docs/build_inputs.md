@@ -77,7 +77,7 @@ Now when we leave development mode the priority changes. We normally
 do not want to include extra source files in a deployed artifact and
 we have no need for feedback on files that are not getting
 deployed. When we compile one big artifact with in `:optimizations`
-level `:whitespace` we don't want it contain unneeded namespaces.
+level `:whitespace` we don't want it to contain unneeded namespaces.
 
 `figwheel.main` uses the file containing your `:main` namespace as the
 single build input when you are not in `:optimizations` level
