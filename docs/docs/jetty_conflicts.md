@@ -29,7 +29,7 @@ This also can happen if you update your version of Ring to `1.7.1`.
 
 Currently if I add `com.datomic/client-cloud {:mvn/version "0.8.71"}`
 to a `deps.edn` file along with `com.bhauman/figwheel-main`, trying to
-start a build with `figwheel.main` with fail with 
+start a build with `figwheel.main` with fail with:
 
 ```
 java.lang.NoClassDefFoundError: org/eclipse/jetty/http/HttpParser$ProxyHandler
