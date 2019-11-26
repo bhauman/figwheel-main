@@ -86,9 +86,9 @@ $ clojure -m figwheel.main -b dev -r
 
 Everything will start like usual. But if you check your target
 directory you will have a new output file. In this example it would be
-`target/public/cljs-out/dev-main-test.js`. This output file will work
+`target/public/cljs-out/dev-main-tests.js`. This output file will work
 just like the `target/public/cljs-out/dev-main.js` output file except
-that it will run the code in the `hello-world.core-test` namespace.
+that it will run the code in the `hello-world.core-tests` namespace.
 
 At this point you would normally need to create a host page for this
 new main file but you don't need to do that because you can visit the
