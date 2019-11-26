@@ -88,7 +88,7 @@ re-directs them to a ClojureScript REPL for evaluation. So Piggieback
 is an extension of nREPL and we have to extend nREPL because it knows
 nothing about ClojureScript.
 
-Their are two main parts to using Piggieback. First it has to be
+There are two main parts to using Piggieback. First it has to be
 inserted into the middleware of the nREPL server that you are going to
 be using. Second, you have to start your ClojureScript REPL with a
 call `cider.piggieback/cljs-repl`. You have to start your REPL this
