@@ -154,7 +154,7 @@ Don't worry if neither of those are your favorite editors as there are
 many other integrations out there. But you should know that
 [CIDER][cider] and [Cursive][cursive] account for a whopping 80% of
 Clojure editor use and this is not by accident as both [CIDER][cider]
-and [Cursive][cursive] are both under intense active development.
+and [Cursive][cursive] are under intense active development.
 
 10% of Clojurists use [Vim Fireplace][vim-fireplace]. The Vim support
 for Clojure/Script is nowhere near as extensive as the previous two,
