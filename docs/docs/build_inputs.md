@@ -91,7 +91,7 @@ will perform dead code elimination from the final artifact.
 
 Now that you understand the trade-offs you can safely use the
 [`:build-inputs` config option] to override the default sources passed
-to the compile by Figwheel.
+to the compiler by Figwheel.
 
 #### Only sending the main namespace
 
