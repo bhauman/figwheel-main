@@ -18,7 +18,7 @@ packaged in a way that is prone to version conflicts.</div>
 Moving to Jetty means that Figwheel is using the same server that many
 Clojure applications are already using. While this can be helpful in
 terms of consistent behavior, supporting HTTPS and minimizing
-dependencies. This unfortunately also leads to version conflicts
+dependencies, it unfortunately also leads to version conflicts
 because of the way Jetty is packaged. The most common conflict that
 folks seem to experience is when they include the [Datomic
 Cloud](https://docs.datomic.com/cloud/index.html) client.
