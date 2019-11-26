@@ -109,7 +109,7 @@ Running tests from the command line is an important feature that
 allows you to confirm that your tests are passing without having to
 boot up and kill a REPL. Being able to run tests from the command line
 in a process that will non-zero exit on test failure is an essential
-feature that allows us to integrate testing into modern CI and Cloud
+feature that allows us to integrate testing into modern CI and cloud
 testing services.
 
 Up until now most CLJS developers have had to rely on using a Node
