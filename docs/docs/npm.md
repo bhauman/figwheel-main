@@ -178,7 +178,7 @@ In the `dev.cljs.edn` file we'll add the following `:foreign-libs`
 entry:
 
 ```clojure
-{:main hell-world.core
+{:main hello-world.core
  :npm-deps false
  :infer-externs true
  :foreign-libs [{:file "dist/index.bundle.js"
@@ -350,7 +350,7 @@ before and after using the `:npm` key.
 Before:
 
 ```clojure
-{:main hell-world.core
+{:main hello-world.core
  :npm-deps false
  :infer-externs true
  :foreign-libs [{:file "dist/index.bundle.js"
@@ -363,7 +363,7 @@ After:
 
 ```clojure
 ^{:npm {:bundles {"dist/index.bundle.js" "src/js/index.js"}}}
-{:main hell-world.core}
+{:main hello-world.core}
 ```
 
 This may not seem like much of a reduction, but consider the
