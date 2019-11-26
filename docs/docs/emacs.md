@@ -57,7 +57,7 @@ you want to do more advanced editing.
 Personally, I am not an Emacs expert, I tend to use a very small set
 of commands when I'm using Emacs. I tend to use the commands that are
 available universally in text buffers and shell line readers. I do
-tend use more commands when I'm creating Emacs macros to automate an
+tend to use more commands when I'm creating Emacs macros to automate an
 otherwise repetitive operation to transform some text.
 
 ## Installing CIDER
