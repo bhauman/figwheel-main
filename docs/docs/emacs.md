@@ -25,7 +25,7 @@ up CIDER from scratch in this guide.
 ## Installing Emacs
 
 You can follow the
-[instructions on the emacs site](https://www.gnu.org/software/emacs/download.html)
+[instructions on the Emacs site](https://www.gnu.org/software/emacs/download.html)
 to download and install Emacs.
 
 If you are on MacOS don't miss the
