@@ -17,7 +17,7 @@ the interactions we want when we are working on Clojure code.</div>
 Learn more about why [Emacs is sexy][emacs-sexy].
 
 Emacs can support LISP editing and REPL interaction natively, without
-installing any extra packages or libraries, but the experience sub
+installing any extra packages or libraries, but the experience is sub
 optimal. The [CIDER][cider] library provides a comprehensive set of
 features to help us edit Clojure code. I'm going to focus on setting
 up CIDER from scratch in this guide.
