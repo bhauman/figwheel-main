@@ -40,7 +40,7 @@ JavaScript and Ruby.
 There are a couple of common pitfalls that happen to folks when they
 try to learn ClojureScript.
 
-### Trying to learn to much
+### Trying to learn too much
 
 First, folks try to learn too many things in parallel. They try to
 learn functional programming, persistent data structures, ClojureScript
