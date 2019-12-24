@@ -16,7 +16,7 @@ in the Figwheel server.</div>
 The Figwheel server is primarily needed to provide a connection for
 REPL communication. However, it is a server so it's handy to allow
 developers to leverage this server so they can concentrate on the
-problems they are initially trying to solve.
+problems they are actually trying to solve.
 
 Figwheel allows you to specify the name of a function in your Figwheel
 configuration options in `figwheel-main.edn` or in the metadata of

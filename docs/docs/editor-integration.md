@@ -32,7 +32,7 @@ complexity in connecting a ClojureScript REPL to your editor is that
 the environment is just well ... complex. 
 
 The typical path of code that will ultimately evaluated in a Browser
-and eventually returned to an editor.
+and eventually returned to an editor:
 
 ```
 Editor Buffer
@@ -50,10 +50,10 @@ Browser                         - Figwheel REPL Client code evaluates JavaScript
 ... and back through all the layers
 ```
 
-The main problem here is that a lot more is going on. When we evaluate
+The main problem here is that a lot is going on. When we evaluate
 Clojure remotely the message just needs to travel to the Clojure
 runtime and back. When we are using ClojureScript the code has to
-travel to Compiler and then to the browser and back.
+travel to the compiler and then to the browser and back.
 
 ## The Major Players
 
@@ -88,10 +88,10 @@ re-directs them to a ClojureScript REPL for evaluation. So Piggieback
 is an extension of nREPL and we have to extend nREPL because it knows
 nothing about ClojureScript.
 
-Their are two main parts to using Piggieback. First it has to be
+There are two main parts to using Piggieback. First, it has to be
 inserted into the middleware of the nREPL server that you are going to
 be using. Second, you have to start your ClojureScript REPL with a
-call `cider.piggieback/cljs-repl`. You have to start your REPL this
+call to `cider.piggieback/cljs-repl`. You have to start your REPL this
 way so that it can do the bookkeeping necessary to re-direct `:eval`
 messages to the ClojureScript REPL.
 
@@ -154,7 +154,7 @@ Don't worry if neither of those are your favorite editors as there are
 many other integrations out there. But you should know that
 [CIDER][cider] and [Cursive][cursive] account for a whopping 80% of
 Clojure editor use and this is not by accident as both [CIDER][cider]
-and [Cursive][cursive] are both under intense active development.
+and [Cursive][cursive] are under intense active development.
 
 10% of Clojurists use [Vim Fireplace][vim-fireplace]. The Vim support
 for Clojure/Script is nowhere near as extensive as the previous two,

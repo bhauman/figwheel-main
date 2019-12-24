@@ -14,7 +14,7 @@ based workflow we will need to create a build. A
 be your main unit of configuration.</div>
 
 `figwheel.main` has a CLI that is fairly expressive. However, most
-folks who work with it are going want to define a watch/compile
+folks who work with it are going to want to define a watch/compile
 process with a hot-reloading workflow to get the bulk of their work
 done.
 

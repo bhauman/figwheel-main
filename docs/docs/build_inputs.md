@@ -29,7 +29,7 @@ classpath.
 
 If you provide a single file to the compiler like
 `src/example/core.cljs`, only that file will be in the initial sources and
-all of it's dependencies will be resolved via the classpath.
+all of its dependencies will be resolved via the classpath.
 
 This behavior has various trade-offs that need to be understood in the
 context of compiling for development and production.
@@ -77,7 +77,7 @@ Now when we leave development mode the priority changes. We normally
 do not want to include extra source files in a deployed artifact and
 we have no need for feedback on files that are not getting
 deployed. When we compile one big artifact with in `:optimizations`
-level `:whitespace` we don't want it contain unneeded namespaces.
+level `:whitespace` we don't want it to contain unneeded namespaces.
 
 `figwheel.main` uses the file containing your `:main` namespace as the
 single build input when you are not in `:optimizations` level
@@ -91,7 +91,7 @@ will perform dead code elimination from the final artifact.
 
 Now that you understand the trade-offs you can safely use the
 [`:build-inputs` config option] to override the default sources passed
-to the compile by Figwheel.
+to the compiler by Figwheel.
 
 #### Only sending the main namespace
 

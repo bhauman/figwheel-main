@@ -86,9 +86,9 @@ $ clojure -m figwheel.main -b dev -r
 
 Everything will start like usual. But if you check your target
 directory you will have a new output file. In this example it would be
-`target/public/cljs-out/dev-main-test.js`. This output file will work
+`target/public/cljs-out/dev-main-tests.js`. This output file will work
 just like the `target/public/cljs-out/dev-main.js` output file except
-that it will run the code in the `hello-world.core-test` namespace.
+that it will run the code in the `hello-world.core-tests` namespace.
 
 At this point you would normally need to create a host page for this
 new main file but you don't need to do that because you can visit the
@@ -117,14 +117,14 @@ You could do that with a [background build][background-builds] but in
 that case you have two autobuilding processes running in parallel on
 the same codebase which is much more taxing on your CPU.
 
-This is much lighter especially if you start to have a lot of extra
+This is much lighter, especially if you start to have a lot of extra
 main entry points. For example, you could have all of the following
 running at the same time with virtually no extra cost:
 
 * cljs-test-display
 * devcards
 * backend admin
-* tests that run on node (to keep a part of your app node compatible)
+* tests that run on node (to keep a part of your app node-compatible)
 * node server
 
 You don't have to use all of the main entry points at the same
@@ -216,7 +216,7 @@ mains config is `:tests`.
 
 ## Simple REPL focus switching
 
-A major question when you have more than one environment is "How do a
+A major question when you have more than one environment is "How do I
 get a REPL into my tests?"
 
 The Figwheel REPL allows you to switch focus between environments

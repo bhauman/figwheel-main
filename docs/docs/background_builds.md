@@ -32,7 +32,7 @@ you to work on both of them at the same time.
 Background builds are not full fledged citizens like the build you
 supply to the `--build` option.
 
-In the above example we'll call the `app` build as the foreground
+In the above example we'll call the `app` build the foreground
 build. The foreground build is different because its configuration is
 what gets applied to the Figwheel server when it starts. Practically
 speaking, if both builds have defined their own

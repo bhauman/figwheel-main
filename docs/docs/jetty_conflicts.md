@@ -18,7 +18,7 @@ packaged in a way that is prone to version conflicts.</div>
 Moving to Jetty means that Figwheel is using the same server that many
 Clojure applications are already using. While this can be helpful in
 terms of consistent behavior, supporting HTTPS and minimizing
-dependencies. This unfortunately also leads to version conflicts
+dependencies, it unfortunately also leads to version conflicts
 because of the way Jetty is packaged. The most common conflict that
 folks seem to experience is when they include the [Datomic
 Cloud](https://docs.datomic.com/cloud/index.html) client.
@@ -29,7 +29,7 @@ This also can happen if you update your version of Ring to `1.7.1`.
 
 Currently if I add `com.datomic/client-cloud {:mvn/version "0.8.71"}`
 to a `deps.edn` file along with `com.bhauman/figwheel-main`, trying to
-start a build with `figwheel.main` with fail with 
+start a build with `figwheel.main` with fail with:
 
 ```
 java.lang.NoClassDefFoundError: org/eclipse/jetty/http/HttpParser$ProxyHandler

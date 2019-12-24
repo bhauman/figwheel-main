@@ -17,7 +17,7 @@ the interactions we want when we are working on Clojure code.</div>
 Learn more about why [Emacs is sexy][emacs-sexy].
 
 Emacs can support LISP editing and REPL interaction natively, without
-installing any extra packages or libraries, but the experience sub
+installing any extra packages or libraries, but the experience is sub
 optimal. The [CIDER][cider] library provides a comprehensive set of
 features to help us edit Clojure code. I'm going to focus on setting
 up CIDER from scratch in this guide.
@@ -25,7 +25,7 @@ up CIDER from scratch in this guide.
 ## Installing Emacs
 
 You can follow the
-[instructions on the emacs site](https://www.gnu.org/software/emacs/download.html)
+[instructions on the Emacs site](https://www.gnu.org/software/emacs/download.html)
 to download and install Emacs.
 
 If you are on MacOS don't miss the
@@ -57,7 +57,7 @@ you want to do more advanced editing.
 Personally, I am not an Emacs expert, I tend to use a very small set
 of commands when I'm using Emacs. I tend to use the commands that are
 available universally in text buffers and shell line readers. I do
-tend use more commands when I'm creating Emacs macros to automate an
+tend to use more commands when I'm creating Emacs macros to automate an
 otherwise repetitive operation to transform some text.
 
 ## Installing CIDER
