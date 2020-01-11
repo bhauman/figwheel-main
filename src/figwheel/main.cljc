@@ -208,7 +208,7 @@
                     (:validate-config
                      edn
                      (get-edn-file-key "figwheel-main.edn" :validate-config)))))
-         (expound.ansi/with-color-when (:ansi-color-output edn true)
+         (binding [expound.ansi/*enable-color* (:ansi-color-output edn true)]
            (validate-config!* spec edn fail-msg))
          (when succ-msg
            (log/succeed succ-msg))))
@@ -220,8 +220,8 @@
      (defn validate-cli! [cli-args & [succ-msg]]
        (when (and validate-cli!*
                   (get-edn-file-key "figwheel-main.edn" :validate-cli true))
-         (expound.ansi/with-color-when
-           (get-edn-file-key "figwheel-main.edn" :ansi-color-output true)
+         (binding [expound.ansi/*enable-color*
+                   (get-edn-file-key "figwheel-main.edn" :ansi-color-output true)]
            (validate-cli!* cli-args "Error in command line args"))
          (when succ-msg
            (log/succeed succ-msg))))
