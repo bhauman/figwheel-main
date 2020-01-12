@@ -17,7 +17,7 @@
    [org.eclipse.jetty.websocket/websocket-server  "9.4.12.v20180830"]
    [binaryage/devtools "0.9.10"]
    [hawk "0.2.11"]
-   [expound "0.7.1"]]
+   [expound "0.8.4"]]
   :resource-paths ["helper-resources"]
   :profiles {:dev {:dependencies [[cider/piggieback "0.3.9"]
                                   #_[com.bhauman/rebel-readline-cljs "0.1.4"]]
