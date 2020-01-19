@@ -98,7 +98,7 @@ This local `src` directory is a default that is added to the classpath by
 
 ## Looking up a source file on the Classpath
 
-When the ClojureScript is looking for a namespace to analyze or
+When the ClojureScript compiler is looking for a namespace to analyze or
 compile, it will utilize the classpath to find the file.
 
 For example if a ClojureScript namespace `hello-world.core` is
