@@ -60,9 +60,7 @@ This document is going to prefer [CLI Tools][cli-tools] because:
 
 **On Windows**
 
-As of this writing [CLI Tools][cli-tools] is not available on the
-Windows Operating System yet. For now, if you are on Windows you will
-need to use [Leiningen][lein].
+As of this writing [CLI Tools][cli-tools] on Windows is in an alpha state. For now, if you are on Windows you may want to use [Leiningen][lein].
 
 ## Install your tool of choice
 
