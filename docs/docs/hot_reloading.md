@@ -127,7 +127,7 @@ want called on every reload.
 Here is an example of using reload hooks:
 
 ```clojure
-;; first notify figwheel that this ns has callback defined in it
+;; first notify figwheel that this ns has callbacks defined in it
 (ns ^:figwheel-hooks example.core)
 
 (defn ^:before-load my-before-reload-callback []
