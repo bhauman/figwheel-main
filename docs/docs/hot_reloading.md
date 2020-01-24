@@ -295,8 +295,8 @@ If you want to disable this you can set the
 > a unique identifier. When a client connects to the Figwheel
 > websocket it can supply this process-id along with the
 > build-id. Figwheel only sends messages to clients with the correct
-> identifiers. This prevents stale clients and clients from with other
-> build ids getting the wrong reload messages and REPL evals.
+> identifiers. This prevents stale clients and clients with other
+> build-ids from getting the wrong reload messages and REPL evals.
 
 
 [broadcast-reloads]: ../config-options#broadcast-reloads
