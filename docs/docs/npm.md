@@ -383,7 +383,7 @@ options as well, but only if they are not already defined.
 
 If you supply an `index.js` file with lines in it that start with
 `window.` as is the case in the example above with the lines that
-start `window.React` and `windows.ReactDOM`, then Figwheel will take
+start with `window.React` and `window.ReactDOM`, then Figwheel will take
 the `React` and `ReactDOM` names and
 [**kebab-case**](http://wiki.c2.com/?KebabCase) them into `react` and
 `react-dom`. It will then use these identifiers in the
@@ -431,7 +431,7 @@ it not being there under advanced compile, like this:
 
 ```javascript
 ;; ensure that goog global exists under advanced compile
-var goog = goog || {global = window};
+var goog = goog || {global: window};
 import React from 'react';
 import ReactDOM from 'react-dom';
 goog.global.React = React;
