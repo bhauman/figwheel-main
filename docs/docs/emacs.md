@@ -169,12 +169,10 @@ Clojure tools type `clojure`.
 Cider will now ask you what type of ClojureScript REPL you want to
 start. You should answer `figwheel-main`.
 
-Next it will ask you the name of your build. At this point you should
-simply type the name of your build, in many cases this is `dev`. DO
-NOT ACCEPT THE DEFAULT. Also don't type a keyword version of your
-build like `:dev`. Unfortunately at the time of this writing there is
-a bug in the figwheel-main integration that will cause a failure if
-you do not type in the name of your build correctly at the prompt.
+Next it will ask you for the name of your build. It should list build
+configurations available (such as "dev" build corresponding to the
+dev.cljs.edn file) with one selected by default so you can just hit
+enter if its correct.
 
 At this point you will see Figwheel start up in a REPL buffer in Emacs.
 
