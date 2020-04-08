@@ -127,7 +127,7 @@ want called on every reload.
 Here is an example of using reload hooks:
 
 ```clojure
-;; first notify figwheel that this ns has callback defined in it
+;; first notify figwheel that this ns has callbacks defined in it
 (ns ^:figwheel-hooks example.core)
 
 (defn ^:before-load my-before-reload-callback []
@@ -295,8 +295,8 @@ If you want to disable this you can set the
 > a unique identifier. When a client connects to the Figwheel
 > websocket it can supply this process-id along with the
 > build-id. Figwheel only sends messages to clients with the correct
-> identifiers. This prevents stale clients and clients from with other
-> build ids getting the wrong reload messages and REPL evals.
+> identifiers. This prevents stale clients and clients with other
+> build-ids from getting the wrong reload messages and REPL evals.
 
 
 [broadcast-reloads]: ../config-options#broadcast-reloads
