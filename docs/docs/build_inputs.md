@@ -76,7 +76,7 @@ errors.
 Now when we leave development mode the priority changes. We normally
 do not want to include extra source files in a deployed artifact and
 we have no need for feedback on files that are not getting
-deployed. When we compile one big artifact with in `:optimizations`
+deployed. When we compile one big artifact with `:optimizations`
 level `:whitespace` we don't want it to contain unneeded namespaces.
 
 `figwheel.main` uses the file containing your `:main` namespace as the
@@ -90,7 +90,7 @@ will perform dead code elimination from the final artifact.
 ## Overriding build inputs
 
 Now that you understand the trade-offs you can safely use the
-[`:build-inputs` config option] to override the default sources passed
+[`:build-inputs` config option](../config-options#build-inputs) to override the default sources passed
 to the compiler by Figwheel.
 
 #### Only sending the main namespace
@@ -130,21 +130,4 @@ A string is assumed to be a file or a directory.
 :build-inputs [:watch-dirs example.tool.extra]
 ```
 
-A symbol is assume to be a ClojureScript namespace.
-
-
-
-[build-inputs]: ../config-options#build-inputs
-
-
-
-
-
-
-
-
-
-
-
-
-
+A symbol is assumed to be a ClojureScript namespace.
