@@ -1227,6 +1227,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                         :node-command
                         :broadcast
                         :open-url
+                        :open-url-wait-ms
                         :launch-js
                         :repl-eval-timeout])
           repl-env-options ;; from command line
