@@ -232,7 +232,7 @@ Default: none
 (def-spec-meta ::reload-clj-files
   :doc
   "Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
-It doesn't reload clj dependent files like tools.namspace.
+It doesn't reload clj dependent files like `tools.namspace`.
 
 Figwheel does note if there is a macro in the changed `clj` or `cljc` file
 and then marks any cljs namespaces that depend on the `clj` file for
@@ -578,7 +578,7 @@ Also keep in mind that you can insert extra behavior with `:preloads`
 and you can even change the `:target` to `:nodejs` if you want to work
 on a Nodejs app in parallel with your main build.
 
-    ::extra-main-files {:devcards {:main example.devcards}}"
+    :extra-main-files {:devcards {:main example.devcards}}"
   :group :common)
 
 (s/def ::build-inputs
