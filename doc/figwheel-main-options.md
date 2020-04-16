@@ -53,7 +53,7 @@ I.E. If your `example.core` namespace is located at
 `:watch-dirs`, you must use the path to the root directory of the
 namespace tree `src/cljs`.
 
-    :watch-dirs ["src/cljs"]
+    :watch-dirs ["cljs-src"]
 
 ## :css-dirs
 
@@ -209,7 +209,7 @@ For the server side:
 ## :reload-clj-files
 
 Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
-It doesn't reload clj dependent files like tools.namspace.
+It doesn't reload clj dependent files like `tools.namspace`.
 
 Figwheel does note if there is a macro in the changed `clj` or `cljc` file
 and then marks any cljs namespaces that depend on the `clj` file for
@@ -505,7 +505,7 @@ Also keep in mind that you can insert extra behavior with `:preloads`
 and you can even change the `:target` to `:nodejs` if you want to work
 on a Nodejs app in parallel with your main build.
 
-    ::extra-main-files {:devcards {:main example.devcards}}
+    :extra-main-files {:devcards {:main example.devcards}}
 
 ## :build-inputs
 
@@ -567,6 +567,14 @@ You can also disable `cljs-test-display` with:
     :auto-testing {:cljs-test-display false}
 
 # Rarely used options
+
+## :open-url-wait-ms
+
+The number of milliseconds to wait before launching the browser.
+
+Default: none
+
+    :open-url-wait-ms 1000
 
 ## :cljsjs-resources
 

@@ -77,9 +77,8 @@ Default: none
 All the options to forward to the `ring-jetty-adapter/run-jetty` function
 which figwheel.main uses to run its ring server.
 
-All the available options are documented in [Ring's Jetty adapter][ring-jetty].
-
-[ring-jetty]: https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/adapter/jetty.clj#L127
+All the available options are documented here:
+https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/adapter/jetty.clj#L127
 
 This will normally be used to set the `:port` and `:host` of the server.
 
@@ -89,15 +88,14 @@ own server outside of figwheel.main.
 
 ## :rebel-readline
 
-By default Figwheel engages a Rebel readline editor when it starts
+By default Figwheel engauges a Rebel readline editor when it starts
 the ClojureScript REPL in the terminal that it is launched in.
 
 This will only work if you have `com.bhauman/rebel-readline-cljs` in
 your dependencies.
 
-More about Rebel readline is available in the [GitHub repository][rebel-repo].
-
-[rebel-repo]: https://github.com/bhauman/rebel-readline
+More about Rebel readline:
+https://github.com/bhauman/rebel-readline
 
 Default: true
 
@@ -211,7 +209,7 @@ For the server side:
 ## :reload-clj-files
 
 Figwheel naively reloads `clj` and `cljc` files on the `:source-paths`.
-It doesn't reload clj dependent files like `tools.namespace`.
+It doesn't reload clj dependent files like `tools.namspace`.
 
 Figwheel does note if there is a macro in the changed `clj` or `cljc` file
 and then marks any cljs namespaces that depend on the `clj` file for
@@ -391,7 +389,7 @@ disable this option.
 
 ## :npm
 
-Support for importing Webpack bundles.
+Support for importing webpack bundles.
 
 > Experimental feature! This feature may change or be removed entirely.
 > Only available in `0.1.8-SNAPSHOT` or higher
@@ -425,10 +423,8 @@ This will set `:npm-deps` to `false` if it hasn't been previously set.
 This will set `:infer-externs` to `true` if it hasn't been
 previously set.
 
-You can learn more about ClojureScript and Webpack here in 
-[this guide][guide-webpack] on the official ClojureScript site.
-
-[guide-webpack]: https://clojurescript.org/guides/webpack
+You can learn more about ClojureScript and Webpack here:
+https://clojurescript.org/guides/webpack
 
 ## :pre-build-hooks
 
@@ -465,7 +461,7 @@ configured in your ClojureScript options.
 
 For example this will output a dev-main-test.js file for your tests:
 
-    :extra-main-files {:tests {:main example.tests.test-runner}}
+    ::extra-main-files {:tests {:main example.tests.test-runner}}
 
 This file will be created in addition to the `dev-main.js` file.
 
@@ -499,23 +495,17 @@ config above you would be able to find the `:tests` main at
 div on the default host page will be `app-[id]`.
 
 If you don't want to use the default host page you will need to create
-a your own host page for it. See the [documentation about creating your
-own host page][host-page-doc] for help.
+a your own host page for it. See
+https://figwheel.org/docs/your_own_page for help.
 
-[host-page-doc]: https://figwheel.org/docs/your_own_page
-
-This feature is perfect for adding [cljs-test-display][] and [devcards][]
-to your workflow.
-
-[cljs-test-display]: https://github.com/bhauman/cljs-test-display
-
-[devcards]: https://github.com/bhauman/devcards
+This feature is perfect for adding [cljs-test-display](https://github.com/bhauman/cljs-test-display)
+and [devcards](https://github.com/bhauman/devcards) to your workflow.
 
 Also keep in mind that you can insert extra behavior with `:preloads`
 and you can even change the `:target` to `:nodejs` if you want to work
 on a Nodejs app in parallel with your main build.
 
-    ::extra-main-files {:devcards {:main example.devcards}}
+    :extra-main-files {:devcards {:main example.devcards}}
 
 ## :build-inputs
 
@@ -578,13 +568,19 @@ You can also disable `cljs-test-display` with:
 
 # Rarely used options
 
+## :open-url-wait-ms
+
+The number of milliseconds to wait before launching the browser.
+
+Default: none
+
+    :open-url-wait-ms 1000
+
 ## :cljsjs-resources
 
-When you use libraries from [CLJSJS][] they sometimes
+When you use libraries from http://cljsjs.github.io they sometimes
 come bundled with static resources (like CSS files) that you would
 like to be served from the Figwheel server.
-
-[CLJSJS]: https://cljsjs.github.io
 
 If you set `:cljsjs-resources` to `true` the Figwheel server will
 serve the resources with the `cljsjs` root.
