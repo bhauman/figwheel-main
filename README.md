@@ -15,6 +15,10 @@ Learn even more by watching a 45 minute
 
 Read the [introductory blog post][flappy-bird-blog-post].
 
+> Figwheel main does not support the latest
+> `[org.clojure/clojurescript "1.10.741"]` yet. This work will be
+> undertaken very soon.
+
 ## Support Work on Figwheel and other Clojure tools
 
 I contribute a significant amount of time writing tools and libraries
