@@ -16,8 +16,11 @@ Learn even more by watching a 45 minute
 Read the [introductory blog post][flappy-bird-blog-post].
 
 > Figwheel main does not support the latest
-> `[org.clojure/clojurescript "1.10.741"]` yet. This work will be
-> undertaken very soon.
+> `[org.clojure/clojurescript "1.10.741"]` yet.
+> 
+> `com.bhauman/figwheel-main "0.2.5-SNAPSHOT"` is working with CLJS
+> "1.10.741" and greater, but is under daily development, so your
+> milage may vary.
 
 ## Support Work on Figwheel and other Clojure tools
 
