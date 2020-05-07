@@ -1187,6 +1187,15 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                         (fn [p] (vec (distinct (concat p '[figwheel.main.evalback #_figwheel.main.testing]))))))
          cfg))
 
+     (defn config-system-exit [{:keys [::config options] :as cfg}]
+       (if-let [setup (and (repl-connection? cfg)
+                           (fw-util/require-resolve-var 'figwheel.main.system-exit/setup))]
+         (-> cfg
+             (update ::initializers (fnil conj []) #(setup))
+             (update-in [:options :preloads]
+                        (fn [p] (vec (distinct (concat p '[figwheel.main.system-exit]))))))
+         cfg))
+
      (defn watch-css [css-dirs & [reload-config]]
        (when-let [css-dirs (not-empty css-dirs)]
          (when-let [start-css (fw-util/require-resolve-var 'figwheel.main.css-reload/start*)]
@@ -1455,6 +1464,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             config-repl-connect
             config-cljs-devtools
             config-open-file-command
+            config-system-exit
             #_config-eval-back
             config-watch-css
             config-finalize-repl-options
