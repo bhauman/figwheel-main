@@ -62,6 +62,9 @@ testit: clean
 
 testall: testit test10
 
+itest:
+	cd ../figwheel-main-testing && make itest
+
 deploy: clean install docs helper testall # really needs to clean again before deploy
 	rm -rf target
 	rm -rf docs/assets/compiled/js/out
