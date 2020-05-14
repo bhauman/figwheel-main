@@ -1,3 +1,55 @@
+# 0.2.5 Much better NPM support with new CLJS :bundle target 
+
+> support for the new :bundle target requires clojurescript >= 1.10.764
+
+The latest ClojureScript updated the Google Closure library which
+included some breaking changes when it comes to reloading. This
+release fixes those problems and also fixes fighweel-main problems
+that interfered with the support of the new :bundle target.
+
+You can currently learn more about the new bundle target in the Clojruescript guide
+
+https://clojurescript.org/guides/webpack
+
+Using the bundle target will break auto-testing and the default index
+page. You will have to have your own host page.
+
+There still needs to be some work done on Extra mains to get them to
+work properly with the new bundle target.
+
+The main problem for many of these automated features is that figwheel
+has no idea of where the output file of webpack is because the webpack
+config is exterior to figwheel itself.
+
+The new :bundle target probably deprecates the :npm-deps way of doing
+things. We'll need to take some time with this way of doing things to
+see what makes sense.
+
+# 0.2.4 
+
+* Add :open-url-wait-ms option to delay launching the browser when :open-url is enabled
+* fix repl hanging on error
+* get rid of another glog/warning call
+* allow the Jetty :configurator option
+
+# 0.2.3 Minor release
+
+* fix connection race condition when the load event has already fired
+* add repl-env function for compatability
+
+# 0.2.1 Minor release
+
+* fix goog warning
+* fix warning notification bug
+* update ring dependency to 1.7.1
+* fix goog/warning reference
+* fix dangling colon in connect url
+* up the message size limit for the Websocket to 16M
+
+* handle css imports in css-realoding
+* some :npm-deps fixes
+* output cljsc_opts ot help with bootstrapping clojurescript
+
 # 0.2.0 Minor updates
 
 So nothing groundbreaking in this release, just firming things up and

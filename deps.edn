@@ -4,8 +4,8 @@
         ;; DEV for now its easier to use cider with top level deps
         ;; com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
         ;; com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
-        com.bhauman/figwheel-repl {:mvn/version "0.2.5-SNAPSHOT"}
-        com.bhauman/figwheel-core {:mvn/version "0.2.5-SNAPSHOT"}
+        com.bhauman/figwheel-repl {:mvn/version "0.2.5"}
+        com.bhauman/figwheel-core {:mvn/version "0.2.5"}
 
         ;; server
         ring {:mvn/version "1.7.1"}
@@ -47,7 +47,7 @@
            {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.3"}}}
            :dev
            {:extra-deps
-            {org.clojure/clojurescript {:mvn/version "1.10.339"}
+            {org.clojure/clojurescript {:mvn/version #_"1.10.339" "1.10.764"}
              com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
              com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
              ;; for testing static cljsjs resources

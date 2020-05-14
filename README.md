@@ -15,13 +15,6 @@ Learn even more by watching a 45 minute
 
 Read the [introductory blog post][flappy-bird-blog-post].
 
-> Figwheel main does not support the latest
-> `[org.clojure/clojurescript "1.10.741"]` yet.
-> 
-> `com.bhauman/figwheel-main "0.2.5-SNAPSHOT"` is working with CLJS
-> "1.10.741" and greater, but is under daily development, so your
-> milage may vary.
-
 ## Support Work on Figwheel and other Clojure tools
 
 I contribute a significant amount of time writing tools and libraries
@@ -207,7 +200,7 @@ On Mac OSX with brew:
 Now launch a ClojureScript REPL with:
 
 ```
-clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.4\"}}}}"  -m figwheel.main
+clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.5\"}}}}"  -m figwheel.main
 ```
 
 This will first compile browser REPL code to a temp directory, and
@@ -231,7 +224,7 @@ available. So, you can get Rebel Readline behavior by simply adding it
 to your dependencies.
 
 ```
-clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.4\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -m figwheel.main
+clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.5\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -m figwheel.main
 ```
 
 As of right now using Rebel readline does create some startup overhead
@@ -252,7 +245,7 @@ directory of your project.
 Ensure your `deps.edn` file has the `figwheel.main` dependencies:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.4"}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.5"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  ;; setup some development paths
  :paths ["src" "target" "resources"]
@@ -318,7 +311,7 @@ directory of your project.
 Ensure your `project.clj` file has `figwheel.main` dependencies:
 
 ```clojure
-:dependencies [[com.bhauman/figwheel-main "0.2.4"]
+:dependencies [[com.bhauman/figwheel-main "0.2.5"]
                [com.bhauman/rebel-readline-cljs "0.1.4"]]
  ;; setup target as a resource path
 :resource-paths ["target" "resources"]
@@ -456,7 +449,7 @@ ClojureScript searches for source files on the Classpath. When you add
 a `re-frame` dependency like so:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.4"}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.5"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
         ;; adding re-frame
         re-frame {:mvn/version "1.10.5"}}
