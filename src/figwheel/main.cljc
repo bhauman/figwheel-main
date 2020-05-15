@@ -1362,6 +1362,12 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              (cljs.closure/output-main-file
               (cljs.closure/add-implicit-options
                opts))
+             ;; have to run the bundle command as well
+             (when (and (= :bundle (:target opts))
+                        (:bundle-cmd opts))
+               (when-let [run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)]
+                 (run-bundle-cmd (update opts :optimizations
+                                         (fn [x] (if (nil? x) :none x))))))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
