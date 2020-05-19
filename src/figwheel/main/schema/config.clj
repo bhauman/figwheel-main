@@ -675,6 +675,8 @@ Default: true
     :bundle-once false"
   :group :common)
 
+;; ------ Uncommon options ----------------------------------
+
 (s/def ::cljsjs-resources boolean?)
 (def-spec-meta ::cljsjs-resources
   :doc
@@ -692,11 +694,6 @@ it via the Figwheel server at the path
 
     :cljsjs-resources true"
   :group :un-common)
-
-
-
-
-;; ------ Uncommon options ----------------------------------
 
 (s/def ::client-print-to (s/coll-of #{:console :repl}))
 (def-spec-meta ::client-print-to
