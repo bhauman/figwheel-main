@@ -119,12 +119,19 @@
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be
      (defn config->reload-config [config]
-       (select-keys config [:reload-clj-files :wait-time-ms :hawk-options]))
+       (select-keys config [:reload-clj-files :wait-time-ms :hawk-options :bundle-once]))
+
+     (defn bundle-once-opts [config opts]
+       (if (get config :bundle-once true)
+         (dissoc opts :bundle-cmd)
+         opts))
 
      (defn watch-build [id paths inputs opts cenv & [reload-config]]
        (when-let [inputs (not-empty (if (coll? inputs) inputs [inputs]))]
          (let [build-inputs (if (coll? inputs) (apply bapi/inputs inputs) inputs)
-          ;; the build-fn needs to be passed in before here?
+               ;; watch is always called after in initial build
+               opts (bundle-once-opts reload-config opts)
+               ;; the build-fn needs to be passed in before here?
                build-fn (if (some #{'figwheel.core} (:preloads opts))
                           #(fig-core-build id build-inputs opts cenv %)
                           (fn [files] (build-cljs id build-inputs opts cenv)))]

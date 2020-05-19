@@ -35,7 +35,7 @@ I.E. If your `example.core` namespace is located at
 `:watch-dirs`, you must use the path to the root directory of the
 namespace tree `src/cljs`.
 
-    :watch-dirs [\"cljs-src\"]"
+    :watch-dirs [\"src/cljs\"]"
   :group :common)
 
 (s/def ::css-dirs (s/coll-of (s/and non-blank-string?
@@ -662,6 +662,19 @@ You can also disable `cljs-test-display` with:
     :auto-testing {:cljs-test-display false}"
   :group :common)
 
+(s/def ::bundle-once boolean?)
+(def-spec-meta ::bundle-once
+  :doc
+  "When using the :bundle target and there is a :bundle-cmd specified
+only call the bundle command once for the initial compile of the
+build. Set this to false if you want to call the bundle command
+everytime a compile is triggered.
+
+Default: true
+
+    :bundle-once false"
+  :group :common)
+
 (s/def ::cljsjs-resources boolean?)
 (def-spec-meta ::cljsjs-resources
   :doc
@@ -679,6 +692,9 @@ it via the Figwheel server at the path
 
     :cljsjs-resources true"
   :group :un-common)
+
+
+
 
 ;; ------ Uncommon options ----------------------------------
 
@@ -844,6 +860,7 @@ be useful for certain docker environments.
      ::build-inputs
      ::auto-testing
      ::launch-js
+     ::bundle-once
      ::cljsjs-resources
 
      ::helpful-classpaths
