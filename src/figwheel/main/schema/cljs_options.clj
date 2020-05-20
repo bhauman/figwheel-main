@@ -725,6 +725,18 @@ This setting does not apply if :optimizations is set to :advanced.
 
   :checked-arrays :warn")
 
+(s/def ::bundle-cmd-entry
+  (s/every (s/or :string non-blank-string?
+                 :template-key #{:output-to :final-output-to})
+           :min-count 1 :into [] :kind sequential?))
+
+(s/def ::none ::bundle-cmd-entry)
+(s/def ::default ::bundle-cmd-entry)
+
+(s/def ::bundle-cmd (spell/keys
+                     :req-un [::none]
+                     :opt-un [::default]))
+
 ;; ** ClojureScript Compiler Warnings
 
 (s/def ::warnings
@@ -1110,6 +1122,7 @@ See the Closure Compiler Warning wiki for detailed descriptions.")
     ::rewrite-polyfills
     ::checked-arrays
     ::aot-cache
+    ::bundle-cmd
 
     ;; these need to be specified
     ::closure-variable-map-out

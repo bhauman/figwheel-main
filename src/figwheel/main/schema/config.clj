@@ -675,6 +675,18 @@ Default: true
     :bundle-once false"
   :group :common)
 
+(s/def ::final-output-to non-blank-string?)
+(def-spec-meta ::final-output-to
+  :doc
+  "When you have a process or a bundler that is going to process
+the :output-to file and produce a final load file for your
+application, you can specify it with :final-output-to
+
+Defaults to the value of :output-to
+
+    :final-output-to \"target/public/cljs-out/dev-main-bundle.js\""
+  :group :common)
+
 ;; ------ Uncommon options ----------------------------------
 
 (s/def ::cljsjs-resources boolean?)
@@ -858,6 +870,8 @@ be useful for certain docker environments.
      ::auto-testing
      ::launch-js
      ::bundle-once
+     ::final-output-to
+
      ::cljsjs-resources
 
      ::helpful-classpaths

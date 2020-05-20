@@ -19,6 +19,7 @@
       [clojure.edn :as edn]
       [clojure.tools.reader.edn :as redn]
       [clojure.tools.reader.reader-types :as rtypes]
+      [clojure.walk :as walk]
       [figwheel.core :as fw-core]
       [figwheel.main.ansi-party :as ansip]
       [figwheel.main.logging :as log]
@@ -110,11 +111,39 @@
          (apply build-fn args)
          (run-hooks (::post-build-hooks *config*) *config*)))
 
+     ;; filling in a bundle-cmd template at the last moment
+     (defn- fill-in-bundle-cmd-template [opts final-output-to]
+       (let [fill-in {:output-to (:output-to opts)
+                      :final-output-to final-output-to
+                      :none :none
+                      :default :default}]
+         (if (:bundle-cmd opts)
+           (update opts :bundle-cmd
+                   #(walk/postwalk
+                     (fn [x]
+                       (if (keyword? x)
+                         (if-let [replace (fill-in x)]
+                           replace
+                           (throw (ex-info (format "No %s available to fill :bundle-cmd template" x)
+                                           {})))
+                         x))
+                     %))
+           opts)))
+
+     (defn- fill-in-bundle-cmd-template-build-fn [build-fn]
+       (fn [id build-inputs opts & args]
+         (let [{:keys [final-output-to]} (::config *config*)]
+           (apply build-fn id build-inputs
+                  (fill-in-bundle-cmd-template opts final-output-to)
+                  args))))
+
      (def build-cljs
-       (-> bapi/build wrap-with-build-logging wrap-with-build-hooks))
+       (-> bapi/build wrap-with-build-logging wrap-with-build-hooks
+           fill-in-bundle-cmd-template-build-fn))
 
      (def fig-core-build
-       (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks))
+       (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks
+           fill-in-bundle-cmd-template-build-fn))
 
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be
@@ -754,11 +783,25 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                           (cond->> "main.js"
                             scope (str scope "-")))))
 
+     (defn default-bundle-output-to* [target & [scope]]
+       (->> (cond-> [(or target default-target-dir) "public" "cljs-out"]
+              scope (conj scope)
+              true (conj "main.js"))
+            (apply io/file)
+            (.getPath)))
+
      (defmulti default-output-to (fn [{:keys [options]}]
                                    (get options :target :browser)))
 
-     (defmethod default-output-to :default [{:keys [::config ::build]}]
-       (default-output-to* (:target-dir config) (:id build)))
+     (defmethod default-output-to :default [{:keys [options ::config ::build]}]
+       (if-let [out-dir (:output-dir options)]
+         (.getPath (io/file out-dir "main.js"))
+         (default-output-to* (:target-dir config) (:id build))))
+
+     (defmethod default-output-to :bundle [{:keys [options ::config ::build]}]
+       (if-let [out-dir (:output-dir options)]
+         (.getPath (io/file out-dir "main.js"))
+         (default-bundle-output-to* (:target-dir config) (:id build))))
 
      (defmethod default-output-to :nodejs [{:keys [::build] :as cfg}]
        (let [scope (:id build)]
@@ -1026,8 +1069,8 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                 (into {})))
          cfg))
 
-;; targets options
-;; TODO needs to consider case where one or the other is specified???
+     ;; targets options
+     ;; TODO needs to consider case where one or the other is specified???
      (defn- config-default-dirs [{:keys [options ::config ::build] :as cfg}]
        (cond-> cfg
          (and (nil? (:output-to options)) (not (:modules options)))
@@ -1036,6 +1079,24 @@ classpath. Classpath-relative paths have prefix of @ or @/")
          modules-output-to
          (nil? (:output-dir options))
          (assoc-in [:options :output-dir] (default-output-dir cfg))))
+
+     (defn- file-extension [f]
+       (apply str "" (reverse (take-while #(not= \. %) (reverse (str f))))))
+
+     (defn- append-to-filename-before-ext [f to-append]
+       (let [f (io/file f)
+             fname (.getName ^java.io.File f)
+             ext (file-extension fname)
+             fname (subs fname 0 (- (count fname) (inc (count ext))))]
+         (.getPath (io/file (.getParent ^java.io.File f) (str fname to-append "." ext)))))
+
+     (defn- config-default-final-output-to [{:keys [options ::config] :as cfg}]
+       (cond-> cfg
+         (nil? (:final-output-to config))
+         (assoc-in [::config :final-output-to]
+                   (if (= :bundle (:target options))
+                     (append-to-filename-before-ext (:output-to options) "_bundle")
+                     (:output-to options)))))
 
      (defn figure-default-asset-path [{:keys [figwheel-options options ::config ::build] :as cfg}]
        (if (= :nodejs (:target options))
@@ -1250,7 +1311,8 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                         :launch-js
                         :repl-eval-timeout])
           repl-env-options ;; from command line
-          (select-keys options [:output-to :output-dir :target]))))
+          (select-keys options [:output-dir :target])
+          {:output-to (:final-output-to config)})))
 
      (defn config-finalize-repl-options [cfg]
        (let [repl-options (get-repl-options cfg)
@@ -1304,10 +1366,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
      (defn alter-output-to [nm {:keys [output-to output-dir] :as opts}]
        (cond
          output-to
-         (let [f (io/file output-to)
-               fname (string/replace (.getName f) #"\.js$" "")]
-           (assoc opts :output-to
-                  (str (io/file (.getParent f) (str fname "-" nm ".js")))))
+         (append-to-filename-before-ext output-to (str "-" nm))
          output-dir
          (assoc opts :output-to (str (io/file output-dir (str "main-" nm ".js"))))
          :else nil))
@@ -1471,6 +1530,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             config-ensure-watch-dirs-on-classpath
             config-figwheel-mode?
             config-default-dirs
+            config-default-final-output-to
             config-default-asset-path
             config-default-aot-cache-false
             npm/config
@@ -1803,7 +1863,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                 :ring-stack-options
                                 :figwheel.server.ring/dev
                                 :figwheel.server.ring/system-app-handler]
-                          ;; executing a function is slightly different as well
+                               ;; executing a function is slightly different as well
                                #(helper/middleware
                                  %
                                  {:header "Main fn exec page"
@@ -1883,7 +1943,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     (if (and (:modules options)
                              (:output-dir options))
                       {:output-to (str (io/file (:output-dir options) "cljs_base.js"))}
-                      (select-keys (:options cfg) [:output-to])))))))))
+                      {:output-to (:final-output-to config)}))))))))
 
      (defn validate-basic-assumptions! [{:keys [options ::config] :as cfg}]
        (when (and (= (:mode config) :repl)
