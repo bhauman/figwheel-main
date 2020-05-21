@@ -1366,7 +1366,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
      (defn alter-output-to [nm {:keys [output-to output-dir] :as opts}]
        (cond
          output-to
-         (append-to-filename-before-ext output-to (str "-" nm))
+         (assoc opts :output-to (append-to-filename-before-ext output-to (str "-" nm)))
          output-dir
          (assoc opts :output-to (str (io/file output-dir (str "main-" nm ".js"))))
          :else nil))
@@ -1415,8 +1415,12 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                                          (str (apply io/file parts)))))))
 
      (defn extra-main-fn [nm em-options options]
-  ;; TODO modules??
-       (let [opts (extra-main-options nm em-options options)]
+       ;; TODO modules??
+       (let [opts (extra-main-options nm em-options options)
+             final-output-to
+             (append-to-filename-before-ext
+              (:final-output-to (::config *config*))
+              (str "-" (name nm)))]
          (fn [_]
            (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
            (let [switch-to-node? (and (= :nodejs (:target em-options)) (not= :nodejs (:target options)))
@@ -1431,9 +1435,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              ;; have to run the bundle command as well
              (when (and (= :bundle (:target opts))
                         (:bundle-cmd opts))
-               (when-let [run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)]
-                 (run-bundle-cmd (update opts :optimizations
-                                         (fn [x] (if (nil? x) :none x))))))
+               (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
+                 (when-let [run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)]
+                   (run-bundle-cmd (update opts :optimizations
+                                           (fn [x] (if (nil? x) :none x)))))))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
@@ -1923,10 +1928,12 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                     (cljs.repl/tear-down @stolen-repl-env)))))))))
 
      (defn add-default-system-app-handler [{:keys [options ::config] :as cfg}]
-       (let [extra-mains-name->output-to
+       (let [final-output-to (:final-output-to config)
+             extra-mains-name->output-to
              (into {}
                    (keep (fn [[nm em-options]]
-                           [(name nm) (:output-to (extra-main-options nm em-options options))])
+                           [(name nm)
+                            (append-to-filename-before-ext final-output-to (str "-" (name nm)))])
                          (:extra-main-files config)))]
          (update-in
           cfg
