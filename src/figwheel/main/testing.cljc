@@ -17,7 +17,7 @@
      (defn on-finish-listener [ky listener]
        (add-watch test-result-data ky (fn [_ _ _ m] (listener m))))
 
-;; cljs-test-display     
+;; cljs-test-display
      (defmethod report [:cljs-test-display.core/default :end-run-tests] [m]
        (reset! test-result-data m))
 
@@ -111,19 +111,19 @@
 
   `run-tests` runs all cljs.tests in the given namespaces; prints
   results.  Defaults to running all the namespaces in the local source
-  files if no namespaces are given. 
+  files if no namespaces are given.
 
   Will throw an exception if tests have failed. This is only useful if
   you are NOT running asynchronous tests. An exception thrown from a
   `-main` will cause a process started with the `--main` CLI arg to
   exit unsuccessfully.
-  
-  Usage examples: 
+
+  Usage examples:
 
       ;; run all tests in local sources
-      (run-tests) 
-      ;; run tests in 'example.core-tests 
-      (run-tests 'example.core-tests) ;; 
+      (run-tests)
+      ;; run tests in 'example.core-tests
+      (run-tests 'example.core-tests) ;;
       ;; run tests in 'example.core-tests and display with cljs-test-display
       (run-tests (cljs-test-display.core/init!) 'example.core-tests)"
        ([] `(run-tests (cljs.test/empty-env)))
@@ -146,7 +146,7 @@
      (defmacro run-tests-async
        "This is only supported when run in conjunction with the
   `figwheel.main`'s `--main` CLI option.
-  
+
   Differs from `cljs.test/run-tests` in that this macro by finds all
   the available namespaces in the local sources to test and tests
   them.
@@ -167,12 +167,12 @@
   function then you need to make sure that the `-main` function returns a
   `[:figwheel.main.async-result/wait timeout]` value.
 
-  Usage examples: 
+  Usage examples:
 
       ;; run all tests in local sources, time out if it takes more than 5 seconds
-      (run-tests-async 5000) 
+      (run-tests-async 5000)
       ;; run tests in 'example.core-tests with 5000 millis timeout
-      (run-tests-async 5000 'example.core-tests) ;; 
+      (run-tests-async 5000 'example.core-tests) ;;
       ;; run tests in 'example.core-tests and display with cljs-test-display
       (run-tests-async 5000 (cljs-test-display.core/init!) 'example.core-tests)"
        ([timeout]
@@ -275,9 +275,13 @@
         (= :none (get options :optimizations :none))
         (get config :auto-testing false)))
 
+     (defn- browser-target? [target]
+       (or (nil? target)
+           (= :bundle target)))
+
      (defn cljs-test-display? [cfg]
        (let [auto-testing (get-in cfg [:figwheel.main/config :auto-testing])]
-         (and (nil? (get-in cfg [:options :target]))
+         (and (browser-target? (get-in cfg [:options :target]))
               (not (and (map? auto-testing) (false? (:cljs-test-display auto-testing)))))))
 
      (defn add-file-gen [{:keys [options :figwheel.main/config] :as cfg}]
