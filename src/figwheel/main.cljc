@@ -56,47 +56,59 @@
          (with-precision 2
            (str (/ (double elapsed-us) 1000) " seconds"))))
 
+     (defn- extract-bundle-cmd-cli [opts]
+       (get-in opts [:bundle-cmd (or (#{:none} (:optimizations opts :none)) :default)]))
+
      (defn- wrap-with-build-logging [build-fn]
-       (fn [id? & args]
-         (let [started-at (System/currentTimeMillis)
-               {:keys [output-to output-dir]} (second args)]
-      ;; print start message
-           (log/info (str "Compiling build"
-                          (when id? (str " " id?))
-                          " to \""
-                          (or output-to output-dir)
-                          "\""))
-           (try
-             (let [warnings (volatile! [])
-                   out *out*
-                   warning-fn (fn [warning-type env extra]
-                                (when (get cljs.analyzer/*cljs-warnings* warning-type)
-                                  (let [warn {:warning-type warning-type
-                                              :env env
-                                              :extra extra
-                                              :path ana/*cljs-file*}]
-                                    (binding [*out* out]
-                                      (if (<= (count @warnings) 2)
-                                        (log/cljs-syntax-warning warn)
-                                        (binding [log/*syntax-error-style* :concise]
-                                          (log/cljs-syntax-warning warn))))
-                                    (vswap! warnings conj warn))))]
-               (binding [cljs.analyzer/*cljs-warning-handlers*
-                         (conj (remove #{cljs.analyzer/default-warning-handler}
-                                       cljs.analyzer/*cljs-warning-handlers*)
-                               warning-fn)]
-                 (apply build-fn args)))
-             (log/succeed (str "Successfully compiled build"
-                               (when id? (str " " id?))
-                               " to \""
-                               (or output-to output-dir)
-                               "\" in " (time-elapsed started-at) "."))
-             (catch Throwable e
-               (log/failure (str
-                             "Failed to compile build" (when id? (str " " id?))
-                             " in " (time-elapsed started-at) "."))
-               (log/syntax-exception e)
-               (throw e))))))
+       (let [run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)]
+         (fn [id? build-inputs opts & args]
+           (let [started-at (System/currentTimeMillis)
+                 {:keys [output-to output-dir target bundle-cmd]} opts]
+             ;; print start message
+             (log/info (str "Compiling build"
+                            (when id? (str " " id?))
+                            " to \""
+                            (or output-to output-dir)
+                            "\""))
+             (try
+               (let [warnings (volatile! [])
+                     out *out*
+                     warning-fn (fn [warning-type env extra]
+                                  (when (get cljs.analyzer/*cljs-warnings* warning-type)
+                                    (let [warn {:warning-type warning-type
+                                                :env env
+                                                :extra extra
+                                                :path ana/*cljs-file*}]
+                                      (binding [*out* out]
+                                        (if (<= (count @warnings) 2)
+                                          (log/cljs-syntax-warning warn)
+                                          (binding [log/*syntax-error-style* :concise]
+                                            (log/cljs-syntax-warning warn))))
+                                      (vswap! warnings conj warn))))]
+                 (binding [cljs.analyzer/*cljs-warning-handlers*
+                           (conj (remove #{cljs.analyzer/default-warning-handler}
+                                         cljs.analyzer/*cljs-warning-handlers*)
+                                 warning-fn)]
+                   (apply build-fn build-inputs
+                          (dissoc opts :bundle-cmd)
+                          args)))
+               (log/succeed (str "Successfully compiled build"
+                                 (when id? (str " " id?))
+                                 " to \""
+                                 (or output-to output-dir)
+                                 "\" in " (time-elapsed started-at) "."))
+               ;; breaking out bundling as to allow better logging
+               (when-let [cli (and (= :bundle target)
+                                   (extract-bundle-cmd-cli opts))]
+                 (log/info (str "Bundling: " (string/join " " cli)))
+                 (run-bundle-cmd (update opts :optimizations
+                                         (fn [x] (if (nil? x) :none x)))))
+               (catch Throwable e
+                 (log/failure (str
+                               "Failed to compile build" (when id? (str " " id?))
+                               " in " (time-elapsed started-at) "."))
+                 (log/syntax-exception e)
+                 (throw e)))))))
 
      (declare resolve-fn-var)
 
@@ -1420,7 +1432,9 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              final-output-to
              (append-to-filename-before-ext
               (:final-output-to (::config *config*))
-              (str "-" (name nm)))]
+              (str "-" (name nm)))
+             run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)
+             bundled-already (atom false)]
          (fn [_]
            (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
            (let [switch-to-node? (and (= :nodejs (:target em-options)) (not= :nodejs (:target options)))
@@ -1434,11 +1448,15 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                opts))
              ;; have to run the bundle command as well
              (when (and (= :bundle (:target opts))
-                        (:bundle-cmd opts))
+                        (:bundle-cmd opts)
+                        run-bundle-cmd
+                        (not @bundled-already))
                (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
-                 (when-let [run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)]
-                   (run-bundle-cmd (update opts :optimizations
-                                           (fn [x] (if (nil? x) :none x)))))))
+                 (reset! bundled-already true)
+                 (when-let [cli (extract-bundle-cmd-cli opts)]
+                   (log/info (str "Bundling: " (string/join " " cli))))
+                 (run-bundle-cmd (update opts :optimizations
+                                         (fn [x] (if (nil? x) :none x))))))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
