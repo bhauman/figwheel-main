@@ -3,11 +3,15 @@
    [goog.events]
    [goog.object :as gobj]
    [clojure.string :as string]
-   [exproj.other]
-   [react]
+   #_[exproj.other]
+   #_[react]
    [cljs.test :refer [deftest is]]))
 
-(js/console.log react/Component)
+#_(js/console.log react/Component)
+
+#_(defn)
+#_(prn "ouchy")
+
 
 (defn hello []
   "hello  exproj")
