@@ -146,10 +146,10 @@
 layout: config-options
 ---
 
-<!-- DO NOT EDIT: File generated from specs defined in figwheel/main/schema/config.clj -->
-<!-- Generation code can be found in figwheel/main/schema/core.clj -->
+<!-- DO NOT EDIT: File generated from specs defined in src/figwheel/main/schema/config.clj -->
+<!-- Generation code can be found in src/figwheel/main/schema/core.clj -->
 
-# Figwheel Main Configuration Options
+# Configuration Options
 
 This page is a reference for all of the Figwheel configuration options.
 

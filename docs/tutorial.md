@@ -1,11 +1,15 @@
 ---
-layout: config-options
+layout: tutorial
 ---
 
-# Tutorial
+{::comment}
+for table of contents script
+{:/comment}
+<h1 style="display:none" id="tutorial">Tutorial</h1>
 
-This document is intended to get you aquainted with the features and
-workflow of Figwheel.
+
+<div class="lead-in">This document is intended to get you aquainted with the features and
+workflow of Figwheel.</div>
 
 This tutorial is based on the Clojure CLI tools. 
 

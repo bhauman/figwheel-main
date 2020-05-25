@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1438" height="424" viewBox="0 0 1438 424">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#3A8820" d="M1 0H1441V428.018H1z" transform="translate(-1 -1)"/>
+        <g>
+            <path fill="#459B29" d="M337 144.456L438 274.645 269 253.244zM937 166L1197 290.696 850 332.606zM776 361.141L654 336.173 765 412.859zM994 24L1199 80.489 1096 148.415z" transform="translate(1 1) translate(1)"/>
+            <path fill="#34801B" d="M1097 151.59L1276 258.594 1195 292.479zM176 428.018L439 273.753 268 253.244 154 428.018zM850.063 270L653 336.328 777 362.199zM0 0L261 0 274 24.979 0 120.436zM1375 0L1195 79.489 1440 134 1440 0z" transform="translate(1 1) translate(1)"/>
+            <path fill="#34801B" d="M654 336.328L504 149.415 541 403zM1440 269.419L1334 388 1391 428.018 1440 428.018zM753 0L996 23 449 81z" transform="translate(1 1) translate(1)"/>
+        </g>
+        <g stroke="#459B29" stroke-width="2">
+            <path stroke-linejoin="round" d="M851 269.419L654 336.328 450 81.183 275 25" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M262 0L275 25 338 144.456 504 150 542 403.237 654 336.328M521 428.216L542 403.237 338 145.415 155 428.216" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M268 253.361L439 273.88 177 428.216M777 362L937 166 1005 0" transform="translate(1 1)"/>
+            <path d="M851 332.606L778 362.199 655 336.328 681 428M790 430L655 336.328" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M996 24L1096 148.983 937 166 851.063 332.202 869 428.216" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M937 166L1197 289.938 851 331.867" transform="translate(1 1)"/>
+            <path d="M778 362.199L766 413.05" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M974 428.216c4.667-2.38 79-48.472 223-138.278l-101-140.955L1202 81l239 52.817M1441 270L1276.971 259.529 1197 289.938 1395 430" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M1335 388L1277 258.714 1097 149.876" transform="translate(1 1)"/>
+            <path d="M1441 269.419L1297 428.216M997 23L1200.908 79.489 1376 0M1197 290.83L1128.546 428.018M449 81L337 145.456 1 163.257" transform="translate(1 1)"/>
+            <path d="M269.255 254.244L145.399 154.59 0 120.436" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M439 274.645L340 428" transform="translate(1 1)"/>
+            <path d="M1 120.436L275 24.979" transform="translate(1 1)"/>
+            <path stroke-linejoin="round" d="M449 81L753 0 995 23zM937 166L662 60 505 149.59" transform="translate(1 1)"/>
+        </g>
+    </g>
+</svg>

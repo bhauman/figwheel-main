@@ -1,40 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-{% seo %}
-    <link rel="stylesheet" href="{{ "/assets/css/docs.css?v=" | append: site.github.build_revision | relative_url }}">
-    <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <header>
-      <a class="logo" href="{{"/" | relative_url}}"><span class="f" >F</span><span class="w" >w</span></a>
-      <a href="{{"/docs" | relative_url}}">Documentation</a>
-      <div class="arrow">&gt;</div>
-      <div class="section-title">{{ page.title }}</div>
-      <div class="right-links">
-	<a href="https://github.com/bhauman/figwheel-main">Github</a>
-      </div>
-    </header>
-    <div class="container">
-      <nav>
-	<div class="major-nav">
-	  <a href="{{"/tutorial" | relative_url }}">Tutorial</a>
-	  <a href="{{"/config-options" | relative_url }}">Configuration</a>
-	</div>  
-	
-{% assign my-pages = site.pages | where: "category","docs" | sort:"order"%}
-
-{% for p in my-pages %}
-  {% if p.title %}
-  <a href="{{p.url | relative_url}}">{{p.title}}</a>
-  {% endif %}
-{% endfor %}
-    </nav>
+---
+layout: default
+---
+  <div class="over-hide">
+    <div class="container basic-contain">
     <section class="main">
       {{ content }}
       <div class="sibling-nav">
@@ -50,13 +18,19 @@
   <a class="next-btn" href="{{next-page.url | relative_url}}">Next →<span>{{next-page.title}}</span></a>
 {% endif %}
 
-      </div>	
+      </div>
     </section>
-    
+
+
+      <nav>
+
+{% assign my-pages = site.pages | where: "category","docs" | sort:"order"%}
+
+{% for p in my-pages %}
+  {% if p.title %}
+  <a href="{{p.url | relative_url}}">{{p.title}}</a>
+  {% endif %}
+{% endfor %}
+    </nav>
     </div>
-    <footer>
-    </footer>
-    <script src="{{ "/assets/compiled/js/main.js?v=" | append: site.github.build_revision | relative_url }}"></script>
-    <script>figwheel_main_docs.main.insert_doc_toc();</script>
-  </body>
-</html>
+    </div>

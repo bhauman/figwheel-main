@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
 
 {% seo %}
     <link rel="stylesheet" href="{{ "/assets/css/docs.css?v=" | append: site.github.build_revision | relative_url }}">
@@ -12,19 +13,9 @@
     <![endif]-->
   </head>
   <body>
-    <header>
-      <a class="logo" href="{{"/" | relative_url }}"><span class="f" >F</span><span class="w" >w</span></a>
-      <a href="{{"/" | relative_url }}">Home</a>
-      <a href="{{"/tutorial" | relative_url }}">Tutorial</a>
-      <a href="{{"/docs" | relative_url }}">Documentation</a>
-      <a href="{{"/config-options" | relative_url }}">Configuration</a>
-      <div class="right-links">
-	<a href="https://github.com/bhauman/figwheel-main">Github</a>
-      </div>
-    </header>
+    {% include navigation.html %}
     {{ content }}
-    <footer>
-    </footer>
+    {% include footer.html%}
     <script src="{{ "/assets/compiled/js/main.js?v=" | append: site.github.build_revision | relative_url }}"></script>
   </body>
 </html>
