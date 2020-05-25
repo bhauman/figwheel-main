@@ -162,8 +162,11 @@
      (defn config->reload-config [config]
        (select-keys config [:reload-clj-files :wait-time-ms :hawk-options :bundle-once]))
 
+     (defn bundle-once? [config]
+       (get config :bundle-once true))
+
      (defn bundle-once-opts [config opts]
-       (if (get config :bundle-once true)
+       (if (bundle-once? config)
          (dissoc opts :bundle-cmd)
          opts))
 
@@ -1434,6 +1437,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
               (:final-output-to (::config *config*))
               (str "-" (name nm)))
              run-bundle-cmd (resolve 'cljs.closure/run-bundle-cmd)
+             bundle-every-time? (not (bundle-once? (::config *config*)))
              bundled-already (atom false)]
          (fn [_]
            (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
@@ -1452,7 +1456,8 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                         run-bundle-cmd
                         (not @bundled-already))
                (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
-                 (reset! bundled-already true)
+                 (when-not bundle-every-time?
+                   (reset! bundled-already true))
                  (when-let [cli (extract-bundle-cmd-cli opts)]
                    (log/info (str "Bundling: " (string/join " " cli))))
                  (run-bundle-cmd (update opts :optimizations
