@@ -2,10 +2,10 @@
 layout: config-options
 ---
 
-<!-- DO NOT EDIT: File generated from specs defined in figwheel/main/schema/config.clj -->
-<!-- Generation code can be found in figwheel/main/schema/core.clj -->
+<!-- DO NOT EDIT: File generated from specs defined in src/figwheel/main/schema/config.clj -->
+<!-- Generation code can be found in src/figwheel/main/schema/core.clj -->
 
-# Figwheel Main Configuration Options
+# Configuration Options
 
 This page is a reference for all of the Figwheel configuration options.
 
@@ -53,7 +53,7 @@ I.E. If your `example.core` namespace is located at
 `:watch-dirs`, you must use the path to the root directory of the
 namespace tree `src/cljs`.
 
-    :watch-dirs ["cljs-src"]
+    :watch-dirs ["src/cljs"]
 
 ## :css-dirs
 
@@ -565,6 +565,27 @@ You can specify which namespaces to test:
 You can also disable `cljs-test-display` with:
 
     :auto-testing {:cljs-test-display false}
+
+## :bundle-once
+
+When using the :bundle target and there is a :bundle-cmd specified
+only call the bundle command once for the initial compile of the
+build. Set this to false if you want to call the bundle command
+everytime a compile is triggered.
+
+Default: true
+
+    :bundle-once false
+
+## :final-output-to
+
+When you have a process or a bundler that is going to process
+the :output-to file and produce a final load file for your
+application, you can specify it with :final-output-to
+
+Defaults to the value of :output-to
+
+    :final-output-to "target/public/cljs-out/dev-main-bundle.js"
 
 # Rarely used options
 
