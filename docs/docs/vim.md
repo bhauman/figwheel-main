@@ -55,10 +55,10 @@ Place the following in `project.clj`:
 (defproject fullstack "0.1"
   :description "A minimal sample full-stack Clojure(Script) website"
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.10.339"]]
+                 [org.clojure/clojurescript "1.10.773"]]
   :plugins [[cider/cider-nrepl "0.18.0"]]
   :profiles {:dev
-             {:dependencies [[org.clojure/clojurescript "1.10.339"]
+             {:dependencies [[org.clojure/clojurescript "1.10.773"]
                              [com.bhauman/figwheel-main "0.2.6"]
                              [cider/piggieback "0.3.8"]]
               :resource-paths ["target"]
@@ -198,7 +198,7 @@ So here's a minimal `deps.edn` (analogous to the previous `project.clj`):
  :paths ["src" "resources" "target"]
  :deps
  {org.clojure/clojure {:mvn/version "1.9.0"}
-  org.clojure/clojurescript {:mvn/version "1.10.339"}
+  org.clojure/clojurescript {:mvn/version "1.10.773"}
   com.bhauman/figwheel-main {:mvn/version "0.2.6"}
   com.bhauman/rebel-readline {:mvn/version "0.1.4"}
   com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}

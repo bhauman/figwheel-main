@@ -44,7 +44,7 @@ same version.
 In your `deps.edn` this would look like this:
 
 ```clojure
-{:deps {org.clojure/clojurescript {:mvn/version "1.10.339"}
+{:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
         com.bhauman/figwheel-main {:mvn/version "0.2.6"}
 		com.datomic/client-cloud {:mvn/version "0.8.71"}
 	    
