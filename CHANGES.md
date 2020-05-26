@@ -1,3 +1,15 @@
+# 0.2.6 Further NPM support for the new :bundle target
+
+Got extra-mains and auto-testing up and running along with a new
+intial docs page https://figwheel.org/docs/npm.html to help get
+started with an NPM based ClojureScript project.
+
+* Added templating to `:bundle-cmd` cljs option: it interpolates `:output-to` and `:final-output-to`
+* `:bundle-cmd` only bundles one time when watching and compiling
+* set the fighweel option `:bundle-once` to `false` to have bundling occur on every compile
+* set the fighweel option `:final-output-to` if you don't want the default of `:output-to` + "_bundle"
+* logs the bundle command when it runs for easier debugging
+
 # 0.2.5 Much better NPM support with new CLJS :bundle target 
 
 > support for the new :bundle target requires clojurescript >= 1.10.764
