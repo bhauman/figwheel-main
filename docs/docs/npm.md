@@ -17,6 +17,12 @@ This guide is modeled after the
 [ClojureScript Webpack Guide](https://clojurescript.org/guides/webpack). If
 you prefer a more concise guide, feel free to head over there now.
 
+> Npm usage in Figwheel has changed significantly. For reference purposes the
+> original version of this document can be found
+> [here](/docs/npm_archived)
+
+> These instructions require `org.clojure/clojurescript` >= `1.10.773`
+
 <hr/>
 **Quick Instructions**
 
@@ -43,9 +49,7 @@ Your host page will need to load the final bundled asset.
 
 <hr/>
 
-> Npm usage in Figwheel has changed significantly. For reference purposes the
-> original version of this document can be found
-> [here](/docs/npm_archived)
+
 
 ## What?
 
