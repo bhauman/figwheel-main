@@ -38,7 +38,11 @@ to
 {:none {"npx" "webpack" "--mode=development" :output-to "-o"
 :final-output-to}}
 ``` 
-to ensure the output file is bundled after a compile. Figwheel will fill in `:output-to` and `:final-output-to`.
+to ensure the output file is bundled after a compile. Figwheel will
+fill in `:output-to` and `:final-output-to`.
+
+> You will want to make sure that the `:output-to` file is in the
+> `:output-dir` directory so the bundler can find the assets it needs.
 
 Your host page will need to load the final bundled asset.
 
@@ -48,8 +52,6 @@ Your host page will need to load the final bundled asset.
 * [:final-output-to](/config-options#final-output-to)
 
 <hr/>
-
-
 
 ## What?
 
