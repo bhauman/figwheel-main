@@ -219,7 +219,9 @@
                                       (figwheel.core/reload-clj-files clj-files)
                                       (catch Throwable t
                                         (if (-> t ex-data :figwheel.core/internal)
-                                          (log/error (.getMessage t) t)
+                                          (do
+                                            (log/error (.getMessage t) t)
+                                            (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
                                           (do
                                             (log/syntax-exception t)
                                             (figwheel.core/notify-on-exception cenv t {})))
@@ -2009,6 +2011,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                        (build config options cenv)
                        (catch Throwable t
                          (log/error t)
+                         (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
                     ;; when not watching throw build errors
                          (when-not (and (not build-once)
                                         (= :none (:optimizations options :none))
