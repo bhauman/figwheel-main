@@ -35,8 +35,8 @@ Optionally set the [`:bundle-cmd` compiler
 option](https://clojurescript.org/reference/compiler-options#target)
 to 
 ```clojure
-{:none {"npx" "webpack" "--mode=development" :output-to "-o"
-:final-output-to}}
+{:none ["npx" "webpack" "--mode=development" :output-to "-o"
+:final-output-to]}
 ``` 
 to ensure the output file is bundled after a compile. Figwheel will
 fill in `:output-to` and `:final-output-to`.
