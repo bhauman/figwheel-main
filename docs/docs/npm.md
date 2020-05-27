@@ -13,18 +13,17 @@ tremendous amount of valuable functionality. This guide will show you
 how to include and consume NPM packages in your ClojureScript
 codebase.</div>
 
-This guide is modeled after the
-[ClojureScript Webpack Guide](https://clojurescript.org/guides/webpack). If
-you prefer a more concise guide, feel free to head over there now.
-
 > Npm usage in Figwheel has changed significantly. For reference purposes the
 > original version of this document can be found
 > [here](/docs/npm_archived)
 
 > These instructions require `org.clojure/clojurescript` >= `1.10.773`
+> and `com.bhauman/figwheel-main` >= `0.2.6`.
 
 <hr/>
-**Quick Instructions**
+**Quick Reference**
+
+*Read the rest of this document and come back here for a quick reference.*
 
 Set the [`:target` compiler
 option](https://clojurescript.org/reference/compiler-options#target)
@@ -41,10 +40,11 @@ to
 to ensure the output file is bundled after a compile. Figwheel will
 fill in `:output-to` and `:final-output-to`.
 
-> You will want to make sure that the `:output-to` file is in the
-> `:output-dir` directory so the bundler can find the assets it needs.
-
 Your host page will need to load the final bundled asset.
+
+> You will want to make sure that the `:output-to` file is in the
+> `:output-dir` directory so the bundler can resolve the assets it
+> requires.
 
 **Relevant Figwheel Options**
 
@@ -82,7 +82,41 @@ However, with recent changes in the ClojureScript compiler (along with
 changes in Figwheel) it is now becoming much more straightforward to
 include NPM modules in your codebase.
 
-## Importing NPM libraries into your project
+## The Overview
+
+We are going to utilize a JavaScript bundler like [Webpack][webpack]
+to bundle up the output of our ClojureScript compiled code to produce
+a final bundled output file which will contain all the NPM libraries
+we have required in our ClojureScript code.
+
+So the code is going to go through two steps:
+
+1. compilation by the ClojureScript compiler to an intermediate file
+2. bundled together with its NPM dependencies to a final output
+   file that we will load into the browser
+
+It's important to remember that the under the `:bundle` target the
+output of the ClojureScript compiler is not loadable by the browser it
+has to be bundled first.
+
+During development under optimizations `:none` the bundled output file
+will only contain the NPM libraries and small amount of ClojureScript
+boot code that will in turn load our compiled ClojureScript code. So
+there exists a bundle file and then a bunch of individually compiled
+ClojureScript namespaces that the bundled boot script will need to
+load. 
+
+> It's important to remember that during development the bundled file
+> still depends on the other ClojureScript output files and will not
+> work on its own.
+
+When we deploy to production we will be compiling a single
+ClojureScript artifact using `:simple` or `:advanced`
+optimizations. This single ClojureScript artifact will then be bundled
+along with its NPM dependencies into a single bundle that can be
+deployed on its own.
+
+## Getting started with NPM libraries into your project
 
 We are going to assume you are starting from the [base example][base-example-gist].
 
@@ -165,7 +199,17 @@ option](https://clojurescript.org/reference/compiler-options#target)
 is set to `:bundle` to instruct the ClojureScript compiler to produce
 an output file that can be bundled by a JavaScript bundler like Webpack.
 
-The [`:bundle-cmd` compiler option](https://clojurescript.org/reference/compiler-options#bundle-cmd)
+The [`:bundle-cmd` compiler
+option](https://clojurescript.org/reference/compiler-options#bundle-cmd)
+is set to 
+
+```clojure
+{:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]}}
+```
+
+This provides the ClojureScript compiler with a command that it can
+use to bundle the intermediate output of the compiler into its final
+bundled form.
 
 Figwheel adds some additional functionality to the `:bundle-cmd`. It
 interpolates the keywords `:output-to` and `:final-output-to` into the
@@ -234,6 +278,247 @@ Well we successfully used an [NPM][npm] package from our ClojureScript
 code. Now you can `npm add` other JavaScript NPM packages and use them
 from ClojureScript 
 
+## Configuration Tips
+
+### Don't specify `:output-to`
+
+Don't specify the `:output-to` compiler option. Figwheel will take
+care of this for you and normally it's just an intermediate file. You are
+probably much more interested in the output of the bundler.
+
+If you must specify where the output of the compiler is sent use
+`:output-dir` and Figwheel will specify an `[:output-dir]/main.js`
+file for you.
+
+### Using `:final-output-to`
+
+> `:final-output-to` is a Figwheel option, NOT a ClojureScript
+> compiler option. Place it in the metadata section of your build
+> config.
+
+If you don't want to use the default location and need to specify a
+specific location for your build's final bundled asset its probably
+best to supply a `:final-output-to` config option.
+
+You don't need to specify `:final-output-to` if you are **not** using the
+built in Figwheel REPL host page, [Extra-Mains](/docs/extra_mains.html), or
+[Auto-testing](/docs/testing.html#auto-testing).
+
+However, its helpful for Figwheel to know where the final bundled
+asset of your build is located. If the location is known then Figwheel
+can provide you a REPL without having to create and `index.html` page.
+Figwheel can also munge the name of the `:final-output-to` to create
+bundles for [Extra-Mains](/docs/extra_mains.html) and
+[Auto-testing](/docs/testing.html#auto-testing).
+
+### Using `:bundle-cmd`
+
+The `:bundle-cmd` compiler option is not required. It specifies what
+to do with the a compiled ClojureScript output file.
+
+You can skip using `:bundle-cmd` entirely and this would require that
+you run the bundler manually **AFTER** your files have been initially
+compiled.
+
+This can be unpleasant because it's rather nice to run a Figwheel build
+command and have the browser window pop open along with a running REPL.
+
+When you omit the `:bundle-cmd` you will need to launch figwheel
+first. The browser will pop open and display your custom `index.html`
+application page but it will be broken because the bundled JavaScript
+isn't available yet. Next, you will need to run your bundler and
+reload the browser. At this point, everything should be up and running
+fine. However, this is not the best experience and why using the
+`:bundle-cmd` is helpful.
+
+Another reason the `:bundle-cmd` is helpful is to provide Figwheel a
+template of a command that can create bundles for your build. If you
+create a `:bundle-cmd` with the keywords `:output-to` and
+`:final-output-to`, Figwheel will be able to reuse that command with
+different parameters to create slightly different bundles for things
+like [Extra-Mains](/docs/extra_mains.html) and
+[Auto-testing](/docs/testing.html#auto-testing).
+
+> Using a `:bundle-cmd` that specifies an `--output` does not preclude
+> you from having a `webpack.config.js` as the `--output` or `-o` flag
+> will override the output file settings in the config.
+
+Figwheel by default only runs the `:bundle-cmd` after the first
+compile, this avoids the incurring the latency of bundling on every
+single file change. This can significantly slow down hot-reloading
+depending on your set up.
+
+If you want bundling to happen after every compile set the
+`:bundle-once` Figwheel option to `false`
+
+
+## How NPM support works
+
+The motivation is that we want to have a JavaScript bundler process
+our ClojureScript output so that it can bring in and bundle all of our
+NPM dependencies. So we have two output files the output file from
+ClojureScript and the final bundled output from a JavaScript
+bundler like [Webpack][webpack] or [Parcel][parcel].
+
+When you use the `:bundle` target, the ClojureScript compiler does
+just this. We're going to examine how this is accomplished.
+
+Let's look at an example default output file when you don't supply a
+`:target` option and thus get the default browser target output.
+
+```javascript
+window.CLOSURE_UNCOMPILED_DEFINES = {"figwheel.repl.connect_url":"ws:\/\/localhost:9500\/figwheel-connect?fwprocess=29ee5f&fwbuild=devy"};
+window.CLOSURE_NO_DEPS = true;
+if(typeof goog == "undefined") document.write('<script src="/cljs-out/devy/goog/base.js"></script>');
+document.write('<script src="/cljs-out/devy/goog/deps.js"></script>');
+document.write('<script src="/cljs-out/devy/cljs_deps.js"></script>');
+document.write('<script>if (typeof goog == "undefined") console.warn("ClojureScript could not load :main, did you forget to specify :asset-path?");</script>');
+document.write('<script>goog.require("figwheel.core");</script>');
+document.write('<script>goog.require("figwheel.main");</script>');
+document.write('<script>goog.require("figwheel.repl.preload");</script>');
+document.write('<script>goog.require("devtools.preload");</script>');
+document.write('<script>goog.require("figwheel.main.system_exit");</script>');
+document.write('<script>goog.require("process.env");</script>');
+document.write('<script>goog.require("hello_world.core");</script>');
+```
+
+In the code above you can see the standard ClojureScript bootstrap
+code that loads your application into the browser (along with the
+figwheel preloads).
+
+When we are working with NPM, we want the ClojureScript compiler to
+resolve all of our references to NPM libraries in our `ns`
+declarations and then add them into this file somehow so we can call
+`webpack` on it to import them.
+
+For example when we have a namespace like above:
+
+```clojure
+(ns hello-world.core
+  (:require [moment]))
+```
+
+We want ClojureScript to make a note of that and then emit something
+that can bundled and that will process and include the `moment` NPM
+library.
+
+With this in mind let's look at the main output-to file when we use
+the `:bundle` target.
+
+```javascript
+import {npmDeps} from "./npm_deps.js";
+window.CLOSURE_UNCOMPILED_DEFINES = {"figwheel.repl.connect_url":"ws:\/\/localhost:9500\/figwheel-connect?fwprocess=87057f&fwbuild=dev","cljs.core._STAR_target_STAR_":"bundle"};
+window.CLOSURE_NO_DEPS = true;
+if(typeof goog == "undefined") document.write('<script src="/cljs-out/dev/goog/base.js"></script>');
+document.write('<script src="/cljs-out/dev/goog/deps.js"></script>');
+document.write('<script src="/cljs-out/dev/cljs_deps.js"></script>');
+document.write('<script>if (typeof goog == "undefined") console.warn("ClojureScript could not load :main, did you forget to specify :asset-path?");</script>');
+document.write('<script>goog.require("figwheel.core");</script>');
+document.write('<script>goog.require("figwheel.main");</script>');
+document.write('<script>goog.require("figwheel.repl.preload");</script>');
+document.write('<script>goog.require("devtools.preload");</script>');
+document.write('<script>goog.require("figwheel.main.system_exit");</script>');
+document.write('<script>goog.require("process.env");</script>');
+document.write('<script>goog.require("hello_world.core");</script>');
+window.require = function(lib) {
+   return npmDeps[lib];
+}
+```
+
+The first line is new. Let's look at it:
+
+```javascript
+import {npmDeps} from "./npm_deps.js";
+```
+
+OK so we are importing an `npm_deps.js` file. Let's look at its contents as well:
+
+```javascript
+module.exports = {
+  npmDeps: {
+    "moment": require('moment')  }
+};
+```
+
+So, the `npm_deps.js` file is a JavaScript bundler ready file that was
+generated by the CLJS compiler. The compiler looked at all of our `ns`
+declarations and resolved the NPM libraries by looking at the
+`node_modules` directory.
+
+Now when we run a bundler on our `main.js` output file the bundler will
+resolve the `npm_deps.js` file and then will resolve and include all
+NPM libs we are using.
+
+It's important to note that the `main.js` output file is importing the
+`./npm_deps.js` file *relatively* so both these files need to be in
+the same directory. ClojureScript will let you break this easily if
+you supply an `:output-to` option that isn't in the output directory.
+
+Now let's look at the last lines of our `main.js` output file.
+
+```javascript
+window.require = function(lib) {
+   return npmDeps[lib];
+}
+```
+
+These lines shim `require` so that it requiring a NPM library in
+ClojureScript works correctly.
+
+Further is we look at the output of compiling the
+`hello_world/core.cljs` file you will see this:
+
+```javascript
+// Compiled by ClojureScript 1.10.773 {:target :nodejs}
+goog.provide('hello_world.core');
+goog.require('cljs.core');
+hello_world.core.node$module$moment = require('moment');
+console.log(hello_world.core.node$module$moment);
+cljs.core.println.call(null,["Hello there it's ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(hello_world.core.node$module$moment.call(null).format("dddd"))].join(''));
+
+//# sourceMappingURL=core.js.map
+```
+
+The interesting line is where a scoped local reference of the `moment`
+is created.
+
+```javascript
+hello_world.core.node$module$moment = require('moment');
+```
+
+The `:bundle` target uses the current functionality of the `:nodejs`
+target which emits these requires. And while this works fine for
+`Node` we need to shim `require` to support it in the browser.
+
+Keep in mind this is all only true when we are developing in
+`:optimizations :none`. When we want to create a single compiled
+artifact to deploy for production, using `:simple` or `:advanced`
+optimization mode ClojureScript will put together a single output file
+with the requires in it. Then the bundler will resolve and replace
+these top `require`s as it normally does.
+
+## Troubleshooting
+
+### Bad bundle command
+
+The most likely thing that will happen is you will have a bad
+`:bundle-cmd`. 
+
+* Please check that the command that is logged is the
+command that you expect.
+* comment out the `:bundle-cmd` option, run the figwheel build and then run the
+webpack command from your terminal/shell environment to see what
+errors are showing up
+
+### The relationship between the `:output-to` file and `npm_deps.js`
+
+The `:output-to` file emitted by the `:bundle` target imports the
+`npm_deps.js` file. This can only work when the `:output-to` file is
+in the same directory as the `npm_deps.js` file. I.E. the `:output-to`
+file has to be in the `:output-dir` for the build.
+
+[webpack]: https://webpack.js.org/
+[parcel]: https://parceljs.org/
 [base-example-gist]: https://gist.github.com/bhauman/a5251390d1b8db09f43c385fb505727d
 [npm]: https://www.npmjs.com/
 
