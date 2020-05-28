@@ -239,6 +239,7 @@ resource paths should start with @")
 
 (s/def ::main-opts (s/alt
                     :stdin  ::stdin
+                    :install-deps #{"--install-deps"}
                     :script ::script
                     :build    (s/cat :opt ::build
                                      :repl-serve (s/? ::repl-or-serve))
