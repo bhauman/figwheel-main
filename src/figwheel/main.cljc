@@ -1086,6 +1086,19 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                 (into {})))
          cfg))
 
+     (defn output-to-inside-output-dir? [{:keys [output-to output-dir]}]
+       (= (.getCanonicalPath (.getParentFile (io/file output-to)))
+          (.getCanonicalPath (io/file output-dir))))
+
+     (defn validate-output-paths-relationship! [{:keys [options] :as cfg}]
+       (if (= :bundle (:target options))
+         (do (when-not (output-to-inside-output-dir? options)
+               (throw (ex-info (str "[Config Error] When using the :bundle target the :output-to file needs to be inside\nthe directory specified by :output-dir"
+                                    "\n :output-to "  (:output-to options)
+                                    "\n :output-dir " (:output-dir options)) {::error true})))
+             cfg)
+         cfg))
+
      ;; targets options
      ;; TODO needs to consider case where one or the other is specified???
      (defn- config-default-dirs [{:keys [options ::config ::build] :as cfg}]
@@ -1561,6 +1574,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             config-figwheel-mode?
             config-default-dirs
             config-default-final-output-to
+            validate-output-paths-relationship!
             config-default-asset-path
             config-default-aot-cache-false
             npm/config
