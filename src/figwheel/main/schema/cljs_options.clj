@@ -727,15 +727,33 @@ This setting does not apply if :optimizations is set to :advanced.
 
 (s/def ::bundle-cmd-entry
   (s/every (s/or :string non-blank-string?
-                 :template-key #{:output-to :final-output-to})
+                 :template-key #{:output-to :final-output-to :final-output-dir :final-output-filename})
            :min-count 1 :into [] :kind sequential?))
 
 (s/def ::none ::bundle-cmd-entry)
 (s/def ::default ::bundle-cmd-entry)
 
 (s/def ::bundle-cmd (spell/keys
-                     :req-un [::none]
-                     :opt-un [::default]))
+                     :opt-un [::none ::default]))
+
+(def-spec-meta ::bundle-cmd
+  :doc
+  "When using :target :bundle, set shell commands to be run after
+a build. This command is not parameterizable. You should provide
+both :none which will be run after dev builds, and :default which
+will be run after builds passed through Closure Compiler. The
+command should be one that exits, i.e. you cannot use this to launch
+a watcher.
+
+  Figwheel adds these template keywords
+    :output-to - the path and filename of the output file of the ClojureScript compiler
+    :final-output-to - the path and filename of the bundle output file
+    :final-output-dir - the directory of the final output bundle
+    :final-output-filename - the filename of the bundle output file
+
+  :bundle-cmd {:none [\"npx\" \"webpack\" \"--mode=development\" :output-to \"-o\" :final-output-to]
+               :default [\"npx\" \"webpack\"]}"
+  )
 
 ;; ** ClojureScript Compiler Warnings
 

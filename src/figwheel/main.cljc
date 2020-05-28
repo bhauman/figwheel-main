@@ -125,10 +125,15 @@
 
      ;; filling in a bundle-cmd template at the last moment
      (defn- fill-in-bundle-cmd-template [opts final-output-to]
-       (let [fill-in {:output-to (:output-to opts)
-                      :final-output-to final-output-to
-                      :none :none
-                      :default :default}]
+       (let [final-output-to-file (io/file final-output-to)
+             file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
+             file-name (try (.getName final-output-to-file) (catch Throwable t nil))
+             fill-in (cond-> {:output-to (:output-to opts)
+                              :final-output-to final-output-to
+                              :none :none
+                              :default :default}
+                       file-path (assoc :final-output-dir file-path)
+                       file-name (assoc :final-output-filename file-name))]
          (if (:bundle-cmd opts)
            (update opts :bundle-cmd
                    #(walk/postwalk
@@ -780,6 +785,32 @@ classpath. Classpath-relative paths have prefix of @ or @/")
               scope (conj scope))
             (apply io/file)
             (.getPath)))
+
+     (defn auto-bundle [{:keys [options ::config] :as cfg}]
+       ;; we only support webpack right now
+       (if (:auto-bundle config)
+         (cond-> cfg
+           true (assoc-in [:options :target] :bundle)
+           (= :webpack (:auto-bundle config))
+           (update-in [:options :bundle-cmd]
+                      #(merge
+                        {:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]
+                         :default ["npx" "webpack" :output-to "-o" :final-output-to]}
+                        %))
+           (= :parcel (:auto-bundle config))
+           (update-in [:options :bundle-cmd]
+                      #(merge
+                        {:none ["npx" "parcel" "build" :output-to
+                                "--out-dir" :final-output-dir
+                                "--out-file" :final-output-filename
+                                "--no-minify"]
+                         :default ["npx" "parcel" "build" :output-to
+                                   "--out-dir" :final-output-dir
+                                   "--out-file" :final-output-filename]}
+                        %))
+           (#{:advanced :simple} (:optimizations options))
+           (assoc-in [:options :closure-defines 'cljs.core/*global*] "window"))
+         cfg))
 
      (defmulti default-output-dir (fn [{:keys [options]}]
                                     (get options :target :browser)))
@@ -1568,10 +1599,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             config-repl-serve?
             config-main-ns
             config-main-source-path-on-classpath
-
             config-update-watch-dirs
             config-ensure-watch-dirs-on-classpath
             config-figwheel-mode?
+            auto-bundle
             config-default-dirs
             config-default-final-output-to
             validate-output-paths-relationship!

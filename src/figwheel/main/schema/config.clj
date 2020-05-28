@@ -680,12 +680,56 @@ Default: true
   :doc
   "When you have a process or a bundler that is going to process
 the :output-to file and produce a final load file for your
-application, you can specify it with :final-output-to
+application, you can specify it with :final-output-to.
 
 Defaults to the value of :output-to
 
     :final-output-to \"target/public/cljs-out/dev-main-bundle.js\""
   :group :common)
+
+(s/def ::auto-bundle #{:webpack :parcel})
+(def-spec-meta ::auto-bundle
+  :doc
+  "If you want to automatically configure your build with the default
+configuration when working with NPM and JavaScript bundle like Webpack
+set :auto-bundle.
+
+You can currently set :bundle-cmd to either :webpack of :parcel.
+
+If you are willing to live with the default configuration
+options :auto-bundle allows you to quickly configure a build to use
+NPM and webpack or parcel.
+
+This will set the Clojurescript compile options :target and :bundle-cmd
+
+This will set :target to :bundle
+
+Using :webpack this will set :bundle-cmd to:
+
+    {:none [\"npx\" \"webpack\" \"--mode=development\" :output-to \"-o\" :final-output-to]
+     :default [\"npx\" \"webpack\" :output-to \"-o\" :final-output-to]}
+
+Using :parsel this will set :bundle-cmd to:
+
+    {:none [\"npx\" \"parcel\" \"build\" :output-to
+            \"--out-dir\" :final-output-dir
+            \"--out-file\" :final-output-filename
+            \"--no-minify\"]
+     :default [\"npx\" \"parcel\" \"build\" :output-to
+              \"--out-dir\" :final-output-dir
+              \"--out-file\" :final-output-filename]}
+
+And it will also add
+
+    :clojure-defines {\"cljs.core/*global*\"\"window\"}
+
+when using :optimizations :simple or :advanced.
+
+Default value is nil
+
+    :auto-bundle :webpack"
+  :group :common)
+
 
 ;; ------ Uncommon options ----------------------------------
 
@@ -871,6 +915,7 @@ be useful for certain docker environments.
      ::launch-js
      ::bundle-once
      ::final-output-to
+     ::auto-bundle
 
      ::cljsjs-resources
 
