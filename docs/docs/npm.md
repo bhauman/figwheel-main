@@ -517,6 +517,14 @@ The `:output-to` file emitted by the `:bundle` target imports the
 in the same directory as the `npm_deps.js` file. I.E. the `:output-to`
 file has to be in the `:output-dir` for the build.
 
+{::comment}
+TODO
+- advanced 
+- talk about the combination of bundling :once and the launching a watcher
+- maybe discouraging the :output-to is a bad idea, perhaps just encourage the
+"_bundle" convention.
+{/:comment}
+
 [webpack]: https://webpack.js.org/
 [parcel]: https://parceljs.org/
 [base-example-gist]: https://gist.github.com/bhauman/a5251390d1b8db09f43c385fb505727d

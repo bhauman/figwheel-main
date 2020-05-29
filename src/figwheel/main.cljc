@@ -61,14 +61,43 @@
        (get-in opts [:bundle-cmd (or (#{:none} (:optimizations opts :none)) :default)]))
 
      (let [file-mod-atom (atom {})]
-       (defn file-has-changed? [f]
+       (defn file-has-changed? [f scope]
          (let [f ^java.io.File (io/file f)
-               canonical-path (.getCanonicalPath f)]
+               canonical-path (str scope ":" (.getCanonicalPath f))]
            (when (.exists f)
-             (let [last-modified (.lastModified f)
-                   changed? (not= last-modified (get @file-mod-atom canonical-path))]
-               (swap! file-mod-atom assoc canonical-path last-modified)
+             (let [chk-sum (.hashCode (slurp f))
+                   changed? (not= chk-sum (get @file-mod-atom canonical-path))]
+               (swap! file-mod-atom assoc canonical-path chk-sum)
                changed?)))))
+
+     (defn bundle-once? [config]
+       (if (not (contains? config :bundle-freq))
+         (get config :bundle-once true)
+         (= :once (get config :bundle-freq :once))))
+
+     (defn bundle-always? [config]
+       (if (not (contains? config :bundle-freq))
+         (not (get config :bundle-once true))
+         (= :always (get config :bundle-freq :once))))
+
+     (defn bundle-smart? [config]
+       (= :smart (get config :bundle-freq :once)))
+
+     (defn bundle-once-opts [config opts]
+       (if (bundle-once? config)
+         (dissoc opts :bundle-cmd)
+         opts))
+
+     (def NPM-DEPS-FILE "npm_deps.js")
+
+     (defn bundle-smart-opts [opts & [scope]]
+       (if (and (bundle-smart? (::config *config*))
+                (let [{:keys [output-to output-dir]} opts
+                      output-to? (file-has-changed? output-to scope)
+                      npm-deps? (file-has-changed? (io/file output-dir NPM-DEPS-FILE) scope)]
+                  (and (not output-to?) (not npm-deps?))))
+         (dissoc opts :bundle-cmd)
+         opts))
 
      ;; filling in a bundle-cmd template at the last moment
      (defn- fill-in-bundle-cmd-template [opts final-output-to]
@@ -95,31 +124,43 @@
            opts)))
 
      ;; taken and modified from cljs.closure/run-bundle-cmd
+     (defn run-bundle-cmd* [opts]
+       (when-let [cmd (extract-bundle-cmd-cli opts)]
+         (let [{:keys [exit out err]}
+               (try
+                 (log/info (str "Bundling: " (string/join " " cmd)))
+                 (apply sh/sh cmd)
+                 (catch Throwable t
+                   (throw
+                    (ex-info (str "Bundling command failed: " (.getMessage t))
+                             {::error true :cmd cmd} t))))]
+           (when-not (== 0 exit)
+             (throw
+              (ex-info (cond-> (str "Bundling command failed")
+                         (not (string/blank? out)) (str "\n" out)
+                         (not (string/blank? err)) (str "\n" err))
+                       {::error true :cmd cmd :exit-code exit :stdout out :stderr err}))))))
+
      (defn run-bundle-cmd [opts]
        (let [final-output-to (:final-output-to (::config *config*))
-             opts (fill-in-bundle-cmd-template opts final-output-to)
-             cmd-type (or (#{:none} (:optimizations opts :none)) :default)]
-         (when-let [cmd (get-in opts [:bundle-cmd cmd-type])]
-           (let [{:keys [exit out err]}
-                 (try
-                   (log/info (str "Bundling: " (string/join " " cmd)))
-                   (apply sh/sh cmd)
-                   (catch Throwable t
-                     (throw
-                      (ex-info (str "Bundling command failed: " (.getMessage t))
-                               {::bundle-failed true :cmd cmd} t))))]
-             (when-not (== 0 exit)
-               (throw
-                (ex-info (cond-> (str "Bundling command failed")
-                           (not (string/blank? out)) (str "\n" out)
-                           (not (string/blank? err)) (str "\n" err))
-                         {::bundle-failed true
-                          :cmd cmd :exit-code exit :stdout out :stderr err})))))))
+             opts (fill-in-bundle-cmd-template opts final-output-to)]
+         (run-bundle-cmd* opts)))
+
+     (defn- wrap-with-bundling [build-fn]
+       (fn [id build-inputs opts & args]
+         (let [bundling? (and (= :bundle (:target opts))
+                              (:bundle-cmd opts))]
+           (when bundling?
+             (file-has-changed? (:output-to opts) id)
+             (file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) id))
+           (apply build-fn id build-inputs (dissoc opts :bundle-cmd) args)
+           (when bundling?
+             (run-bundle-cmd (bundle-smart-opts opts id))))))
 
      (defn- wrap-with-build-logging [build-fn]
        (fn [id? build-inputs opts & args]
          (let [started-at (System/currentTimeMillis)
-               {:keys [output-to output-dir target bundle-cmd]} opts]
+               {:keys [output-to output-dir]} opts]
            ;; print start message
            (log/info (str "Compiling build"
                           (when id? (str " " id?))
@@ -145,21 +186,17 @@
                          (conj (remove #{cljs.analyzer/default-warning-handler}
                                        cljs.analyzer/*cljs-warning-handlers*)
                                warning-fn)]
-                 (apply build-fn build-inputs
-                        (dissoc opts :bundle-cmd)
-                        args)))
+                 (apply build-fn build-inputs opts args)))
              (log/succeed (str "Successfully compiled build"
                                (when id? (str " " id?))
                                " to \""
                                (or output-to output-dir)
                                "\" in " (time-elapsed started-at) "."))
-             (run-bundle-cmd opts)
              (catch Throwable e
                (log/failure (str
                              "Failed to compile build" (when id? (str " " id?))
                              " in " (time-elapsed started-at) "."))
-               (when-not (::bundle-failed (ex-data e))
-                 (log/syntax-exception e))
+               (log/syntax-exception e)
                (throw e))))))
 
      (declare resolve-fn-var)
@@ -176,23 +213,15 @@
          (run-hooks (::post-build-hooks *config*) *config*)))
 
      (def build-cljs
-       (-> bapi/build wrap-with-build-logging wrap-with-build-hooks))
+       (-> bapi/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks))
 
      (def fig-core-build
-       (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks))
+       (-> figwheel.core/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks))
 
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be
      (defn config->reload-config [config]
-       (select-keys config [:reload-clj-files :wait-time-ms :hawk-options :bundle-once]))
-
-     (defn bundle-once? [config]
-       (get config :bundle-once true))
-
-     (defn bundle-once-opts [config opts]
-       (if (bundle-once? config)
-         (dissoc opts :bundle-cmd)
-         opts))
+       (select-keys config [:reload-clj-files :wait-time-ms :hawk-options :bundle-once :bundle-freq]))
 
      (defn watch-build [id paths inputs opts cenv & [reload-config]]
        (when-let [inputs (not-empty (if (coll? inputs) inputs [inputs]))]
@@ -1501,7 +1530,6 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              (append-to-filename-before-ext
               (:final-output-to (::config *config*))
               (str "-" (name nm)))
-             bundle-every-time? (not (bundle-once? (::config *config*)))
              bundled-already (atom false)]
          (fn [_]
            (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
@@ -1516,11 +1544,15 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                opts))
              ;; have to run the bundle command as well
              (when (and (= :bundle (:target opts))
-                        (:bundle-cmd opts)
-                        (not @bundled-already))
-               (run-bundle-cmd opts)
-               (when-not bundle-every-time?
-                 (reset! bundled-already true)))
+                        (:bundle-cmd opts))
+               (if-not @bundled-already
+                 (do
+                   (file-has-changed? (:output-to opts) nm)
+                   (file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) nm)
+                   (run-bundle-cmd opts)
+                   (reset! bundled-already true))
+                 (when (not (bundle-once? (::config *config*)))
+                   (run-bundle-cmd (bundle-smart-opts opts nm)))))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
@@ -2068,7 +2100,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                      (try
                        (build config options cenv)
                        (catch Throwable t
-                         (log/error (.getMessage t))
+                         (log/error (ansip/format-str [:red (.getMessage t)]))
                          (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
                     ;; when not watching throw build errors
                          (when-not (and (not build-once)

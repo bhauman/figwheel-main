@@ -663,17 +663,24 @@ You can also disable `cljs-test-display` with:
   :group :common)
 
 (s/def ::bundle-once boolean?)
-(def-spec-meta ::bundle-once
+
+(s/def ::bundle-freq #{:once :smart :always})
+(def-spec-meta ::bundle-freq
   :doc
-  "When using the :bundle target and there is a :bundle-cmd specified
-only call the bundle command once for the initial compile of the
-build. Set this to false if you want to call the bundle command
-everytime a compile is triggered.
+  "When using the :bundle target and there is a :bundle-cmd specified,
+this option specifies how often to call the bundle-cmd.
 
-Default: true
+There are three possible values for this key:
 
-    :bundle-once false"
+:once - only bundle once on the first compile
+:always - exec the bundle cmd on every compile
+:smart - bundle only when the :output-to file or the npm_deps.js file changes
+
+Default: :once
+
+    :bundle-freq :smart"
   :group :common)
+
 
 (s/def ::final-output-to non-blank-string?)
 (def-spec-meta ::final-output-to
@@ -914,6 +921,7 @@ be useful for certain docker environments.
      ::auto-testing
      ::launch-js
      ::bundle-once
+     ::bundle-freq
      ::final-output-to
      ::auto-bundle
 
