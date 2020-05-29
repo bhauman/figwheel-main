@@ -60,12 +60,49 @@
      (defn- extract-bundle-cmd-cli [opts]
        (get-in opts [:bundle-cmd (or (#{:none} (:optimizations opts :none)) :default)]))
 
+     (let [file-mod-atom (atom {})]
+       (defn file-has-changed? [f]
+         (let [f ^java.io.File (io/file f)
+               canonical-path (.getCanonicalPath f)]
+           (when (.exists f)
+             (let [last-modified (.lastModified f)
+                   changed? (not= last-modified (get @file-mod-atom canonical-path))]
+               (swap! file-mod-atom assoc canonical-path last-modified)
+               changed?)))))
+
+     ;; filling in a bundle-cmd template at the last moment
+     (defn- fill-in-bundle-cmd-template [opts final-output-to]
+       (let [final-output-to-file (io/file final-output-to)
+             file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
+             file-name (try (.getName final-output-to-file) (catch Throwable t nil))
+             fill-in (cond-> {:output-to (:output-to opts)
+                              :final-output-to final-output-to
+                              :none :none
+                              :default :default}
+                       file-path (assoc :final-output-dir file-path)
+                       file-name (assoc :final-output-filename file-name))]
+         (if (:bundle-cmd opts)
+           (update opts :bundle-cmd
+                   #(walk/postwalk
+                     (fn [x]
+                       (if (keyword? x)
+                         (if-let [replace (fill-in x)]
+                           replace
+                           (throw (ex-info (format "No %s available to fill :bundle-cmd template" x)
+                                           {})))
+                         x))
+                     %))
+           opts)))
+
      ;; taken and modified from cljs.closure/run-bundle-cmd
      (defn run-bundle-cmd [opts]
-       (let [cmd-type (or (#{:none} (:optimizations opts)) :default)]
+       (let [final-output-to (:final-output-to (::config *config*))
+             opts (fill-in-bundle-cmd-template opts final-output-to)
+             cmd-type (or (#{:none} (:optimizations opts :none)) :default)]
          (when-let [cmd (get-in opts [:bundle-cmd cmd-type])]
            (let [{:keys [exit out err]}
                  (try
+                   (log/info (str "Bundling: " (string/join " " cmd)))
                    (apply sh/sh cmd)
                    (catch Throwable t
                      (throw
@@ -116,21 +153,14 @@
                                " to \""
                                (or output-to output-dir)
                                "\" in " (time-elapsed started-at) "."))
-             ;; breaking out bundling as to allow better logging
-             (when-let [cli (and (= :bundle target)
-                                 (extract-bundle-cmd-cli opts))]
-               (log/info (str "Bundling: " (string/join " " cli)))
-               (run-bundle-cmd (update opts :optimizations
-                                       (fn [x] (if (nil? x) :none x)))))
+             (run-bundle-cmd opts)
              (catch Throwable e
                (log/failure (str
                              "Failed to compile build" (when id? (str " " id?))
                              " in " (time-elapsed started-at) "."))
-               (when (::bundle-failed (ex-data e))
-                 (throw e))
-               (log/syntax-exception e)
-               (throw e)
-               )))))
+               (when-not (::bundle-failed (ex-data e))
+                 (log/syntax-exception e))
+               (throw e))))))
 
      (declare resolve-fn-var)
 
@@ -145,44 +175,11 @@
          (apply build-fn args)
          (run-hooks (::post-build-hooks *config*) *config*)))
 
-     ;; filling in a bundle-cmd template at the last moment
-     (defn- fill-in-bundle-cmd-template [opts final-output-to]
-       (let [final-output-to-file (io/file final-output-to)
-             file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
-             file-name (try (.getName final-output-to-file) (catch Throwable t nil))
-             fill-in (cond-> {:output-to (:output-to opts)
-                              :final-output-to final-output-to
-                              :none :none
-                              :default :default}
-                       file-path (assoc :final-output-dir file-path)
-                       file-name (assoc :final-output-filename file-name))]
-         (if (:bundle-cmd opts)
-           (update opts :bundle-cmd
-                   #(walk/postwalk
-                     (fn [x]
-                       (if (keyword? x)
-                         (if-let [replace (fill-in x)]
-                           replace
-                           (throw (ex-info (format "No %s available to fill :bundle-cmd template" x)
-                                           {})))
-                         x))
-                     %))
-           opts)))
-
-     (defn- fill-in-bundle-cmd-template-build-fn [build-fn]
-       (fn [id build-inputs opts & args]
-         (let [{:keys [final-output-to]} (::config *config*)]
-           (apply build-fn id build-inputs
-                  (fill-in-bundle-cmd-template opts final-output-to)
-                  args))))
-
      (def build-cljs
-       (-> bapi/build wrap-with-build-logging wrap-with-build-hooks
-           fill-in-bundle-cmd-template-build-fn))
+       (-> bapi/build wrap-with-build-logging wrap-with-build-hooks))
 
      (def fig-core-build
-       (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks
-           fill-in-bundle-cmd-template-build-fn))
+       (-> figwheel.core/build wrap-with-build-logging wrap-with-build-hooks))
 
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be
@@ -1520,15 +1517,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              ;; have to run the bundle command as well
              (when (and (= :bundle (:target opts))
                         (:bundle-cmd opts)
-                        run-bundle-cmd
                         (not @bundled-already))
-               (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
-                 (when-not bundle-every-time?
-                   (reset! bundled-already true))
-                 (when-let [cli (extract-bundle-cmd-cli opts)]
-                   (log/info (str "Bundling: " (string/join " " cli))))
-                 (run-bundle-cmd (update opts :optimizations
-                                         (fn [x] (if (nil? x) :none x))))))
+               (run-bundle-cmd opts)
+               (when-not bundle-every-time?
+                 (reset! bundled-already true)))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
