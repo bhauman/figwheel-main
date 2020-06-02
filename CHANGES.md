@@ -1,3 +1,14 @@
+# 0.2.7 Further NPM support
+
+Pushed `:bundle` target support forward a bit further.
+
+* added `:bundle-freq` figwheel-option with `:once`, `:always` and `:smart` which bundles when `output-to` or `npm_deps.js` changes
+* added `:auto-bundle` figwheel-option so supply basic default bundle config
+* log the bundle command and the bunder output when a bundle command fails
+* added a warning to ensure the `:output-to` is inside the `:output-dir` for the bundle target
+* added `--install-deps` cli support to the schema
+
+
 # 0.2.6 Further NPM support for the new :bundle target
 
 Got extra-mains and auto-testing up and running along with a new
