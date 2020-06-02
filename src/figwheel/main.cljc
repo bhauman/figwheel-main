@@ -141,10 +141,11 @@
                          (not (string/blank? err)) (str "\n" err))
                        {::error true :cmd cmd :exit-code exit :stdout out :stderr err}))))))
 
-     (defn run-bundle-cmd [opts]
-       (let [final-output-to (:final-output-to (::config *config*))
-             opts (fill-in-bundle-cmd-template opts final-output-to)]
-         (run-bundle-cmd* opts)))
+     (defn run-bundle-cmd
+       ([opts] (run-bundle-cmd opts (:final-output-to (::config *config*))))
+       ([opts final-output-to]
+        (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
+          (run-bundle-cmd* opts))))
 
      (defn- wrap-with-bundling [build-fn]
        (fn [id build-inputs opts & args]
@@ -1549,10 +1550,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                  (do
                    (file-has-changed? (:output-to opts) nm)
                    (file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) nm)
-                   (run-bundle-cmd opts)
+                   (run-bundle-cmd opts final-output-to)
                    (reset! bundled-already true))
                  (when (not (bundle-once? (::config *config*)))
-                   (run-bundle-cmd (bundle-smart-opts opts nm)))))
+                   (run-bundle-cmd (bundle-smart-opts opts nm) final-output-to))))
              (when switch-to-node?
                (compile-resource-helper "cljs/nodejs.cljs" opts)
                (compile-resource-helper "cljs/nodejscli.cljs" opts)
