@@ -1179,6 +1179,22 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              cfg)
          cfg))
 
+     (defn closure-defines-has-key-value? [{:keys [closure-defines] :as options} k v]
+       (= (str v)
+          (str (or (get closure-defines (symbol k))
+                   (get closure-defines (str k))))))
+
+     (defn validate-bundle-advanced! [{:keys [options] :as cfg}]
+       (if (and (= :bundle (:target options))
+                (#{:simple :advanced} (:optimizations options)))
+         (do (when-not (closure-defines-has-key-value? options
+                                                       'cljs.core/*global* 'window)
+               (log/warn "When using :bundle target with simple or advanced optimizations,
+you should add a cljs.core/*global* key with a value of \"window\" to :closure-defines.
+I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
+             cfg)
+         cfg))
+
      ;; targets options
      ;; TODO needs to consider case where one or the other is specified???
      (defn- config-default-dirs [{:keys [options ::config ::build] :as cfg}]
@@ -1652,6 +1668,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             config-default-dirs
             config-default-final-output-to
             validate-output-paths-relationship!
+            validate-bundle-advanced!
             config-default-asset-path
             config-default-aot-cache-false
             npm/config
