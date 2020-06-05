@@ -131,6 +131,7 @@ resource paths should start with @")
                           :opt-val not-flag?))
 
 (s/def ::print-config #{"-pc" "--print-config"})
+(s/def ::clean-outputs #{"--clean"})
 
 (s/def ::watch (s/cat :opt-key #{"-w" "--watch"}
                       :opt-val (s/and ::directory-exists
@@ -170,6 +171,7 @@ resource paths should start with @")
    :figwheel      ::figwheel
    :output-to     ::output-to
    :print-config  ::print-config
+   :clean-outputs ::clean-outputs
    :watch         ::watch
    :port          ::port
    :host          ::host
@@ -475,6 +477,7 @@ resource paths should start with @")
                   :figwheel      ::figwheel
                   :output-to     ::output-to
                   :print-config  ::print-config
+                  :clean-outputs ::clean-outputs
                   :watch         ::watch
                   :port          ::port
                   :host          ::host
@@ -526,6 +529,7 @@ resource paths should start with @")
                   ;:figwheel      ::figwheel
                   ;:output-to     ::output-to
                   :print-config  ::print-config
+                  :clean-outputs ::clean-outputs
                   ;:watch         ::watch
                   :port          ::port
                   :host          ::host

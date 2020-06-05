@@ -7,6 +7,14 @@
   (:import
    java.nio.file.Paths))
 
+(defn delete-file-or-directory [f]
+  (let [f (io/file f)]
+    (when (.exists f)
+      (if (.isDirectory f)
+        (doseq [sf (reverse (file-seq f))]
+          (.delete sf))
+        (.delete f)))))
+
 (defn ->path [s & args]
   (java.nio.file.Paths/get ^String s (into-array String args)))
 

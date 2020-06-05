@@ -737,6 +737,20 @@ Default value is nil
     :auto-bundle :webpack"
   :group :common)
 
+(s/def ::clean-outputs boolean?)
+
+(def-spec-meta ::clean-outputs
+  :doc "Takes a boolean value that if true indicates that
+figwheel.main should clean the output artifacts of the compile BEFORE
+building or compiling. I.E. :output-to, :output-dir,
+and :final-output-to all be deleted along with any extra-main, and
+auto-testing files.
+
+Default value is nil
+
+    :clean-outputs true"
+  :group :common)
+
 
 ;; ------ Uncommon options ----------------------------------
 
@@ -924,6 +938,7 @@ be useful for certain docker environments.
      ::bundle-freq
      ::final-output-to
      ::auto-bundle
+     ::clean-outputs
 
      ::cljsjs-resources
 

@@ -528,7 +528,10 @@ classpath. Classpath-relative paths have prefix of @ or @/")
          (update cfg ::config merge edn)))
 
      (defn print-config-opt [cfg opt]
-       (assoc-in cfg [::config :pprint-config] (not (#{"false"} opt))))
+       (assoc-in cfg [::config :pprint-config] (not= "false" opt)))
+
+     (defn clean-outputs-opt [cfg opt]
+       (assoc-in cfg [::config :clean-outputs] (not= "false" opt)))
 
      (defn- watch-opt
        [cfg path]
@@ -780,7 +783,13 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                 :doc "The name of a build config to watch and build in the background."}
                ["-pc" "--print-config"]
                {:group :cljs.cli/main&compile :fn print-config-opt
-                :doc "Instead of running the command print out the configuration built up by the command. Useful for debugging."}}
+                :doc "Instead of running the command print out the configuration built up by the command. Useful for debugging."}
+               ["--clean"]
+               {:group :cljs.cli/main&compile :fn clean-outputs-opt
+                :doc (str "Delete the compile artifacts for this build before compiling. "
+                          "Deletes :output-dir, :output-to, :final-output-to and any extra-main files."
+                          "This option can be supplied by itself to clean all builds."
+                          "Or you can supply a single build name to clean only that build.")}}
         :main {["-b" "--build"]
                {:fn build-main-opt
                 :arg "string"
@@ -1258,6 +1267,44 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
      (defn config-clean [cfg]
        (update cfg :options dissoc :watch))
 
+     ;; find and clean all builds
+
+     (defn clean-outputs* [& args]
+       (doseq [f (keep identity (distinct args))]
+         (when (.exists (io/file f))
+           (log/info (str "Deleting: " (str f)))
+           (fw-util/delete-file-or-directory f))))
+
+     (declare extra-main-altered-output-filenames)
+
+     (defn config-clean-outputs! [{:keys [options ::config ::build] :as cfg}]
+       (when (:clean-outputs config)
+         (let [files-for-mains
+               (->> (keys (:extra-main-files config))
+                    (mapcat
+                     #(vals (extra-main-altered-output-filenames % options config)))
+                    (keep identity))]
+           (log/info (str "Cleaning compiler output for build " (:id build)))
+           (apply clean-outputs*
+                  (concat
+                   files-for-mains
+                   [(:final-output-to config)
+                    (:output-to options)
+                    (:output-dir options)]))))
+       cfg)
+
+     (defn clean-build-outputs! [build-id]
+       (when-let [build-edn (and build-id (get-build build-id))]
+         (-> {:options build-edn
+              ::config (cond-> (assoc (meta build-edn) :clean-outputs true)
+                         (:auto-testing (meta build-edn))
+                         (update :extra-main-files assoc :auto-testing true)) }
+             (merge {::build {:id build-id}})
+             auto-bundle
+             config-default-dirs
+             config-default-final-output-to
+             config-clean-outputs!)))
+
 ;; TODO create connection
 
      (let [localhost (promise)]
@@ -1489,12 +1536,12 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                   (keep (partial resolve-fn-var "post-build-hook-fn")
                         (:post-build-hooks config))))))
 
-     (defn alter-output-to [nm {:keys [output-to output-dir] :as opts}]
+     (defn output-to-for-extra-main [nm {:keys [output-to output-dir]}]
        (cond
          output-to
-         (assoc opts :output-to (append-to-filename-before-ext output-to (str "-" nm)))
+         (append-to-filename-before-ext output-to (str "-" nm))
          output-dir
-         (assoc opts :output-to (str (io/file output-dir (str "main-" nm ".js"))))
+         (str (io/file output-dir (str "main-" nm ".js")))
          :else nil))
 
      (defn merge-extra-key-with [m extra-m f k]
@@ -1527,8 +1574,14 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
      (defn extra-main-options [nm em-options options]
   ;; need to remove modules so that we get a funcitioning independent main endpoint
        (merge-extra-cljs-options
-        (dissoc (alter-output-to (name nm) options) :modules)
+        (dissoc options :modules)
         em-options))
+
+     (defn extra-main-altered-output-filenames [nm options config]
+         {:output-to (output-to-for-extra-main (name nm) options)
+          :final-output-to (append-to-filename-before-ext
+                            (:final-output-to config)
+                            (str "-" (name nm)))})
 
      (defn- compile-resource-helper [res opts]
        (let [parts (-> res
@@ -1542,11 +1595,10 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
 
      (defn extra-main-fn [nm em-options options]
        ;; TODO modules??
-       (let [opts (extra-main-options nm em-options options)
-             final-output-to
-             (append-to-filename-before-ext
-              (:final-output-to (::config *config*))
-              (str "-" (name nm)))
+       (let [{:keys [output-to final-output-to]}
+             (extra-main-altered-output-filenames nm options (::config *config*))
+             opts (-> (extra-main-options nm em-options options)
+                      (assoc :output-to output-to))
              bundled-already (atom false)]
          (fn [_]
            (log/info (format "Outputting main file: %s" (:output-to opts "main.js")))
@@ -1685,6 +1737,7 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
             config-extra-mains
             config-build-inputs
             config-clean
+            config-clean-outputs!
             config-warn-resource-directory-not-on-classpath))
 
 ;; ----------------------------------------------------------------------------
@@ -2428,6 +2481,30 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                 (list)
                 args)))
 
+     (defn available-build-ids []
+       (->> (seq (.listFiles (clojure.java.io/file ".")))
+            (filter #(.endsWith (.getName %) ".cljs.edn"))
+            (mapv #(string/replace (.getName %) ".cljs.edn" ""))))
+
+     (defn clean-all-builds! []
+       (doseq [build-id (available-build-ids)]
+         (clean-build-outputs! build-id)))
+
+     (defn build-cleaning! [args]
+       (cond
+         (= args ["--clean"])
+         (do (clean-all-builds!)
+             (System/exit 0))
+         (and (= 3 (count args))
+              (= ["--clean" "true"]
+                 (take 2 args)))
+         (let [build-ids (available-build-ids)
+               build-id (last args)]
+           (if ((set build-ids) build-id)
+             (clean-build-outputs! build-id)
+             (println (str "Cannot find " build-id ".cljs.edn build file to clean build.")))
+           (System/exit 0))))
+
      (defn -main [& orig-args]
   ;; todo make this local with-redefs?
        (alter-var-root #'cli/default-commands cli/add-commands figwheel-commands)
@@ -2435,7 +2512,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
        (when-let [level (get-edn-file-key "figwheel-main.edn" :log-level)]
          (log/set-level level))
        (try
-         (let [args       (fix-simple-bool-args #{"-pc" "--print-config"} orig-args)
+         (let [args       (fix-simple-bool-args #{"-pc" "--print-config" "--clean"} orig-args)
                [pre post] (split-with (complement #{"-re" "--repl-env"}) args)
                _          (when (not-empty post)
                             (throw
@@ -2443,6 +2520,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                            "The figwheel REPL is implicitly used.\n"
                                            "Perhaps you were intending to use the --target option?")
                                       {::error true})))
+               _          (build-cleaning! args)
                _          (validate-cli! (vec orig-args))
                args'      (concat ["-re" "figwheel"] args)
                args'      (if (or (empty? args)
