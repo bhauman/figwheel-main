@@ -48,7 +48,8 @@ Your host page will need to load the final bundled asset.
 
 **Relevant Figwheel Options**
 
-* [:bundle-once](/config-options#bundle-once)
+* [:auto-bundle](/config-options#auto-bundle)
+* [:bundle-freq](/config-options#bundle-freq)
 * [:final-output-to](/config-options#final-output-to)
 
 <hr/>
@@ -278,6 +279,53 @@ Well we successfully used an [NPM][npm] package from our ClojureScript
 code. Now you can `npm add` other JavaScript NPM packages and use them
 from ClojureScript 
 
+## Simplifying with `:auto-bundle`
+
+If you just need to get up and running quickly the `:auto-bundle`
+Figwheel option will set up all the default options that we configured above.
+
+So this configuration is equivalent to the above configuration:
+
+```clojure
+^{:auto-bundle :webpack}
+{:main hello-world.core}
+```
+
+When enabled `:auto-bundle` will set `:target` to `:bundle`.
+
+When choosing `:webpack` it will set `:bundle-cmd` to:
+
+```clojure
+{:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]
+ :default ["npx" "webpack" "--mode=production" :output-to "-o" :final-output-to]}
+``` 
+  
+and when choosing `:parcel` it will set `:bundle-cmd` to:
+
+```clojure
+{:none ["npx" "parcel" "build" :output-to
+        "--out-dir" :final-output-dir
+        "--out-file" :final-output-filename
+        "--no-minify"]
+ :default ["npx" "parcel" "build" :output-to
+           "--out-dir" :final-output-dir
+           "--out-file" :final-output-filename]}
+```
+
+These `:bundle-cmd` configurations are merged with any `:bundle-cmd`
+configurations in your `.cljs.edn` file so that you can override
+either the default ones.
+
+`:auto-bundle` also adds an important config to `:closure-defines` in
+your compiler options when not using `:optimizations` `:none`.
+
+It adds:
+
+```clojure
+{:closure-defines {...
+                   cljs.core/*global "window"}}
+```
+
 ## Configuration Tips
 
 ### Don't specify `:output-to`
@@ -289,6 +337,10 @@ probably much more interested in the output of the bundler.
 If you must specify where the output of the compiler is sent use
 `:output-dir` and Figwheel will specify an `[:output-dir]/main.js`
 file for you.
+
+It's important to remember that all the output-files still have to be
+accessible from the browser (i.e. served by the web-server) when
+developing, as these files are not included in the output bundle.
 
 ### Using `:final-output-to`
 
@@ -339,18 +391,58 @@ different parameters to create slightly different bundles for things
 like [Extra-Mains](/docs/extra_mains.html) and
 [Auto-testing](/docs/testing.html#auto-testing).
 
-> Using a `:bundle-cmd` that specifies an `--output` does not preclude
-> you from having a `webpack.config.js` as the `--output` or `-o` flag
-> will override the output file settings in the config.
+When filling in the `:bundle-cmd` template Figwheel also replaces the
+`:final-output-dir` and `:final-output-filename` template keywords
+(this helps with commands that require them). It obtains these values
+from the `:final-output-to` value.
 
 Figwheel by default only runs the `:bundle-cmd` after the first
 compile, this avoids the incurring the latency of bundling on every
 single file change. This can significantly slow down hot-reloading
-depending on your set up.
+depending on your set up. You can change this with the `:bundle-freq`
+Figwheel option.
 
-If you want bundling to happen after every compile set the
-`:bundle-once` Figwheel option to `false`
 
+## Using `:bundle-freq`
+
+The `:bundle-freq` Figwheel option controls how often a the
+`:bundle-cmd` is called.
+
+It has three settings `:once`, `:always`, and `:smart`:
+
+* `:once` - bundles only once after the initial build compile. This
+  helpful if you want to launch a `webpack` watch command on the
+  command line after you start your build. 
+* `:always` - bundles after every ClojureScript compile. This is fine
+  when you are starting out and bundle times are short. This however
+  increases the total compile time and can slow down your hot-reload
+  time.
+* `:smart` - re-bundles only when your `:output-to` or `npm_deps.js`
+  changes thus trying to only bundle when you have included a new node
+  dependency in your CLJS code. This will cover most cases where you
+  need to rebundle but is no where near a complete as launching a
+  `webpack` watcher.
+  
+The default is `:once` which is the most conservative setting. 
+
+I think that using `:smart` is probably the best choice if you are not
+using a `webpack` watcher.
+
+> Keep in mind that a hot-reload will NOT pick up changes from a
+> re-bundling. You have to refresh the browser to get those changes.
+> So if you add a node dependency and it gets re-bundled into your JS
+> bundle you won't see it until you reload the browser.
+
+## Using a `webpack.config.js`
+
+It's important to note that you can still use a `webpack.config.js` to
+specify various configurations for your bundle. The CLI options simply
+override the configuration in the `webpack.config.js` file. If an
+input file is specified on the command line it will simply override
+any `entry` supplied in the Webpack config. If an `-o` is supplied it will
+any `output` supplied in the Webpack config as well.
+
+This frees you to configure your Webpack bundle as you need.
 
 ## How NPM support works
 

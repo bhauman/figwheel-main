@@ -866,7 +866,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                                    "--out-dir" :final-output-dir
                                    "--out-file" :final-output-filename]}
                         %))
-           (#{:advanced :simple} (:optimizations options))
+           (#{:advanced :simple :whitespace} (:optimizations options))
            (assoc-in [:options :closure-defines 'cljs.core/*global*] "window"))
          cfg))
 
