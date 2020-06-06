@@ -632,6 +632,18 @@ Default value is nil
 
     :auto-bundle :webpack
 
+## :clean-outputs
+
+Takes a boolean value that if true indicates that
+figwheel.main should clean the output artifacts of the compile BEFORE
+building or compiling. I.E. :output-to, :output-dir,
+and :final-output-to all be deleted along with any extra-main, and
+auto-testing files.
+
+Default value is nil
+
+    :clean-outputs true
+
 # Rarely used options
 
 ## :open-url-wait-ms

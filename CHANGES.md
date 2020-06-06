@@ -1,4 +1,29 @@
+# 0.2.8 Bug fix and build cleaning
+
+Fixed a major bug introduced in 0.2.7 that caused extra-mains to
+overwrite the builds :output-to. 
+
+Also added the `:clean-outputs` Figwheel option that will clean the
+compiler's output targets before compiling and starting the build.
+
+Also added the `--clean` command line option that does the same thing.
+
+Here are some examples of using the `--clean` CLI option:
+
+```
+# this cleans before building
+clojure -m figwheel.main --clean -b dev -r
+
+# this cleans all the builds
+clojure -m figwheel.main --clean
+
+# this only cleans the dev build
+clojure -m figwheel.main --clean dev
+```
+
 # 0.2.7 Further NPM support
+
+> This version has a serious bug when using auto-testing or extra-mains. Please use 0.2.8
 
 Pushed `:bundle` target support forward a bit further.
 
