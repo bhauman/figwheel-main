@@ -844,7 +844,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             (apply io/file)
             (.getPath)))
 
-     (defn auto-bundle [{:keys [options ::config] :as cfg}]
+     (defn config-auto-bundle [{:keys [options ::config] :as cfg}]
        ;; we only support webpack right now
        (if (:auto-bundle config)
          (cond-> cfg
@@ -985,6 +985,18 @@ classpath. Classpath-relative paths have prefix of @ or @/")
             main-edn "Configuration error in figwheel-main.edn"
             "figwheel-main.edn is valid \\(ツ)/"))
          (process-main-config main-edn)))
+
+     (defn config-use-ssl [{:keys [::config] :as cfg}]
+       (if (:use-ssl config)
+         (let [ssl-port (get-in config [:ring-server-options :ssl-port] figwheel.repl/default-ssl-port)]
+           (-> cfg
+               (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
+               (update-in [::config :ring-server-options :ssl?] (fnil identity true))
+               (update-in [::config :connect-url]
+                          (fnil identity (format "wss://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
+               (update-in [::config :open-url]
+                          (fnil identity (format "https://[[server-hostname]]:%d" ssl-port)))))
+         cfg))
 
 ;; use tools reader read-string for better error messages
      #_(redn/read-string)
@@ -1300,7 +1312,7 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                          (:auto-testing (meta build-edn))
                          (update :extra-main-files assoc :auto-testing true)) }
              (merge {::build {:id build-id}})
-             auto-bundle
+             config-auto-bundle
              config-default-dirs
              config-default-final-output-to
              config-clean-outputs!)))
@@ -1716,7 +1728,8 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
             config-update-watch-dirs
             config-ensure-watch-dirs-on-classpath
             config-figwheel-mode?
-            auto-bundle
+            config-auto-bundle
+            config-use-ssl
             config-default-dirs
             config-default-final-output-to
             validate-output-paths-relationship!
