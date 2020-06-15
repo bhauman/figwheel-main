@@ -1,3 +1,8 @@
+# 0.2.9 Use-SSL figwheel configuration option
+
+* added `:use-ssl` figwheel configuration option as sugar to make
+  setting up https easier
+
 # 0.2.8 Bug fix and build cleaning
 
 Fixed a major bug introduced in 0.2.7 that caused extra-mains to

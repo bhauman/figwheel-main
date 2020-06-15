@@ -644,6 +644,29 @@ Default value is nil
 
     :clean-outputs true
 
+## :use-ssl
+
+Takes a boolean value that if true indicates that
+figwheel.main should configure its server to use https.
+
+This mainly adds default `:ring-server-options` for
+
+    :ssl? true
+    :ssl-port 9533
+
+This also changes the default `:connect-url` to
+`wss://[[config-hostname]]:<ssl-port>/figwheel-connect` and the
+default `:open-url` to `https://[[server-hostname]]:<ssl-port>` where
+`<ssl-port>` is replaced with the `:ssl-port` from
+`:ring-server-options`.
+
+To complete your SSL configuration you will need to provide a
+certificate and keys to options to `:ring-server-options` via a Java
+KeyStore.
+
+    :keystore <path to java keystore>
+    :password <password to the java keystore>
+
 # Rarely used options
 
 ## :open-url-wait-ms

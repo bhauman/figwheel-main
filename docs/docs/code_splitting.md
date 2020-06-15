@@ -53,7 +53,7 @@ touch deps.edn
 Edit this script to look like the following:
 
 ```clojure
-{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.8"}}
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.2.9"}}
  :paths ["src" "resources" "target"]}
 ```
 
