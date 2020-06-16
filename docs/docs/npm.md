@@ -46,6 +46,14 @@ Your host page will need to load the final bundled asset.
 > `:output-dir` directory so the bundler can resolve the assets it
 > requires.
 
+> As a rule, if you are using NPM libraries along with the `:bundle`
+> target, don't use `:aot-cache true`.
+
+> If your are porting a project over to use the
+> `:bundle` target and NPM libs, use the
+> [`:clean-outputs`](/config-options#clean-outputs) Figwheel
+> option.
+
 **Relevant Figwheel Options**
 
 * [:auto-bundle](/config-options#auto-bundle)
@@ -561,7 +569,7 @@ Further is we look at the output of compiling the
 `hello_world/core.cljs` file you will see this:
 
 ```javascript
-// Compiled by ClojureScript 1.10.773 {:target :nodejs}
+// Compiled by ClojureScript 1.10.775 {:target :nodejs}
 goog.provide('hello_world.core');
 goog.require('cljs.core');
 hello_world.core.node$module$moment = require('moment');
@@ -589,12 +597,135 @@ optimization mode ClojureScript will put together a single output file
 with the requires in it. Then the bundler will resolve and replace
 these top `require`s as it normally does.
 
+## Problems with cached compiled assets
+
+Looking at the previous example if we hadn't been using the `:bundle`
+target had been using the Cljsjs `cljsjs/moment` library instead of
+the NPM based `moment` library the output of compiling
+`hello_world/core.cljs` would have instead been the following:
+
+```javascript
+// Compiled by ClojureScript 1.10.775 {}
+goog.provide('hello_world.core');
+goog.require('cljs.core');
+goog.require('moment');
+hello_world.core.global$module$moment = goog.global["moment"];
+console.log(hello_world.core.global$module$moment);
+cljs.core.println.call(null,["Hello there it's ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(hello_world.core.global$module$moment.call(null).format("dddd"))].join(''));
+
+//# sourceMappingURL=core.js.map
+```
+
+The major difference is one the line:
+
+```clojure
+hello_world.core.global$module$moment = goog.global["moment"];
+```
+
+which when compiled with an NPM `moment` library looks like this:
+
+```clojure
+hello_world.core.node$module$moment = require('moment');
+```
+
+When transitioning from Cljsjs libraries to NPM based libraries the
+way that `moment` is required changes. This can become a problem while
+we are actively converting our code to use NPM libraries.
+
+The caching of compiled code can wreak havoc on this process. The AOT
+caching that happens when you set `:aot-cache true` caches compiled
+libraries *globally*.
+
+If you compile a version of `reagent` the depends on Cljsjs based
+`react` and it gets cached to the global AOT-cache, then the compiled
+`reagent` lib in the cache will have been specialized to use a Cljsjs
+based `react`.
+
+If you then create a new project that has a `reagent` dependency that
+tries to meet its `react` dependency from NPM it will fail if you are
+using `:aot-cache true`. It will fail because you aren't providing the
+library via Cljsjs but the cached version of `reagent` is expecting
+it.
+
+This same caching problem also occurs with code that's been compiled
+to your local target directory. A compiled `reagent` library could
+be specialized to either NPM or Cljsjs.
+
+This becomes even more confusing if you are accidentally providing
+both the Cljsjs lib and the NPM lib. It's possible that your code will
+appear to work but may potentially be fetching the JavaScript library
+from the wrong source.
+
+*Bottom line*
+
+As a rule, if you are using NPM libraries along with the `:bundle`
+target don't use `:aot-cache true`. The default value of `:aot-cache`
+is `false` in Figwheel. However the default value of `:aot-cache` is
+`true` when you use `cljs.main`.
+
+Also, if your are porting a project over to use the `:bundle` target
+and NPM libs, use the
+[`:clean-outputs`](/config-options#clean-outputs) Figwheel option. The
+clean outputs option will delete all of your compiled artifacts
+everytime you start a Figwheel build.
+
+If you run into a situation where your Cljsjs lib or your NPM lib
+doesn't resolve you should look at the compiled output file and verify
+that the file is being required correctly as you may have a caching
+problem.
+
+## Compiling for production
+
+When you want to compile your final output file you will use an
+`:optimizations` mode other than `:none`. 
+
+The thing to remember is that the ClojureScript compiler is going to
+outputing a single JavaScript file and then the bundler is going to
+resolve all of the JavaScript `require`s present in that file in order
+to ultimately create a JavaScript bundle that you can deploy.
+
+This is different process to what happens during development (under
+`:optimizations :none`). During developement bundle only resolves the
+`require`s in the `:output-to` file and the `npm_deps.js` file.
+
+This is an important difference because if there is an errant
+`require` in your code that is called conditionally it won't cause a
+problem during development because require is shimmed, however the
+bundle process is resolving `require`s statically. So if there is a
+`(js/require ...)` for a library that isn't in `node_modules` or is
+only available in the `Nodejs` runtime (but not in the browser) your
+bundler will throw an error about a missing library.
+
+Keeping this in mind we should remember to not dynamically `require`
+NPM libraries that are only available on the backend, or are not
+currently stored in `node_modules`.
+
+When compiling for production we should also, make sure that you
+aren't including Cljsjs libraries that are being provided for by NPM
+libraries. We don't want to be including libraries twice.
+
+For example, we need to exclude `react` dependencies from `reagent` to
+prevent bundling to copies of `react` into your final application.
+
+An example of excluding `react` from `reagent`:
+
+```clojure
+{:deps {org.clojure/clojurescript {:mvn/version "1.10.775"}
+        reagent {:mvn/version "0.10.0" :exclusions [cljsjs/react cljsjs/react-dom]}}}
+```
+
+We also need to make sure we include `cljs.core/*global* "window"` in
+our `:closure-defines` (I.e.`:closure-defines {cljs.core/*global*
+"window" ...}`). This is required when we aren't compiling in
+`:optimizations :none`.  Figwheel adds this automatically when using the
+`:auto-bundle` option.
+
 ## Troubleshooting
 
 ### Bad bundle command
 
 The most likely thing that will happen is you will have a bad
-`:bundle-cmd`. 
+`:bundle-cmd`.
 
 * Please check that the command that is logged is the
 command that you expect.
