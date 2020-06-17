@@ -2,10 +2,38 @@
   (:require
    [clojure.string :as string]
    [clojure.java.io :as io]
+   [clojure.java.shell :refer [sh]]
    [cljs.util]
    [cljs.build.api :as bapi])
   (:import
    java.nio.file.Paths))
+
+(defn command-exists? [& paths]
+  (boolean
+   (try
+     (= 0 (:exit (apply sh (map str paths))))
+     (catch Throwable e))))
+
+(defn os? []
+  (let [os-name
+        (-> (System/getProperty "os.name" "generic")
+            (.toLowerCase java.util.Locale/ENGLISH))
+        has? #(>= (.indexOf %1 %2) 0)]
+    (cond
+      (or (has? os-name "mac")
+          (has? os-name "darwin")) :macos
+      (has? os-name "win") :windows
+      (has? os-name "nux") :linux
+      :else :other)))
+
+(def system-os (os?))
+
+;; this is a function so that we can actually make an effort to find the
+;; executable
+(defn npx-executable []
+  (if (= :windows system-os)
+    "npx.cmd"
+    "npx"))
 
 (defn delete-file-or-directory [f]
   (let [f (io/file f)]

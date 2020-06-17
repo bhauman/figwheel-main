@@ -727,7 +727,7 @@ This setting does not apply if :optimizations is set to :advanced.
 
 (s/def ::bundle-cmd-entry
   (s/every (s/or :string non-blank-string?
-                 :template-key #{:output-to :final-output-to :final-output-dir :final-output-filename})
+                 :template-key #{:npx-cmd :output-to :final-output-to :final-output-dir :final-output-filename})
            :min-count 1 :into [] :kind sequential?))
 
 (s/def ::none ::bundle-cmd-entry)

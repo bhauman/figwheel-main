@@ -100,28 +100,30 @@
          opts))
 
      ;; filling in a bundle-cmd template at the last moment
-     (defn- fill-in-bundle-cmd-template [opts final-output-to]
-       (let [final-output-to-file (io/file final-output-to)
-             file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
-             file-name (try (.getName final-output-to-file) (catch Throwable t nil))
-             fill-in (cond-> {:output-to (:output-to opts)
-                              :final-output-to final-output-to
-                              :none :none
-                              :default :default}
-                       file-path (assoc :final-output-dir file-path)
-                       file-name (assoc :final-output-filename file-name))]
-         (if (:bundle-cmd opts)
-           (update opts :bundle-cmd
-                   #(walk/postwalk
-                     (fn [x]
-                       (if (keyword? x)
-                         (if-let [replace (fill-in x)]
-                           replace
-                           (throw (ex-info (format "No %s available to fill :bundle-cmd template" x)
-                                           {})))
-                         x))
-                     %))
-           opts)))
+     (let [npx-cmd (fw-util/npx-executable)]
+       (defn- fill-in-bundle-cmd-template [opts final-output-to]
+         (let [final-output-to-file (io/file final-output-to)
+               file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
+               file-name (try (.getName final-output-to-file) (catch Throwable t nil))
+               fill-in (cond-> {:output-to (:output-to opts)
+                                :final-output-to final-output-to
+                                :none :none
+                                :default :default
+                                :npx-cmd npx-cmd}
+                         file-path (assoc :final-output-dir file-path)
+                         file-name (assoc :final-output-filename file-name))]
+           (if (:bundle-cmd opts)
+             (update opts :bundle-cmd
+                     #(walk/postwalk
+                       (fn [x]
+                         (if (keyword? x)
+                           (if-let [replace (fill-in x)]
+                             replace
+                             (throw (ex-info (format "No %s available to fill :bundle-cmd template" x)
+                                             {})))
+                           x))
+                       %))
+             opts))))
 
      ;; taken and modified from cljs.closure/run-bundle-cmd
      (defn run-bundle-cmd* [opts]
@@ -852,17 +854,17 @@ classpath. Classpath-relative paths have prefix of @ or @/")
            (= :webpack (:auto-bundle config))
            (update-in [:options :bundle-cmd]
                       #(merge
-                        {:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]
-                         :default ["npx" "webpack" "--mode=production" :output-to "-o" :final-output-to]}
+                        {:none [:npx-cmd "webpack" "--mode=development" :output-to "-o" :final-output-to]
+                         :default [:npx-cmd "webpack" "--mode=production" :output-to "-o" :final-output-to]}
                         %))
            (= :parcel (:auto-bundle config))
            (update-in [:options :bundle-cmd]
                       #(merge
-                        {:none ["npx" "parcel" "build" :output-to
+                        {:none [:npx-cmd "parcel" "build" :output-to
                                 "--out-dir" :final-output-dir
                                 "--out-file" :final-output-filename
                                 "--no-minify"]
-                         :default ["npx" "parcel" "build" :output-to
+                         :default [:npx-cmd "parcel" "build" :output-to
                                    "--out-dir" :final-output-dir
                                    "--out-file" :final-output-filename]}
                         %))
