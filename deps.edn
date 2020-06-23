@@ -21,7 +21,8 @@
         ;; going to make validation seperate?
         expound {:mvn/version "0.7.0"}
         com.bhauman/spell-spec {:mvn/version "0.1.0"}
-        com.bhauman/cljs-test-display {:mvn/version "0.1.1"}}
+        com.bhauman/cljs-test-display {:mvn/version "0.1.1"}
+        com.bhauman/certifiable {:mvn/version "0.0.1"}}
 
  :paths ["src" "helper-resources"]
 

@@ -31,7 +31,8 @@
       [figwheel.main.async-result :as async-result]
       [figwheel.main.testing :as testing]
       [figwheel.repl :as fw-repl]
-      [figwheel.tools.exceptions :as fig-ex]))
+      [figwheel.tools.exceptions :as fig-ex]
+      [certifiable.main :as certifiable]))
   #?(:clj
      (:import
       [java.io StringReader]
@@ -989,16 +990,30 @@ classpath. Classpath-relative paths have prefix of @ or @/")
          (process-main-config main-edn)))
 
      (defn config-use-ssl [{:keys [::config] :as cfg}]
-       (if (:use-ssl config)
-         (let [ssl-port (get-in config [:ring-server-options :ssl-port] figwheel.repl/default-ssl-port)]
-           (-> cfg
-               (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
-               (update-in [::config :ring-server-options :ssl?] (fnil identity true))
-               (update-in [::config :connect-url]
-                          (fnil identity (format "wss://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
-               (update-in [::config :open-url]
-                          (fnil identity (format "https://[[server-hostname]]:%d" ssl-port)))))
-         cfg))
+       (if-not (:use-ssl config)
+         cfg
+         (cond->
+             (let [ssl-port (get-in config [:ring-server-options :ssl-port] figwheel.repl/default-ssl-port)
+                   cfg (-> cfg
+                           (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
+                           (update-in [::config :ring-server-options :ssl?] (fnil identity true))
+                           (update-in [::config :connect-url]
+                                      (fnil identity (format "wss://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
+                           (update-in [::config :open-url]
+                                      (fnil identity (format "https://[[server-hostname]]:%d" ssl-port))))]
+               (if (or (get-in cfg [::config :ring-server-options :keystore])
+                       (get-in cfg [::config :ring-server-options :truststore]))
+                 cfg
+                 (do (log/info "Attempting to get an SSL certificate for localhost")
+                     (if-let [{:keys [server-keystore-path password]}
+                              (try
+                                (certifiable/create-dev-certificate-jks {:print-instructions? false})
+                                (catch Throwable t
+                                  (log/error (.getMessage t))))]
+                       (cond-> cfg
+                           server-keystore-path (assoc-in [::config :ring-server-options :keystore] (str server-keystore-path))
+                           password (assoc-in [::config :ring-server-options :key-password] password))
+                       cfg)))))))
 
 ;; use tools reader read-string for better error messages
      #_(redn/read-string)
