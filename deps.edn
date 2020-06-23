@@ -1,6 +1,6 @@
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         ;org.clojure/clojure {:mvn/version "1.10.0-alpha7"}
-        org.clojure/clojurescript {:mvn/version "1.10.773" :exclusions [commons-codec]}
+        org.clojure/clojurescript {:mvn/version "1.10.339" :exclusions [commons-codec]}
         ;; DEV for now its easier to use cider with top level deps
         ;; com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
         ;; com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
