@@ -32,7 +32,8 @@
       [figwheel.main.testing :as testing]
       [figwheel.repl :as fw-repl]
       [figwheel.tools.exceptions :as fig-ex]
-      [certifiable.main :as certifiable]))
+      [certifiable.main :as certifiable]
+      [certifiable.log]))
   #?(:clj
      (:import
       [java.io StringReader]
@@ -1007,7 +1008,11 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                  (do (log/info "Attempting to get an SSL certificate for localhost")
                      (if-let [{:keys [server-keystore-path password]}
                               (try
-                                (certifiable/create-dev-certificate-jks {:print-instructions? false})
+                                (binding [certifiable.log/*log-fn*
+                                          (fn [level & args]
+                                            (when (log/levels-map level)
+                                              (log/fwlog! log/*logger* level (string/join " " (map str args)) nil)))]
+                                    (certifiable/create-dev-certificate-jks {:print-instructions? false}))
                                 (catch Throwable t
                                   (log/error (.getMessage t))))]
                        (cond-> cfg

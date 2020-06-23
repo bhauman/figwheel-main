@@ -22,9 +22,9 @@
 (defn api-docs []
   (let [syms ['figwheel.main.api/start
               'figwheel.main.api/cljs-repl
-              'figwheel.main.api/repl-env              
+              'figwheel.main.api/repl-env
               'figwheel.main.api/stop
-              'figwheel.main.api/stop-all              
+              'figwheel.main.api/stop-all
               'figwheel.main.api/start-join]]
     (string/join "\n" (map sym->markdown-doc syms))))
 
@@ -41,4 +41,3 @@
 (defn build-docs []
   (build-api-docs)
   (build-option-docs))
-
