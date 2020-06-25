@@ -12,7 +12,7 @@
    [com.bhauman/figwheel-core "0.2.10-SNAPSHOT"]
    [com.bhauman/spell-spec "0.1.1"]
    [com.bhauman/cljs-test-display "0.1.1"]
-   [com.bhauman/certifiable "0.0.3"]
+   [com.bhauman/certifiable "0.0.4"]
    [ring "1.8.1"]
    [org.eclipse.jetty.websocket/websocket-servlet "9.4.28.v20200408"]
    [org.eclipse.jetty.websocket/websocket-server  "9.4.28.v20200408"]
