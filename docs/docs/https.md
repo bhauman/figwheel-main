@@ -9,8 +9,8 @@ order: 13
 
 <div class="lead-in">The web is becoming more insistent on using HTTPS
 to ensure secure communications between client and server. While still
-rare, there are some situations where it is very beneficial to use
-HTTPS in your development environment.</div>
+rare, there are some situations where it is neccessary and or helpful
+to use HTTPS in your development environment.</div>
 
 > Figwheel is currently working to make using HTTPS locally as easy as
 > setting [`:use-ssl`](/config-options#use-ssl) to `true` in your
@@ -19,11 +19,11 @@ HTTPS in your development environment.</div>
 
 It's important to remember that you may not need the figwheel server
 to use HTTPS. If you are serving your application from [your own
-server](/docs/your_own_server) (something you are going to need to do
-eventually) and that server is using HTTPS then connecting to a local
-websocket (for Figwheel) should not require an SSL connection. Another
-thing to note is that connections to `127.0.0.1` rather than
-`localhost` do not require an SSL connection either.
+server](/docs/your_own_server) and that server is using HTTPS then
+connecting to a local websocket (for Figwheel) should not require an
+SSL connection. Another thing to note is that connections from a
+secure web page to `127.0.0.1` rather than `localhost` do not require
+an SSL connection either.
 
 If you are serving your application via the Figwheel server and decide
 you want to use HTTPS, Figwheel tries to make this as easy as possible.
@@ -60,7 +60,7 @@ A Java KeyStore is a bundle of certificates and keys. The keys are
 needed to sign server responses so that clients know that they are
 valid.
 
-#### Using `certifiable` to create a keystore
+#### Using [certifiable](https://github.com/bhauman/certifiable) to create a keystore
 
 If you are not on the Windows platform you can use
 [certifiable](https://github.com/bhauman/certifiable) to create a Java
@@ -115,18 +115,17 @@ So given the above certifiable command we can finish the
 {:main example.core}
 ```
 
-#### Using `mkcert` to create one
+#### Using [mkcert](https://github.com/FiloSottile/mkcert) to create a keystore
 
-Another option is the
-[`mkcert`](https://github.com/FiloSottile/mkcert) tool.
+Another option is the [`mkcert`](https://github.com/FiloSottile/mkcert) tool.
 
 [Mkcert](https://github.com/FiloSottile/mkcert) will create and set up
- trust for a certificate as well.
+trust for a certificate as well.
  
- Follow the instructions to install [`mkcert`](https://github.com/FiloSottile/mkcert). (i.e. `brew install mkcert` on MacOS).
+Follow the instructions to install [`mkcert`](https://github.com/FiloSottile/mkcert). (i.e. `brew install mkcert` on MacOS).
  
- You can then ensure that its root certificate is installed and
- trusted by running:
+You can then ensure that its root certificate is installed and
+trusted by running:
  
 ```shell
  $ mkcert -install
@@ -155,6 +154,20 @@ We can utilize this certificate/key bundle in our config like so:
 ```
 
 Be sure to indicate the keystore type is `PKCS12`.
+
+#### Why use `certifiable` over `mkcert`?
+
+`mkcert` is a robust popular tool. `mkcert` creates one root
+certificate and then keeps the keys for that certificate on your
+machine so it can create more leaf certificates from a single trusted
+root. This is potentially hazardous as you have trusted a root
+certificate that someone may be able to obtain the keys for, allowing
+an attacker to create trusted certificates for arbitrary sites like
+[google.com](https://google.com). `certifiable` trades off ease of use
+for safety, it creates a new root certificate for each leaf certificate
+and then deletes all the keys for the root certificates. This requires
+you to trust each root certificate individually but guarantees that no
+new certificates can be created for that trusted root.
 
 ### Configure `:connect-url` and `:open-url`
 
