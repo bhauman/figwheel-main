@@ -773,7 +773,13 @@ certificate and keys to options to `:ring-server-options` via a Java
 KeyStore.
 
     :keystore <path to java keystore>
-    :password <password to the java keystore>"
+    :key-password <password to the java keystore>
+
+You may also need to supply the `:keystore-type` to
+`:ring-server-options` if you are using a PKCS12 certificate bundle.
+
+    :keystore-type \"PKCS12\"
+"
   :group :common)
 
 ;; ------ Uncommon options ----------------------------------
