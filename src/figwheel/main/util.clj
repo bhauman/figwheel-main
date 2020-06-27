@@ -221,7 +221,8 @@
 #_(safe-ns->location 'figwheel.main)
 
 (defn ns-available? [ns]
-  (or (safe-ns->location ns)
+  (or (try (safe-ns->location ns)
+           (catch Throwable t))
       (find-ns-source-in-local-dir ns)))
 
 #_(ns-available? "exproj.core")
