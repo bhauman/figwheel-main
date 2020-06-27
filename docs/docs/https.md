@@ -14,8 +14,7 @@ to use HTTPS in your development environment.</div>
 
 > Figwheel is currently working to make using HTTPS locally as easy as
 > setting [`:use-ssl`](/config-options#use-ssl) to `true` in your
-> Figwheel Options. The support for this is strong on MacOS and
-> Linux. Support on Windows however still needs some work.
+> Figwheel Options.
 
 It's important to remember that you may not need the figwheel server
 to use HTTPS. If you are serving your application from [your own
@@ -62,9 +61,8 @@ valid.
 
 #### Using [certifiable](https://github.com/bhauman/certifiable) to create a keystore
 
-If you are not on the Windows platform you can use
-[certifiable](https://github.com/bhauman/certifiable) to create a Java
-key store. 
+You can use [certifiable](https://github.com/bhauman/certifiable) to
+create a Java key store.
 
 [Certifiable](https://github.com/bhauman/certifiable) is designed
 create a safe certificate for local use. On the MacOS platform it also
