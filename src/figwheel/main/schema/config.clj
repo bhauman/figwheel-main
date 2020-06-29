@@ -782,6 +782,10 @@ You may also need to supply the `:keystore-type` to
 "
   :group :common)
 
+(s/def ::react-native boolean?)
+
+
+
 ;; ------ Uncommon options ----------------------------------
 
 (s/def ::cljsjs-resources boolean?)
@@ -970,6 +974,7 @@ be useful for certain docker environments.
      ::auto-bundle
      ::clean-outputs
      ::use-ssl
+     ::react-native
 
      ::cljsjs-resources
 

@@ -29,6 +29,7 @@
       [figwheel.main.helper :as helper]
       [figwheel.main.npm :as npm]
       [figwheel.main.async-result :as async-result]
+      [figwheel.main.react-native :as react-native]
       [figwheel.main.testing :as testing]
       [figwheel.repl :as fw-repl]
       [figwheel.tools.exceptions :as fig-ex]
@@ -62,16 +63,6 @@
      (defn- extract-bundle-cmd-cli [opts]
        (get-in opts [:bundle-cmd (or (#{:none} (:optimizations opts :none)) :default)]))
 
-     (let [file-mod-atom (atom {})]
-       (defn file-has-changed? [f scope]
-         (let [f ^java.io.File (io/file f)
-               canonical-path (str scope ":" (.getCanonicalPath f))]
-           (when (.exists f)
-             (let [chk-sum (.hashCode (slurp f))
-                   changed? (not= chk-sum (get @file-mod-atom canonical-path))]
-               (swap! file-mod-atom assoc canonical-path chk-sum)
-               changed?)))))
-
      (defn bundle-once? [config]
        (if (not (contains? config :bundle-freq))
          (get config :bundle-once true)
@@ -95,8 +86,8 @@
      (defn bundle-smart-opts [opts & [scope]]
        (if (and (bundle-smart? (::config *config*))
                 (let [{:keys [output-to output-dir]} opts
-                      output-to? (file-has-changed? output-to scope)
-                      npm-deps? (file-has-changed? (io/file output-dir NPM-DEPS-FILE) scope)]
+                      output-to? (fw-util/file-has-changed? output-to scope)
+                      npm-deps? (fw-util/file-has-changed? (io/file output-dir NPM-DEPS-FILE) scope)]
                   (and (not output-to?) (not npm-deps?))))
          (dissoc opts :bundle-cmd)
          opts))
@@ -156,8 +147,8 @@
          (let [bundling? (and (= :bundle (:target opts))
                               (:bundle-cmd opts))]
            (when bundling?
-             (file-has-changed? (:output-to opts) id)
-             (file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) id))
+             (fw-util/file-has-changed? (:output-to opts) id)
+             (fw-util/file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) id))
            (apply build-fn id build-inputs (dissoc opts :bundle-cmd) args)
            (when bundling?
              (run-bundle-cmd (bundle-smart-opts opts id))))))
@@ -1650,8 +1641,8 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                         (:bundle-cmd opts))
                (if-not @bundled-already
                  (do
-                   (file-has-changed? (:output-to opts) nm)
-                   (file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) nm)
+                   (fw-util/file-has-changed? (:output-to opts) nm)
+                   (fw-util/file-has-changed? (io/file (:output-dir opts) NPM-DEPS-FILE) nm)
                    (run-bundle-cmd opts final-output-to)
                    (reset! bundled-already true))
                  (when (not (bundle-once? (::config *config*)))
@@ -1756,7 +1747,9 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
             config-default-final-output-to
             validate-output-paths-relationship!
             validate-bundle-advanced!
+
             config-default-asset-path
+            react-native/plugin
             config-default-aot-cache-false
             npm/config
             testing/plugin

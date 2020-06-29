@@ -237,3 +237,13 @@
      (filter
       #(.isFile %)
       (file-seq (io/file dir)))))))
+
+(let [file-mod-atom (atom {})]
+  (defn file-has-changed? [f scope]
+    (let [f ^java.io.File (io/file f)
+          canonical-path (str scope ":" (.getCanonicalPath f))]
+      (when (.exists f)
+        (let [chk-sum (.hashCode (slurp f))
+              changed? (not= chk-sum (get @file-mod-atom canonical-path))]
+          (swap! file-mod-atom assoc canonical-path chk-sum)
+          changed?)))))
