@@ -91,7 +91,10 @@ and understood these guides on the ClojureScript site:
 * [Externs guide][externs-guide] is absolutely essential
 * [Dependencies guide][dependencies-guide] is written with a focus on advanced compilation
 * [Advanced compilation guide][advanced-guide] provides some extra info
+* [Taming advanced compilation bugs][advanced-bugs-blog] A blog post summarizing methods for avoiding and 
+fixing advanced compilation bugs
 
 [externs-guide]: https://clojurescript.org/guides/externs
 [dependencies-guide]: https://clojurescript.org/reference/dependencies
 [advanced-guide]: https://clojurescript.org/reference/advanced-compilation
+[advanced-bugs-blog]: https://dev.solita.fi/2020/06/25/taming-cljs-advanced-compilation.html
