@@ -247,3 +247,36 @@
               changed? (not= chk-sum (get @file-mod-atom canonical-path))]
           (swap! file-mod-atom assoc canonical-path chk-sum)
           changed?)))))
+
+(let [localhost (promise)]
+  ;; this call takes a very long time to complete so lets get in in parallel
+  (doto (Thread. #(deliver localhost (try (java.net.InetAddress/getLocalHost)
+                                          (catch Throwable e
+                                            nil))))
+    (.setDaemon true)
+    (.start))
+  (defn fill-connect-url-template [url host server-port]
+    (cond-> url
+      (.contains url "[[config-hostname]]")
+      (string/replace "[[config-hostname]]" (or host "localhost"))
+
+      (.contains url "[[server-hostname]]")
+      (string/replace "[[server-hostname]]" (or (some-> @localhost
+                                                        .getHostName)
+                                                "localhost"))
+
+      (.contains url "[[server-ip]]")
+      (string/replace "[[server-ip]]"       (or (some-> @localhost
+                                                        .getHostAddress)
+                                                "127.0.0.1"))
+
+      (.contains url "[[server-port]]")
+      (string/replace "[[server-port]]"     (str server-port)))))
+
+(defn setup-connect-url [{:keys [::config repl-env-options] :as cfg}]
+  (let [port (get-in config [:ring-server-options :port] figwheel.repl/default-port)
+        host (get-in config [:ring-server-options :host] "localhost")]
+    (fill-connect-url-template
+     (:connect-url config "ws://[[config-hostname]]:[[server-port]]/figwheel-connect")
+     host
+     port)))

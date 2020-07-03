@@ -32,6 +32,8 @@
       [figwheel.main.react-native :as react-native]
       [figwheel.main.testing :as testing]
       [figwheel.repl :as fw-repl]
+      [figwheel.main.krell.passes :as krell-passes]
+      [figwheel.main.krell.ana-api :as ana-compat]
       [figwheel.tools.exceptions :as fig-ex]
       [certifiable.main :as certifiable]
       [certifiable.log]))
@@ -208,11 +210,20 @@
          (apply build-fn args)
          (run-hooks (::post-build-hooks *config*) *config*)))
 
+     (defn wrap-with-compiler-passes [build-fn]
+       (fn [& args]
+         (if (::passes *config*)
+           (binding [ana/*passes* (into ana-compat/default-passes (::passes *config*))
+                     ;; sneak this in here
+                     krell-passes/*nses-with-requires* (atom #{})]
+             (apply build-fn args))
+           (apply build-fn args))))
+
      (def build-cljs
-       (-> bapi/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks))
+       (-> bapi/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks wrap-with-compiler-passes))
 
      (def fig-core-build
-       (-> figwheel.core/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks))
+       (-> figwheel.core/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks wrap-with-compiler-passes ))
 
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be
@@ -1330,33 +1341,6 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
              config-default-final-output-to
              config-clean-outputs!)))
 
-;; TODO create connection
-
-     (let [localhost (promise)]
-  ;; this call takes a very long time to complete so lets get in in parallel
-       (doto (Thread. #(deliver localhost (try (java.net.InetAddress/getLocalHost)
-                                               (catch Throwable e
-                                                 nil))))
-         (.setDaemon true)
-         (.start))
-       (defn fill-connect-url-template [url host server-port]
-         (cond-> url
-           (.contains url "[[config-hostname]]")
-           (string/replace "[[config-hostname]]" (or host "localhost"))
-
-           (.contains url "[[server-hostname]]")
-           (string/replace "[[server-hostname]]" (or (some-> @localhost
-                                                             .getHostName)
-                                                     "localhost"))
-
-           (.contains url "[[server-ip]]")
-           (string/replace "[[server-ip]]"       (or (some-> @localhost
-                                                             .getHostAddress)
-                                                     "127.0.0.1"))
-
-           (.contains url "[[server-port]]")
-           (string/replace "[[server-port]]"     (str server-port)))))
-
      (defn add-to-query [uri query-map]
        (let [[pre query] (string/split uri #"\?")]
          (str pre
@@ -1371,25 +1355,13 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                      (when (not (string/blank? query))
                        (str "&" query)))))))
 
-     #_(add-to-query "ws://localhost:9500/figwheel-connect?hey=5" {:ab 'ab})
-
-     (defn config-connect-url [{:keys [::config repl-env-options] :as cfg} connect-id]
-       (let [port (get-in config [:ring-server-options :port] figwheel.repl/default-port)
-             host (get-in config [:ring-server-options :host] "localhost")
-             connect-url
-             (fill-connect-url-template
-              (:connect-url config "ws://[[config-hostname]]:[[server-port]]/figwheel-connect")
-              host
-              port)]
-         (add-to-query connect-url connect-id)))
-
-     #_(config-connect-url {} {:abb 1})
-
      (defn config-repl-connect [{:keys [::config options ::build] :as cfg}]
        (let [connect-id (:connect-id config
                                      (cond-> {:fwprocess process-unique}
                                        (:id build) (assoc :fwbuild (:id build))))
-             conn-url (config-connect-url cfg connect-id)
+             conn-url (-> cfg
+                          fw-util/setup-connect-url
+                          (add-to-query connect-id))
              conn? (repl-connection? cfg)]
          (cond-> cfg
            conn?
