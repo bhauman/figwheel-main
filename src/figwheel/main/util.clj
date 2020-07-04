@@ -4,6 +4,7 @@
    [clojure.java.io :as io]
    [clojure.java.shell :refer [sh]]
    [cljs.util]
+   [figwheel.repl]
    [cljs.build.api :as bapi])
   (:import
    java.nio.file.Paths))

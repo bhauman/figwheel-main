@@ -1,7 +1,6 @@
 var React = require('react');
 var ReactNative = require('react-native');
 var createReactClass = require('create-react-class');
-var URI = require("uri-js");
 var cljsBootstrap = require("./clojurescript-bootstrap.js");
 
 function assert(predVal, message) {
@@ -95,16 +94,23 @@ function isChrome() {
   return typeof importScripts === "function"
 }
 
+var hostnameRegexp = /([^:]+:\/\/)([^:]+)(:.+)/;
+
+function editHostname(url, hostname) {
+  var parts = hostnameRegexp.exec(url);
+  return [parts[1], hostname, parts[3]].join("");
+}
+
 // this is an odd bit to support the chrome debugger which is almost always
 // local to the server
 // this is a double usage of the url, probably better to explicit in the config
 // to allow this behavior to be overriden
 function correctUrl(url) {
-  var u = URI.parse(url);
   if(isChrome()) {
-	  u.host = "localhost";
+    return editHostname(url, "127.0.0.1");
+  } else {
+    return url;
   }
-  return URI.serialize(u);
 }
 
 function loadApp(config, onLoadCb) {

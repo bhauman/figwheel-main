@@ -755,9 +755,9 @@ Default value is nil
 
 (def-spec-meta ::use-ssl
   :doc "Takes a boolean value that if true indicates that
-figwheel.main should configure its server to use https.
+figwheel.main should configure the server to use https.
 
-This mainly adds default `:ring-server-options` for
+This adds default `:ring-server-options` for
 
     :ssl? true
     :ssl-port 9533
@@ -768,7 +768,10 @@ default `:open-url` to `https://[[server-hostname]]:<ssl-port>` where
 `<ssl-port>` is replaced with the `:ssl-port` from
 `:ring-server-options`.
 
-To complete your SSL configuration you will need to provide a
+This will also attempt to auto-configure an SSL Certificate for local
+development by using the Certifiable library.
+
+To supply your own SSL configuration you will need to provide a
 certificate and keys to options to `:ring-server-options` via a Java
 KeyStore.
 
@@ -782,9 +785,7 @@ You may also need to supply the `:keystore-type` to
 "
   :group :common)
 
-(s/def ::react-native boolean?)
-
-
+(s/def ::react-native #{true :cli :expo})
 
 ;; ------ Uncommon options ----------------------------------
 

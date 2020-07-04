@@ -8,58 +8,65 @@
    [figwheel.repl])
   (:import [java.net URI]))
 
-(defn cli-indexjs [{:keys [npm-deps-path assets-path npm-requires-path options-url figwheel-bridge-path]}]
-  (format "import {AppRegistry} from 'react-native';
-import {name as appName} from './app.json';
-import {npmDeps} from \"%s\";
+;; ----------------------------------------------------------------------
+;; Code generation
+;; ----------------------------------------------------------------------
+
+(defn figbridge-setup-code [{:keys [npm-deps-path assets-path npm-requires-path options-url figwheel-bridge-path]}]
+  (format "import {npmDeps} from \"%s\";
 import {assets} from \"%s\";
 import {krellNpmDeps} from \"%s\";
-
 var options = {optionsUrl: \"%s\"};
-
 var figBridge = require(\"%s\");
-
-figBridge.shimRequire({...assets, ...krellNpmDeps, ...npmDeps});
-AppRegistry.registerComponent(appName,
-                              () => figBridge.createBridgeComponent(options));"
+figBridge.shimRequire({...assets, ...krellNpmDeps, ...npmDeps});"
           npm-deps-path
           assets-path
           npm-requires-path
           options-url
           figwheel-bridge-path))
 
-(defn cli-indexjs-prod [output-to]
+(defmulti indexjs (fn [{:keys [react-native-tool prod?]}]
+                    [react-native-tool prod?]))
+
+(defmethod indexjs [:cli false] [opts]
+  (str
+   (figbridge-setup-code opts)
+   "\nimport {AppRegistry} from 'react-native';
+import {name as appName} from './app.json';
+AppRegistry.registerComponent(appName,
+                              () => figBridge.createBridgeComponent(options));"))
+
+(defmethod indexjs [:cli true] [{:keys [output-to]}]
   (format "import {AppRegistry} from 'react-native';
 import {name as appName} from './app.json';
 import {renderFn} from './%s';  // output-to
 AppRegistry.registerComponent(appName, () => renderFn);"
           output-to))
 
+(defmethod indexjs [:expo false] [opts]
+  (str (figbridge-setup-code opts)
+       "\nimport { registerRootComponent } from 'expo';
+registerRootComponent(figBridge.createBridgeComponent(options));"))
+
+(defmethod indexjs [:expo true] [{:keys [output-to]}]
+  (format "import { registerRootComponent } from 'expo';
+import {renderFn} from './%s';  // output-to
+registerRootComponent(renderFn);"
+          output-to))
+
 (defn prod-module-js [main-ns]
   (format "module.exports = { renderFn: %s.figwheel_rn_root };"
           (cljs.compiler/munge (str main-ns))))
-
-(defn expo-indexjs [{:keys [npm-deps-path assets-path npm-requires-path options-url figwheel-bridge-path]}]
-  (format "import { registerRootComponent } from 'expo';
-import {npmDeps} from '%s';
-import {assets} from \"%s\";
-import {krellNpmDeps} from \"%s\";
-
-var options = {optionsUrl: '%s'};
-
-var figBridge = require('%s');
-figBridge.shimRequire({...assets, ...krellNpmDeps, ...npmDeps});
-registerRootComponent(figBridge.createBridgeComponent(options));"
-          npm-deps-path
-          assets-path
-          npm-requires-path
-          options-url
-          figwheel-bridge-path))
 
 ;; TODO get expo working
 
 (defn react-native-source-dir [output-dir]
   (str output-dir "_rn"))
+
+(defn tool-name [{:keys [react-native] :as config}]
+  (if (true? react-native)
+    :cli
+    react-native))
 
 (defn setup-react-native [{:keys [options :figwheel.main/config] :as cfg}]
   (assert (not (:auto-bundle config))
@@ -75,7 +82,11 @@ registerRootComponent(figBridge.createBridgeComponent(options));"
                          (ex-info ":connect-url doesn't work for React Native"
                                   {:connect-url (:connect-url config)}
                                   t))))
-        opts-url (format "http://%s:%s%s/cljsc_opts.json"
+        opts-url-scheme (if (#{"https" "wss"} (.getScheme connect-url))
+                          "https"
+                          "http")
+        opts-url (format "%s://%s:%s%s/cljsc_opts.json"
+                         opts-url-scheme
                          (.getHost connect-url)
                          (.getPort connect-url)
                          (:asset-path options))]
@@ -94,14 +105,15 @@ registerRootComponent(figBridge.createBridgeComponent(options));"
 
     ;; create an index.js
     (spit (io/file "index.js")
-          (if prod?
-            (cli-indexjs-prod prod-output-to)
-            (cli-indexjs
-             {:options-url opts-url
-              :assets-path (str "./" (io/file (:output-dir options) "krell_assets.js"))
-              :npm-requires-path (str "./" (io/file (:output-dir options) "krell_npm_deps.js"))
-              :npm-deps-path (str "./" (io/file react-native-src-dir "npm_deps.js"))
-              :figwheel-bridge-path (str "./" (io/file react-native-src-dir "figwheel-bridge.js"))})))
+          (indexjs
+           {:react-native-tool (tool-name config)
+            :prod? prod?
+            :output-to prod-output-to
+            :options-url opts-url
+            :assets-path (str "./" (io/file (:output-dir options) "krell_assets.js"))
+            :npm-requires-path (str "./" (io/file (:output-dir options) "krell_npm_deps.js"))
+            :npm-deps-path (str "./" (io/file react-native-src-dir "npm_deps.js"))
+            :figwheel-bridge-path (str "./" (io/file react-native-src-dir "figwheel-bridge.js"))}))
     (let [post-build-hook
           (fn [{:keys [:figwheel.main/config :figwheel.main/build options] :as cfg}]
             (krell-passes/post-build-hook cfg)
