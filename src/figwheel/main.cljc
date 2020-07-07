@@ -1326,7 +1326,8 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                    files-for-mains
                    [(:final-output-to config)
                     (:output-to options)
-                    (:output-dir options)]))))
+                    (:output-dir options)
+                    (react-native/react-native-source-dir (:output-dir options))]))))
        cfg)
 
      (defn clean-build-outputs! [build-id]
@@ -1699,6 +1700,11 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
               (not (#{"-r" "--repl" "-s" "--serve"} (first args))))
          (assoc-in [::config ::build-once] true)))
 
+     (defn config-run-pre-start-hooks [{:keys [::pre-start-hooks] :as cfg}]
+       (doseq [init-fn pre-start-hooks]
+         (init-fn cfg))
+       cfg)
+
      (defn update-config [cfg]
        (->> cfg
             config-compile-is-build-once
@@ -1738,7 +1744,8 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
             config-build-inputs
             config-clean
             config-clean-outputs!
-            config-warn-resource-directory-not-on-classpath))
+            config-warn-resource-directory-not-on-classpath
+            config-run-pre-start-hooks))
 
 ;; ----------------------------------------------------------------------------
 ;; Main action
