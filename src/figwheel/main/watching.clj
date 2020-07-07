@@ -8,13 +8,23 @@
 
 (def ^:dynamic *hawk-options* nil)
 
+(defn watch-with-fallback!
+  "Wraps hawk/watch! to swap in a polling implementation if any of the native
+   OS file events interfaces fail."
+  [opts & groups]
+  (try
+   (apply hawk/watch! opts groups)
+   (catch Exception e
+     (prn e "WARN - no native fs events; falling back to polling filesystem")
+     (apply hawk/watch! (assoc opts :watcher :polling) groups))))
+
 (defn alter-watches [{:keys [watcher watches]} f]
   (when watcher (hawk/stop! watcher))
   (let [watches (f watches)
         watcher (when (not-empty watches)
                   (if *hawk-options*
-                    (apply hawk/watch! *hawk-options* (map vector (vals watches)))
-                    (apply hawk/watch! (map vector (vals watches)))))]
+                    (apply watch-with-fallback! *hawk-options* (map vector (vals watches)))
+                    (apply watch-with-fallback! (map vector (vals watches)))))]
     {:watcher watcher
      :watches watches}))
 
