@@ -9,6 +9,8 @@
   (:import
    java.nio.file.Paths))
 
+(def ^:dynamic *compile-collector* nil)
+
 (defn command-exists? [& paths]
   (boolean
    (try
@@ -31,10 +33,12 @@
 
 ;; this is a function so that we can actually make an effort to find the
 ;; executable
-(defn npx-executable []
-  (if (= :windows system-os)
-    "npx.cmd"
-    "npx"))
+(def npx-executable
+  (memoize
+   (fn []
+     (if (= :windows system-os)
+       (if (command-exists? "npx" "-h") "npx" "npx.cmd")
+       "npx"))))
 
 (defn delete-file-or-directory [f]
   (let [f (io/file f)]

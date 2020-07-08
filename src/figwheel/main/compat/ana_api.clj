@@ -1,5 +1,5 @@
 (ns ^{:doc "Backwards compatibility for earlier versions of CLJS"}
-    figwheel.main.krell.ana-api
+    figwheel.main.compat.ana-api
   (:require [cljs.analyzer :as ana]
             [cljs.env :as env]
             [cljs.util :as util]

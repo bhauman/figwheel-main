@@ -1,25 +1,61 @@
 ;; ------------------------------------------------------------------------
-;; Code taken directly from Krell https://github.com/vouch-opensource/krell
+;; Code modified from Krell https://github.com/vouch-opensource/krell
 ;; ------------------------------------------------------------------------
 
-(ns figwheel.main.krell.passes
+(ns figwheel.main.react-native.krell-passes
   (:require [cljs.analyzer :as ana]
-            [figwheel.main.krell.ana-api :as ana-api]
+            [figwheel.main.compat.ana-api :as ana-api]
+            [figwheel.main.util :as fw-util]
+            [cljs.build.api :as build-api]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojure.string :as string]
-            [figwheel.main.krell.assets :as assets]
-            [figwheel.main.krell.util :as util])
-  (:import [java.io File]))
+            [clojure.string :as string])
+  (:import [java.io File]
+           [java.nio.file Path]))
 
-(def ^:dynamic *nses-with-requires* nil)
+;; util
+
+(defn relativize ^File [^File source ^File target]
+  (.toFile (.relativize (.toPath source) (.toPath target))))
+
+(defn file-ext [f]
+  (let [path (if (instance? File f) (.getPath ^File f) f)]
+    (let [idx (.lastIndexOf path ".")]
+      (when (pos? idx) (subs path idx)))))
+
+(defn mkdirs
+  "Create all parent directories for the passed file."
+  [^File f]
+  (.mkdirs (.getParentFile (.getCanonicalFile f))))
+
+(defn ns->cache-file [ns {:keys [output-dir] :as opts}]
+  (let [f (build-api/target-file-for-cljs-ns ns output-dir)]
+    (io/file (str (string/replace (.getPath f) #".js$" "") ".cljs.cache.json"))))
+
+;; assets
+
+(defn js? [f]
+  (#{".js"} (file-ext f)))
+
+(defn asset-require [path]
+  (str "\"" path "\": require('" path "')" ))
+
+(defn assets-js [assets]
+  (str
+    "module.exports = {\n"
+    "  assets: {\n"
+    (string/join ",\n" (map (comp #(str "    " %) asset-require) assets))
+    "  }\n"
+    "};\n"))
+
+;; passes
 
 (defn normalize [s]
   (cond-> s (string/starts-with? s "./") (subs 2)))
 
 (defn asset? [s]
-  (and (not (nil? (util/file-ext s)))
-       (not (assets/js? s))))
+  (and (not (nil? (file-ext s)))
+       (not (js? s))))
 
 (defn lib? [s]
   (not (asset? s)))
@@ -37,6 +73,10 @@
   (update-in ast [:args 0] merge
     {:val new-path :form new-path}))
 
+(defn collect-ns! [ns-sym]
+  (when fw-util/*compile-collector*
+    (swap! fw-util/*compile-collector* update ::nses-with-requires (fnil conj #{}) ns-sym)))
+
 (defn rewrite-asset-requires [env ast opts]
   (if (js-require-asset? ast)
     (let [referenced-path (-> ast :args first :val)
@@ -44,15 +84,14 @@
           (str
            (.normalize
             (.toPath
-             (util/relativize
+             (relativize
               (.getAbsoluteFile (io/file (:output-dir opts)))
               (.getAbsoluteFile
                (io/file
                 (.getParentFile (io/file (ana-api/current-file)))
                 (normalize referenced-path)))))))
           cur-ns (ana-api/current-ns)]
-      (when *nses-with-requires*
-        (swap! *nses-with-requires* conj cur-ns))
+      (collect-ns! cur-ns)
       (swap! (ana-api/current-state) update-in
              [::ana/namespaces cur-ns ::assets] (fnil conj #{}) new-path)
       (update-require-path ast new-path))
@@ -66,8 +105,7 @@
   (when (js-require-lib? ast)
     (let [lib (-> ast :args first :val)
           cur-ns (ana-api/current-ns)]
-      (when *nses-with-requires*
-        (swap! *nses-with-requires* conj cur-ns))
+      (collect-ns! cur-ns)
       (swap! (ana-api/current-state) update-in
         [::ana/namespaces cur-ns ::requires] (fnil conj #{}) lib)))
   ast)
@@ -79,7 +117,7 @@
         nses'    (cond-> nses
                    (.exists out-file)
                    (into (edn/read-string (slurp out-file))))]
-    (util/mkdirs out-file)
+    (mkdirs out-file)
     (spit out-file (pr-str nses'))
     nses'))
 
@@ -87,7 +125,7 @@
   (reduce
     (fn [ret ns]
       (assoc-in ret [::ana/namespaces ns]
-        (ana-api/read-analysis-cache (util/ns->cache-file ns opts))))
+        (ana-api/read-analysis-cache (ns->cache-file ns opts))))
     {} nses))
 
 (defn all-assets [analysis]
@@ -117,9 +155,9 @@
   "Write out the REPL asset support code."
   [assets opts]
   (let [out-file (io/file (:output-dir opts) "krell_assets.js")]
-    (util/mkdirs out-file)
+    (mkdirs out-file)
     (write-if-different out-file
-                        (assets/assets-js assets))))
+                        (assets-js assets))))
 
 (defn export-dep [dep]
   (str "\""dep "\": require('" dep "')" ))
@@ -137,14 +175,12 @@
 (defn write-krell-npm-deps-js
   [node-requires opts]
   (let [out-file (io/file (:output-dir opts) "krell_npm_deps.js")]
-    (util/mkdirs out-file)
+    (mkdirs out-file)
     (write-if-different out-file (krell-npm-deps-js node-requires))))
 
 (defn post-build-hook [{:keys [options]}]
-  (let [nses (cache-krell-requires @*nses-with-requires* options)
+  (let [nses (cache-krell-requires (get @fw-util/*compile-collector* ::nses-with-requires) options)
         analysis (load-analysis nses options)]
-    #_(binding [*out* *err*]
-        (prn :HERER (all-assets analysis)))
     (write-assets-js (all-assets analysis)
                      options)
     (write-krell-npm-deps-js (all-requires analysis) options)))

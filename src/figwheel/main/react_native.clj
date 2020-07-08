@@ -5,13 +5,9 @@
    [clojure.data.json :as json]
    [figwheel.main.util :as fw-util]
    [figwheel.main.logging :as log]
-   [figwheel.main.krell.passes :as krell-passes]
+   [figwheel.main.react-native.krell-passes :as krell-passes]
    [figwheel.repl])
   (:import [java.net URI]))
-
-;; TODO update react-native-figwheel-bridge
-;; TODO update react-native-figwheel-bridge docs
-;; TODO add certifiable option
 
 ;; ----------------------------------------------------------------------
 ;; Code generation

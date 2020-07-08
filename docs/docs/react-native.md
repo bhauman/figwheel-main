@@ -8,9 +8,9 @@ order: 13
 # React Native
 
 <div class="lead-in">React Native let's you build cross platform
-mobile applications using good old React. Figwheel now makes setting
-up a [React Native](https://reactnative.dev) and ClojureScript a
-breeze.</div>
+mobile and desktop Native applications using good old React. Figwheel
+now makes setting up a [React Native](https://reactnative.dev) and
+ClojureScript a breeze.</div>
 
 ## Creating a React Native project
 
@@ -232,6 +232,34 @@ Using our `src/awesome/main.cljs` an example of this looks like:
 ;; adding the reload hook here
 (defn ^:after-load on-reload [] (goog/figwheelBridgeRefresh))
 ```
+
+## React Native on MacOS and Windows
+
+Thanks to Microsoft publishing
+[react-native-macos](https://github.com/Microsoft/react-native-macos)
+and
+[react-native-windows](https://github.com/Microsoft/react-native-windows)
+we can use React Native along with ClojureScript to create desktop
+applications.
+
+The setup for MacOS is very similar to the above.
+
+You will need to setup a RN MacOS [project according to the
+instructions](https://microsoft.github.io/react-native-windows/docs/rnm-getting-started).
+
+Then just follow the instructions above for the React Native CLI.
+
+The only difference is that you need to launch the React Native MacOs tooling  with:
+
+```shell
+$ npx react-native run-macos
+```
+
+And there you go.
+
+I haven't tried this for
+[react-native-windows](https://github.com/Microsoft/react-native-windows)
+but it should work in the same manner.
 
 ## Details
 

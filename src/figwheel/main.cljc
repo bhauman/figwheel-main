@@ -32,8 +32,7 @@
       [figwheel.main.react-native :as react-native]
       [figwheel.main.testing :as testing]
       [figwheel.repl :as fw-repl]
-      [figwheel.main.krell.passes :as krell-passes]
-      [figwheel.main.krell.ana-api :as ana-compat]
+      [figwheel.main.compat.ana-api :as ana-compat]
       [figwheel.tools.exceptions :as fig-ex]
       [certifiable.main :as certifiable]
       [certifiable.log]))
@@ -214,8 +213,7 @@
        (fn [& args]
          (if (::passes *config*)
            (binding [ana/*passes* (into ana-compat/default-passes (::passes *config*))
-                     ;; sneak this in here
-                     krell-passes/*nses-with-requires* (atom #{})]
+                     fw-util/*compile-collector* (atom {})]
              (apply build-fn args))
            (apply build-fn args))))
 
