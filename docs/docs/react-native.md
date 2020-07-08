@@ -37,8 +37,6 @@ Install your CLI of choice according to the instructions on that page.
 Once things are installed you can then follow the instructions below
 to get an ClojureScript project setup for Figwheel development.
 
-> In Expo use either the `blank` or `minimal` template
-
 ## Create React Native project
 
 Initialize a project:
@@ -54,6 +52,8 @@ For `Expo CLI` do:
 ```shell
 $ npx expo init MyAwesomeProject
 ```
+
+> In Expo choose either the `blank` or `minimal` template
 
 This will create an initial React Native project. Before you go any
 further you will want to ensure that everything is setup so that you can
@@ -145,7 +145,7 @@ and create a Websocket for REPL communication.
 $ clj -m figwheel.main -b ios -r
 ```
 
-The in another terminal window change into the `MyAwesomeProject`
+Then in another terminal window change into the `MyAwesomeProject`
 directory and start `react-native` using the correct command for your
 chosen CLI.
 
@@ -155,8 +155,8 @@ Currently for both CLIs you can run:
 $ npm run ios
 ```
 
-When using `figwheel-main` figwheel bridge will take care of auto
-refreshing the application for you when figwheel reloads code.
+When using `figwheel-main`, it will take care of auto refreshing the
+application for you when figwheel reloads code.
 
 You can see this behavior by editing the `src/awesome/main.cljs`
 file. Try changing the `"HELLO"` to `"HELLO THERE"`. You should see
