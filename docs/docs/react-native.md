@@ -25,7 +25,7 @@ Native project.
 First you will need to make sure you have React Native and its
 dependencies installed.
 
-On the https://reactnative.dev/docs/environment-setup page you will
+On the [environment setup page](https://reactnative.dev/docs/environment-setup) page you will
 want to choose either the `React Native CLI` or the `Expo CLI`.  I
 prefer to start with the React Native CLI as there is less complexity
 in the tooling to deal with making it easier to figure out what is
@@ -75,7 +75,7 @@ with the RN application defined in `App.js`.
 
 If you have any problems with setting up an application please consult
 the React Native documentation. I really recommend reading all of the
-React Native Documentation as it is well written and will more than
+[React Native documentation](https://reactnative.dev/docs/getting-started) as it is well written and will more than
 likely save you lots of headaches.
 
 If everything is up and running go ahead an close everything so that
