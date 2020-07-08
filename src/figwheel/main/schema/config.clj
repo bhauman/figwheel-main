@@ -1005,6 +1005,7 @@ be useful for certain docker environments.
      ::clean-outputs
      ::use-ssl
      ::react-native
+     ::react-native-auto-refresh
 
      ::cljsjs-resources
 
