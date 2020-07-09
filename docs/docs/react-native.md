@@ -155,6 +155,12 @@ Currently for both CLIs you can run:
 $ npm run ios
 ```
 
+For Android:
+```
+$ adb reverse tcp:9500 tcp:9500
+$ npm run android
+```
+
 When using `figwheel-main`, it will take care of auto refreshing the
 application for you when figwheel reloads code.
 
