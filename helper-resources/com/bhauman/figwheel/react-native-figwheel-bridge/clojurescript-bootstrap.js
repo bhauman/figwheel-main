@@ -28,11 +28,11 @@ This script requires a config object with:
 
 */
 function bootstrap(config) {
-    var evaluate = config.evaluate || eval;
+    var evaluate = config["evaluate"] || eval;
     config.asyncImportChain = Promise.resolve(true);
     var responseText = function(response) { if(response.ok) {return response.text(); }}
     if(!config.loadFn) {
-	config.loadFn = function(url) { return fetch(url).then(responseText).then(evaluate) };
+      config.loadFn = function(url) { return fetch(url).then(responseText).then(evaluate) };
     }
     config.closureImportScript = function (url, opt_src_text) {
 	if(opt_src_text) {
@@ -53,7 +53,7 @@ function bootstrap(config) {
 		goog.global.CLOSURE_UNCOMPILED_DEFINES = config["closure-defines"];
 	    }
 	    goog.global.CLOSURE_IMPORT_SCRIPT = config.closureImportScript;
-	    
+
 	    // it makes sense to set this up here given as its a no-op without
 	    // figwheel and is easily overriden
 	    goog.global.FIGWHEEL_IMPORT_SCRIPT = function(uri, callback) {
@@ -81,4 +81,3 @@ module.exports = {fetchConfig: fetchConfig,
 		  bootstrap: bootstrap};
 
 // fetchConfig("/cljs-out/dev/cljsc_opts.json").then(bootstrap);
-

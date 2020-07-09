@@ -1,6 +1,5 @@
-var React = require('react');
+import React, { useState, useEffect, useReducer } from 'react';
 var ReactNative = require('react-native');
-var createReactClass = require('create-react-class');
 var cljsBootstrap = require("./clojurescript-bootstrap.js");
 
 function assert(predVal, message) {
@@ -52,43 +51,42 @@ function listenForReload(cb) {
   }
 }
 
-var createBridgeComponent = function (config) {
-  var config = provideDefaultsAndValidateConfig(config);
-  return createReactClass({
-    getInitialState: function () {
-      return {loaded: false}
-    },
-
-    render: function () {
-      if (!this.state.loaded) {
-        var plainStyle = {flex: 1, alignItems: 'center', justifyContent: 'center'};
-        return (
-            <ReactNative.View style={plainStyle}>
-            <ReactNative.Text>Waiting for Figwheel to load files.</ReactNative.Text>
-            </ReactNative.View>
-        );
-      }
-      return this.state.root();
-    },
-
-    componentDidMount: function () {
-      var app = this;
-	    var refresh = function(e) {
-		    console.log("Refreshing Figwheel Root Element");
-		    app.forceUpdate();
+function FigwheelBridge(props) {
+    const [state, updateState] = useState({loaded: false, root: null});
+    const [, updateReload] = useReducer(function(accum, data){ return accum + data;}, 0);
+    useEffect(function() {
+      var refresh = function(e) {
+        console.log("Refreshing Figwheel Root Element");
+        updateReload(1);
 	    }
-      if (typeof goog === "undefined") {
-        loadApp(config, function (appRoot) {
+
+      if (!state.loaded && (typeof goog === "undefined")) {
+        loadApp(props.config, function (appRoot) {
 		      goog.figwheelBridgeRefresh = refresh;
-          app.setState({root: appRoot, loaded: true});
-		      if (config.autoRefresh) {
+          updateState({loaded: true, root: appRoot});
+		      if (props.config.autoRefresh) {
 			      listenForReload(refresh);
 		      }
         });
       }
+    }, []);
+    if (!state.root) {
+      var plainStyle = {flex: 1, alignItems: 'center', justifyContent: 'center'};
+      return (
+          <ReactNative.View style={plainStyle}>
+          <ReactNative.Text>Waiting for Figwheel to load files.</ReactNative.Text>
+          </ReactNative.View>
+      );
     }
-  })
-};
+  return state.root();
+}
+
+var createBridgeComponent = function(config) {
+  var config = provideDefaultsAndValidateConfig(config);
+  return function() {
+    return React.createElement(FigwheelBridge, {config: config});
+  };
+}
 
 function isChrome() {
   return typeof importScripts === "function"
@@ -116,22 +114,22 @@ function correctUrl(url) {
 function loadApp(config, onLoadCb) {
   var confProm;
   if(config.optionsUrl) {
-	  confProm = cljsBootstrap.fetchConfig(correctUrl(config.optionsUrl)).then(function (conf) {
-	    return Object.assign(conf, config);
-	  }).catch(function(err){
-	    console.error("Unable to fetch optionsUrl " + config.optionsUrl);
+    confProm = cljsBootstrap.fetchConfig(correctUrl(config.optionsUrl)).then(function (conf) {
+      return Object.assign(conf, config);
+    }).catch(function(err){
+      throw new Error("Figwheel Bridge Unable to fetch optionsUrl: " + config.optionsUrl, err);
 	  });
   } else {
 	  confProm = Promise.resolve(config);
   }
   if(confProm) {
-	  confProm.then(cljsBootstrap.bootstrap)
-	    .then(function (conf) {
-		    var mainNsObject = cljsNamespaceToObject(conf.main);
-		    assert(mainNsObject, "ClojureScript Namespace " + conf.main + " not found.");
-		    assert(mainNsObject[config.renderFn], "Render function " + config.renderFn + " not found.");
-		    onLoadCb(mainNsObject[config.renderFn]);
-	    });
+    confProm.then(cljsBootstrap.bootstrap)
+      .then(function (conf) {
+        var mainNsObject = cljsNamespaceToObject(conf.main);
+        assert(mainNsObject, "ClojureScript Namespace " + conf.main + " not found.");
+        assert(mainNsObject[config.renderFn], "Render function " + config.renderFn + " not found.");
+	      onLoadCb(function() { return mainNsObject[config.renderFn](); });
+      }).catch(function(err){console.error(err)});
   }
 }
 
