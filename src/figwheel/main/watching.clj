@@ -44,15 +44,15 @@
           {:keys [collecting? events]} (deref collector)]
       (if collecting?
         (swap! collector update :events (fnil conj []) e)
-        (do
+        (let [events (volatile! nil)]
           (swap! collector assoc :collecting? true)
-          (future (Thread/sleep millis)
-                  (let [events (volatile! nil)]
-                    (swap! collector
-                           #(-> %
-                                (assoc :collecting? false)
-                                (update :events (fn [evts] (vreset! events evts) nil))))
-                    (f (cons e @events))))))
+          (future
+            (try
+              (Thread/sleep millis) ;; is this needed now?
+              (swap! collector update :events (fn [evts] (vreset! events evts) nil))
+              (f (cons e @events))
+              (finally
+                (swap! collector assoc :collecting? false))))))
       (assoc ctx :collector collector))))
 
 (defn file-suffix [file]
