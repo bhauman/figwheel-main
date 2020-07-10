@@ -14,11 +14,15 @@ Native</a> and ClojureScript a breeze.</div>
 
 ## Creating a React Native project
 
-> The [React Native](https://reactnative.dev/docs/getting-started)
-> docs are great and well worth your time.
-
 We're going to walk through setting up a Figwheel build for a React
 Native project.
+
+> When working with React Native you will be using NPM packages. This
+> guide assumes that you have read and understood the 
+> [Using NPM](/docs/npm.html) docs page.
+
+> The [React Native](https://reactnative.dev/docs/getting-started)
+> docs are great and well worth your time.
 
 ## Initial setup
 
@@ -188,6 +192,20 @@ Native for you.
 This may or may not work for you and is highly dependent on the
 behavior of React Native tooling. Currently this set up works for me
 but your mileage may vary.
+
+## Compiling for production
+
+You will want to compile for production before you create a *release*
+build for your native project.
+
+You can advance compile the above sample project using the command:
+
+```shell
+$ clj -m figwheel.main -O advanced -b ios -r
+```
+
+Compiling for production carries the same caveates as usual. Please
+see the [Advanced compile docs](/docs/advanced_compile.html).
 
 ## Controlling Reload
 
