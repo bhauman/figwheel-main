@@ -816,6 +816,17 @@ Defaults to true
     :react-native-auto-refresh false"
   :group :common)
 
+(s/def ::ssl-valid-hosts (s/coll-of non-blank-string?))
+
+(def-spec-meta ::ssl-valid-hosts
+  :doc "Takes a collection of hosts that the local dev SSL certificate
+should consider valid. These will be supplied to the Certifiable
+library if you do not provide a certificate when you use the :use-ssl
+option.
+
+   ::ssl-valid-hosts [\"localhost\" \"www.localhost\" \"127.0.0.1\"]"
+  :group :common)
+
 ;; ------ Uncommon options ----------------------------------
 
 (s/def ::cljsjs-resources boolean?)
@@ -1004,6 +1015,7 @@ be useful for certain docker environments.
      ::auto-bundle
      ::clean-outputs
      ::use-ssl
+     ::ssl-valid-hosts
      ::react-native
      ::react-native-auto-refresh
 

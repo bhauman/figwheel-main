@@ -1012,9 +1012,13 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                                           (fn [level & args]
                                             (when (log/levels-map level)
                                               (log/fwlog! log/*logger* level (string/join " " (map str args)) nil)))]
-                                    (certifiable/create-dev-certificate-jks {:print-instructions? false}))
+                                  (certifiable/create-dev-certificate-jks
+                                   (merge {:print-instructions? false}
+                                          (when-let [hosts (not-empty (:ssl-valid-hosts config))]
+                                            (certifiable/parse-domain-ip-arguments hosts)))))
                                 (catch Throwable t
-                                  (log/error (.getMessage t))))]
+                                  (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
+                                  (log/error (.getMessage t) t)))]
                        (cond-> cfg
                            server-keystore-path (assoc-in [::config :ring-server-options :keystore] (str server-keystore-path))
                            password (assoc-in [::config :ring-server-options :key-password] password))
