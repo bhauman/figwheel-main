@@ -710,7 +710,7 @@ prevent bundling to copies of `react` into your final application.
 An example of excluding `react` from `reagent`:
 
 ```clojure
-{:deps {org.clojure/clojurescript {:mvn/version "1.10.775"}
+{:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
         reagent {:mvn/version "0.10.0" :exclusions [cljsjs/react cljsjs/react-dom]}}}
 ```
 

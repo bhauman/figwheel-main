@@ -1,3 +1,12 @@
+# 0.2.10 React Native support and SSL certificate generation
+
+New React Native support which includes support for React Native CLI
+and Expo as well as MacOS. See the docs here: https://figwheel.org/docs/react-native.html
+
+* `:ssl-valid-hosts` allows you to specify what hosts the generated certificate should support
+* `:use-ssl` now creates a local dev certificate if one isn't supplied
+* added some improvements to using npm on windows
+
 # 0.2.9 Use-SSL figwheel configuration option
 
 * added `:use-ssl` figwheel configuration option as sugar to make

@@ -702,6 +702,15 @@ Defaults to true
 
     :react-native-auto-refresh false
 
+## :ssl-valid-hosts
+
+Takes a collection of hosts that the local dev SSL certificate
+should consider valid. These will be supplied to the Certifiable
+library if you do not provide a certificate when you use the :use-ssl
+option.
+
+   ::ssl-valid-hosts ["localhost" "www.localhost" "127.0.0.1"]
+
 # Rarely used options
 
 ## :open-url-wait-ms
