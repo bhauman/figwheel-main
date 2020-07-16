@@ -216,21 +216,12 @@
 
 (defn safe-ns->location [ns]
   (try (bapi/ns->location ns)
-       (catch java.lang.IllegalArgumentException e
+       (catch Throwable t
          nil)))
 
-#_(ns->location 'asdf.asdf)
-#_(safe-ns->location 'asdf.asdf)
-
-#_(ns->location 'figwheel.main)
-#_(safe-ns->location 'figwheel.main)
-
 (defn ns-available? [ns]
-  (or (try (safe-ns->location ns)
-           (catch Throwable t))
+  (or (safe-ns->location ns)
       (find-ns-source-in-local-dir ns)))
-
-#_(ns-available? "exproj.core")
 
 (defn source-file-types-in-dir [dir]
   (into
@@ -278,7 +269,7 @@
       (.contains url "[[server-port]]")
       (string/replace "[[server-port]]"     (str server-port)))))
 
-(defn setup-connect-url [{:keys [::config repl-env-options] :as cfg}]
+(defn setup-connect-url [{:keys [:figwheel.main/config repl-env-options] :as cfg}]
   (let [port (get-in config [:ring-server-options :port] figwheel.repl/default-port)
         host (get-in config [:ring-server-options :host] "localhost")]
     (fill-connect-url-template
