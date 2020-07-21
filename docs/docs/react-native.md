@@ -201,7 +201,7 @@ build for your native project.
 You can advance compile the above sample project using the command:
 
 ```shell
-$ clj -m figwheel.main -O advanced -b ios
+$ clj -m figwheel.main -O advanced -bo ios
 ```
 
 Compiling for production carries the same caveates as usual. Please
