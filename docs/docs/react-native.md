@@ -10,7 +10,7 @@ order: 13
 <div class="lead-in">React Native let's you build cross platform
 mobile and desktop Native applications using good old React. Figwheel
 now makes setting up a <a href="https://reactnative.dev">React
-Native</a> and ClojureScript a breeze.</div>
+Native</a> and ClojureScript project a breeze.</div>
 
 ## Creating a React Native project
 
