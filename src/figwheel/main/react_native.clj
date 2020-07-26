@@ -92,6 +92,18 @@ registerRootComponent(renderFn);"
                          (.getHost connect-url)
                          (.getPort connect-url)
                          (:asset-path options))
+        create-indexjs-once
+        (memoize #(spit (io/file "index.js")
+                        (indexjs
+                         {:react-native-tool (tool-name config)
+                          :prod? prod?
+                          :output-to prod-output-to
+                          :options-url opts-url
+                          :auto-refresh auto-refresh?
+                          :assets-path          (str "./" (io/file (:output-dir options) "krell_assets.js"))
+                          :npm-requires-path    (str "./" (io/file (:output-dir options) "krell_npm_deps.js"))
+                          :npm-deps-path        (str "./" (io/file react-native-src-dir "npm_deps.js"))
+                          :figwheel-bridge-path (str "./" (io/file react-native-src-dir "figwheel-bridge.js"))})))
         pre-start-hook
         (fn [_]
           (let [npm-config (io/file "package.json")]
@@ -110,6 +122,8 @@ registerRootComponent(renderFn);"
 
           ;; ensure output-dir-rn directory exists
           (io/make-parents (io/file react-native-src-dir "dummy"))
+          (io/make-parents (io/file output-dir "dummy"))
+
           (when (not prod?)
             ;; copy react-native-figwheel-bridge to react-native-source-dir
             (io/copy (io/input-stream
@@ -119,29 +133,16 @@ registerRootComponent(renderFn);"
             (io/copy (io/input-stream
                       (io/resource
                        "com/bhauman/figwheel/react-native-figwheel-bridge/clojurescript-bootstrap.js"))
-                     (io/file react-native-src-dir "clojurescript-bootstrap.js")))
-
-          ;; create an index.js
-          (spit (io/file "index.js")
-                (indexjs
-                 {:react-native-tool (tool-name config)
-                  :prod? prod?
-                  :output-to prod-output-to
-                  :options-url opts-url
-                  :auto-refresh auto-refresh?
-                  :assets-path (str "./" (io/file (:output-dir options) "krell_assets.js"))
-                  :npm-requires-path (str "./" (io/file (:output-dir options) "krell_npm_deps.js"))
-                  :npm-deps-path (str "./" (io/file react-native-src-dir "npm_deps.js"))
-                  :figwheel-bridge-path (str "./" (io/file react-native-src-dir "figwheel-bridge.js"))})))
+                     (io/file react-native-src-dir "clojurescript-bootstrap.js"))))
         post-build-hook
         (fn [{:keys [:figwheel.main/config :figwheel.main/build options] :as cfg}]
+          (create-indexjs-once)
           (krell-passes/post-build-hook cfg)
           (let [f (io/file (:output-dir options) "npm_deps.js")
                 scope (:id build)]
             (when (fw-util/file-has-changed? f scope)
               (log/info "Copying npm_deps.js")
               (io/copy f (io/file react-native-src-dir "npm_deps.js")))))]
-
     (cond->
         (-> cfg
             (update :figwheel.main/pre-start-hooks (fnil conj []) pre-start-hook)

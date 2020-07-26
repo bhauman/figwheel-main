@@ -218,10 +218,18 @@
            (apply build-fn args))))
 
      (def build-cljs
-       (-> bapi/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks wrap-with-compiler-passes))
+       (-> bapi/build
+           wrap-with-build-logging
+           wrap-with-bundling
+           wrap-with-build-hooks
+           wrap-with-compiler-passes))
 
      (def fig-core-build
-       (-> figwheel.core/build wrap-with-build-logging wrap-with-bundling wrap-with-build-hooks wrap-with-compiler-passes ))
+       (-> figwheel.core/build
+           wrap-with-build-logging
+           wrap-with-bundling
+           wrap-with-build-hooks
+           wrap-with-compiler-passes))
 
 ;; TODO the word config is soo abused in this namespace that it's hard to
 ;; know what and argument is supposed to be

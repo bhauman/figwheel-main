@@ -142,16 +142,18 @@ if you are using Expo we'll need to make a few adjustments first.
 
 Now we are ready to launch our ClojureScript application:
 
-First we will start the `figwheel-main` process to watch and compile
+First we will start the `figwheel-main` process to compile our project
 and create a Websocket for REPL communication.
 
 ```shell
 $ clj -m figwheel.main -b ios -r
 ```
 
-Then in another terminal window change into the `MyAwesomeProject`
-directory and start `react-native` using the correct command for your
-chosen CLI.
+**Wait for the compile to complete** up until the REPL is trying to
+start and connect. At this point your ClojureScript code has been
+compiled and you are ready to open your application. In another
+terminal window change into the `MyAwesomeProject` directory and start
+`react-native` using the correct command for your chosen CLI.
 
 Currently for both CLIs you can run:
 
