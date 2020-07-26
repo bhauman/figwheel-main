@@ -1,4 +1,4 @@
-# 0.2.11 Small fix to for React Native support
+# 0.2.11 Small fix for React Native support
 
 # 0.2.10 React Native support and SSL certificate generation
 
