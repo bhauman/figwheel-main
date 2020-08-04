@@ -142,7 +142,7 @@ browser on our REPL host page.
 The REPL we just launched has a simple terminal readline support,
 meaning that it can handle editing a single line, and provide history
 by hitting the up arrow. This will do fine for trying simple
-expressions but we often to have a more fully featured terminal line
+expressions, but we often want to have a more fully featured terminal line
 reader that can:
 
 * syntax highlight Clojure code as you type it
