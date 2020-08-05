@@ -200,7 +200,7 @@ On Mac OSX with brew:
 Now launch a ClojureScript REPL with:
 
 ```
-clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.11\"}}}}"  -m figwheel.main
+clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.11\"}}}"  -m figwheel.main
 ```
 
 This will first compile browser REPL code to a temp directory, and
