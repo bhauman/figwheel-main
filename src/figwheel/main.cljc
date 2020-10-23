@@ -99,12 +99,12 @@
          (let [final-output-to-file (io/file final-output-to)
                file-path (try (.getParent final-output-to-file) (catch Throwable t nil))
                file-name (try (.getName final-output-to-file) (catch Throwable t nil))
-               fill-in (cond-> {:output-to (:output-to opts)
-                                :final-output-to final-output-to
+               fill-in (cond-> {:output-to (str (fw-util/dot-slash (:output-to opts)))
+                                :final-output-to (str (fw-util/dot-slash final-output-to))
                                 :none :none
                                 :default :default
                                 :npx-cmd npx-cmd}
-                         file-path (assoc :final-output-dir file-path)
+                         file-path (assoc :final-output-dir (str (fw-util/dot-slash file-path)))
                          file-name (assoc :final-output-filename file-name))]
            (if (:bundle-cmd opts)
              (update opts :bundle-cmd

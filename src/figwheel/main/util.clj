@@ -276,3 +276,10 @@
      (:connect-url config "ws://[[config-hostname]]:[[server-port]]/figwheel-connect")
      host
      port)))
+
+(defn dot-slash [dir]
+  (let [path (.toPath (io/file dir))]
+    (if (and (not (.getRoot path))
+             (not= "." (str (first (iterator-seq (.iterator path))))))
+      (io/file "." dir)
+      (io/file dir))))
