@@ -864,8 +864,12 @@ classpath. Classpath-relative paths have prefix of @ or @/")
            (= :webpack (:auto-bundle config))
            (update-in [:options :bundle-cmd]
                       #(merge
-                        {:none [:npx-cmd "webpack" "--mode=development" :output-to "-o" :final-output-to]
-                         :default [:npx-cmd "webpack" "--mode=production" :output-to "-o" :final-output-to]}
+                        {:none [:npx-cmd "webpack" "--mode=development" :output-to
+                                "--output-path" :final-output-dir
+                                "--output-filename" :final-output-filename]
+                         :default [:npx-cmd "webpack" "--mode=production" :output-to
+                                   "--output-path" :final-output-dir
+                                   "--output-filename" :final-output-filename]}
                         %))
            (= :parcel (:auto-bundle config))
            (update-in [:options :bundle-cmd]
