@@ -34,11 +34,12 @@ Optionally set the [`:bundle-cmd` compiler
 option](https://clojurescript.org/reference/compiler-options#target)
 to 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to "-o"
-:final-output-to]}
+{:none ["npx" "webpack" "--mode=development" :output-to 
+       "--output-path" :final-output-dir 
+	   "--output-filename" :final-output-filename]}
 ``` 
 to ensure the output file is bundled after a compile. Figwheel will
-fill in `:output-to` and `:final-output-to`.
+fill in `:output-to`, `:final-output-dir` and `:final-output-filename`.
 
 Your host page will need to load the final bundled asset.
 
@@ -197,7 +198,9 @@ In the `dev.cljs.edn` file we'll add the following config:
 ```clojure
 {:main hello-world.core
  :target :bundle
- :bundle-cmd {:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]}}	
+ :bundle-cmd {:none ["npx" "webpack" "--mode=development" :output-to 
+                     "--output-path" :final-output-dir
+					 "--output-filename" :final-output-filename]}}	
 ```
 
 Understanding the above configuration is important, so I'm going to
@@ -213,7 +216,9 @@ option](https://clojurescript.org/reference/compiler-options#bundle-cmd)
 is set to 
 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]}}
+{:none ["npx" "webpack" "--mode=development" :output-to 
+        "--output-path" :final-output-dir
+		"--output-filename" :final-output-filename]}}
 ```
 
 This provides the ClojureScript compiler with a command that it can
@@ -221,28 +226,31 @@ use to bundle the intermediate output of the compiler into its final
 bundled form.
 
 Figwheel adds some additional functionality to the `:bundle-cmd`. It
-interpolates the keywords `:output-to` and `:final-output-to` into the
-command. In this case the `:output-to` is going to be replaced by the
-default `:output-to` path `target/public/cljs-out/dev/main.js`. The
-`:final-ouput-to` is replaced by the default value of `:output-to`
-with a `_bundle` added before the extension or
-`target/public/cljs-out/dev/main_bundle.js`.
+interpolates the keywords `:output-to`, `:final-ouitput-dir` and
+`:final-output-filename` into the command. In this case the
+`:output-to` is going to be replaced by the default `:output-to` path
+`./target/public/cljs-out/dev/main.js`. The `:final-output-dir` is
+replaced by the path part of `:output-to` which is
+`./target/public/cljs-out/dev/`. The `:final-output-filename` defaults
+to the filename of of `:output-to` with a `_bundle` added before the
+extension or `main_bundle.js`.
 
 Or stated more simply in this case:
 
-* `:output-to` is replaced with `target/public/cljs-out/dev/main.js`
-* `:final-output-to` is replaced with `target/public/cljs-out/dev/main_bundle.js`
+* `:output-to` is replaced with `./target/public/cljs-out/dev/main.js`
+* `:final-output-dir` is replaced with `./target/public/cljs-out/dev`
+* `:final-output-filename` is replaced with `main_bundle.js`
 
 If you supply your own `:output-to` cljs compiler option, it will be
 used instead of the default.
 
-Thus after the ClojureScript compiler is finished compiling it will
-call the `:bundle-cmd` to bundle up the output.
+After the ClojureScript compiler is finished compiling it will call
+the `:bundle-cmd` to bundle up the output.
 
 In this case it will call:
 
 ```sh
-$ npx webpack --mode=development target/public/cljs-out/dev/main.js -o target/public/cljs-out/dev/main_bundle.js
+$ npx webpack --mode=development ./target/public/cljs-out/dev/main.js --output-path ./target/public/cljs-out/dev --output-filename main_bundle.js
 ```
 
 This will bundle up the `main.js` file and pull in the `moment`
@@ -304,8 +312,12 @@ When enabled `:auto-bundle` will set `:target` to `:bundle`.
 When choosing `:webpack` it will set `:bundle-cmd` to:
 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to "-o" :final-output-to]
- :default ["npx" "webpack" "--mode=production" :output-to "-o" :final-output-to]}
+{:none ["npx" "webpack" "--mode=development" :output-to 
+        "--output-path" :final-output-dir
+		"--output-filename" :final-output-filename]
+ :default ["npx" "webpack" "--mode=production" :output-to 
+           "--output-path" :final-output-dir
+		   "--output-filename" :final-output-filename]}
 ``` 
   
 and when choosing `:parcel` it will set `:bundle-cmd` to:
@@ -369,7 +381,9 @@ asset of your build is located. If the location is known then Figwheel
 can provide you a REPL without having to create and `index.html` page.
 Figwheel can also munge the name of the `:final-output-to` to create
 bundles for [Extra-Mains](/docs/extra_mains.html) and
-[Auto-testing](/docs/testing.html#auto-testing).
+[Auto-testing](/docs/testing.html#auto-testing). Both
+`:final-output-dir` and `:final-output-filename` are derived from
+`:final-output-to`.
 
 ### Using `:bundle-cmd`
 
