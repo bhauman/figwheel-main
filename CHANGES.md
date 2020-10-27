@@ -1,3 +1,17 @@
+# 0.2.12 Fix webpack-cli 
+
+Webpack 5 changes the cli so that the -o flag no longer supports a
+full path to a output file only the output path.
+
+For this reason the npx command emmitted by figwheel has changed to
+use --output-path and --output-filename explicitly rather than the -o flag.
+
+I.E.
+
+```shell
+npx webpack --mode=development ./resources/public/cljs-out/dev/main.js --output-path ./resources/public/cljs-out/dev --output-filename main_bundle.js
+```
+
 # 0.2.11 Small fix for React Native support
 
 # 0.2.10 React Native support and SSL certificate generation
