@@ -161,7 +161,7 @@
      (defn client-eval [code]
        (when-not (string/blank? code)
          (cljs.repl/-evaluate
-          cljs.repl/*repl-env*
+          (assoc cljs.repl/*repl-env* :broadcast true)
           "<cljs repl>" 1
           code)))
 
