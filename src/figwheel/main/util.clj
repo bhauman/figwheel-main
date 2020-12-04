@@ -133,13 +133,16 @@
 #_(add-classpath! (.toURL (io/file "src")))
 
 (defn dir-on-classpath? [dir]
-  ((set (static-classpath)) (.getCanonicalPath (io/file dir))))
+  (let [dir-canonical-path (.getCanonicalPath (io/file dir))]
+    (some #(.startsWith dir-canonical-path %) (static-classpath))))
 
 (defn dir-on-current-classpath? [dir]
-  ((into #{}
-         (concat
-          (static-classpath)
-          (dynamic-classpath))) (.getCanonicalPath (io/file dir))))
+  (let [dir-canonical-path (.getCanonicalPath (io/file dir))]
+    (some #(.startsWith dir-canonical-path %)
+          (distinct
+            (concat
+              (static-classpath)
+              (dynamic-classpath))))))
 
 (defn root-dynclass-loader []
   (last
