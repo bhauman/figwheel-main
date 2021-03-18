@@ -34,7 +34,7 @@ Optionally set the [`:bundle-cmd` compiler
 option](https://clojurescript.org/reference/compiler-options#target)
 to 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to 
+{:none ["npx" "webpack" "--mode=development" "--entry" :output-to 
        "--output-path" :final-output-dir 
 	   "--output-filename" :final-output-filename]}
 ``` 
@@ -198,7 +198,7 @@ In the `dev.cljs.edn` file we'll add the following config:
 ```clojure
 {:main hello-world.core
  :target :bundle
- :bundle-cmd {:none ["npx" "webpack" "--mode=development" :output-to 
+ :bundle-cmd {:none ["npx" "webpack" "--mode=development" "--entry" :output-to 
                      "--output-path" :final-output-dir
 					 "--output-filename" :final-output-filename]}}	
 ```
@@ -216,7 +216,7 @@ option](https://clojurescript.org/reference/compiler-options#bundle-cmd)
 is set to 
 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to 
+{:none ["npx" "webpack" "--mode=development" "--entry" :output-to 
         "--output-path" :final-output-dir
 		"--output-filename" :final-output-filename]}}
 ```
@@ -250,7 +250,7 @@ the `:bundle-cmd` to bundle up the output.
 In this case it will call:
 
 ```sh
-$ npx webpack --mode=development ./target/public/cljs-out/dev/main.js --output-path ./target/public/cljs-out/dev --output-filename main_bundle.js
+$ npx webpack --mode=development --entry ./target/public/cljs-out/dev/main.js --output-path ./target/public/cljs-out/dev --output-filename main_bundle.js
 ```
 
 This will bundle up the `main.js` file and pull in the `moment`
@@ -312,10 +312,10 @@ When enabled `:auto-bundle` will set `:target` to `:bundle`.
 When choosing `:webpack` it will set `:bundle-cmd` to:
 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" :output-to 
+{:none ["npx" "webpack" "--mode=development" "--entry ":output-to 
         "--output-path" :final-output-dir
 		"--output-filename" :final-output-filename]
- :default ["npx" "webpack" "--mode=production" :output-to 
+ :default ["npx" "webpack" "--mode=production" "--entry" :output-to 
            "--output-path" :final-output-dir
 		   "--output-filename" :final-output-filename]}
 ``` 

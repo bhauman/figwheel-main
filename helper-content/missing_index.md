@@ -32,7 +32,7 @@ current content and style from this page.
 > provide any other html file as a host page. For example
 > `resources/public/app.html`. In this case, you may want to change
 > `:open-url` to
-> `"http://[[server-hostname]]/[[server-port]]/app.html"` in order to
+> `"http://[[server-hostname]]:[[server-port]]/app.html"` in order to
 > change the launch page.
 
 # Providing your own index.html

@@ -8,18 +8,18 @@
         com.bhauman/figwheel-core {:mvn/version "0.2.13-SNAPSHOT"}
 
         ;; server
-        ring {:mvn/version "1.8.1"}
-        org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "9.4.28.v20200408"}
-        org.eclipse.jetty.websocket/websocket-server {:mvn/version "9.4.28.v20200408"}
+        ring/ring {:mvn/version "1.9.1"}
+        org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "9.4.36.v20210114"}
+        org.eclipse.jetty.websocket/websocket-server {:mvn/version "9.4.36.v20210114"}
 
         ;; file watching
-        hawk {:mvn/version "0.2.11"}
+        hawk/hawk {:mvn/version "0.2.11"}
 
         ;; possibly external
         binaryage/devtools {:mvn/version "0.9.10"}
 
         ;; going to make validation seperate?
-        expound {:mvn/version "0.7.0"}
+        expound/expound {:mvn/version "0.7.0"}
         com.bhauman/spell-spec {:mvn/version "0.1.0"}
         com.bhauman/cljs-test-display {:mvn/version "0.1.1"}
         com.bhauman/certifiable {:mvn/version "0.0.7"}}
