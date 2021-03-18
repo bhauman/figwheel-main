@@ -1167,7 +1167,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                       [:yellow
                        "The watch directory "
                        (pr-str (str src-dir))
-                       " is not on the classpath! A watch directory is must "
+                       " is not on the classpath! A watch directory must be "
                        "on the classpath and point to the root directory of your namespace "
                        "source tree. A general all encompassing watch directory will not work."]))
            (when (get config :helpful-classpaths true)
