@@ -115,7 +115,7 @@
   [build-id]
   ;; This is all ad-hoc need to move to a notion of starting and stopping
   (if-let [build-info (get @fig/build-registry build-id)]
-    (let [{:keys [repl-env repl-options]} build-info]
+    (let [{:keys [repl-options] {:keys [server] :as repl-env} :repl-env} build-info]
 
       (log/info (format "Stopping the watcher for build - %s" build-id))
       (fww/remove-watch! [::autobuild build-id])
@@ -126,7 +126,10 @@
 
       (swap! fig/build-registry dissoc build-id)
 
-      (when (zero? (count @fig/build-registry))
+      (when (->> @fig/build-registry
+                 (vals)
+                 (filter (comp #{server} :server :repl-env))
+                 (empty?))
         (log/info "Doing final clean up")
         (log/info (format "Stopping the Figwheel server" build-id))
         (figwheel.repl/tear-down-server repl-env)
