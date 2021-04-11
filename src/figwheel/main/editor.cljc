@@ -2,8 +2,7 @@
   (:require
    [clojure.string :as string]
    [figwheel.repl]
-   #?@(:cljs [[figwheel.tools.heads-up :as heads-up]
-              [goog.log :as glog]]
+   #?@(:cljs [[figwheel.tools.heads-up :as heads-up]]
        :clj [[clojure.java.io :as io]
              [clojure.java.shell :as shell]])))
 

@@ -2,10 +2,10 @@
   (:require
    [clojure.string :as string]
    #?@(:cljs [[goog.Uri :as guri]
-              [goog.log :as glog]
               [goog.object :as gobj]
               [goog.cssom :as gcss]
-              [goog.events :as gevent]]
+              [goog.events :as gevent]
+              [figwheel.repl.logging :as log]]
        :clj [[clojure.data.json :as json]
              [cljs.env]
              [cljs.repl]
@@ -29,7 +29,7 @@
 ;; set level (.setLevel logger goog.debug.Logger.Level.INFO)
 ;; disable   (.setCapturing log-console false)
 
-     (defonce logger (glog/getLogger "Figwheel CSS Reload"))
+     (defonce logger (log/get-logger "Figwheel CSS Reload"))
 
      (defn ^:export console-logging []
        (when-not (gobj/get goog.debug.Console "instance")
@@ -138,10 +138,10 @@
                 (.then prom
                        (fn [loaded-files]
                          (when (not-empty loaded-files)
-                           (glog/info logger (str "loaded " (pr-str loaded-files)))
+                           (log/info logger (str "loaded " (pr-str loaded-files)))
                            (dispatch-on-css-load loaded-files))
                          (when-let [not-loaded (not-empty (remove (set loaded-files) (set files)))]
-                           (glog/warning logger (str "Unable to reload " (pr-str not-loaded))))
+                           (log/warning logger (str "Unable to reload " (pr-str not-loaded))))
                          ;; reset
                          [])))))
 
