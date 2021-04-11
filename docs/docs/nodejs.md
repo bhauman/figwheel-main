@@ -45,7 +45,7 @@ And a `deps.edn` as well.
 ```clojure
 {:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.12"}}}
+        com.bhauman/figwheel-main {:mvn/version "0.2.13"}}}
 ```
 
 Now that we've created our three basic files let's start up a
