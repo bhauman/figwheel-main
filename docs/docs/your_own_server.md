@@ -131,9 +131,9 @@ following at `resources/public/index.html`:
 </html>
 ```
 
-If you don't already have a [host page](your_own_page) for your
+If you don't already have a [host page](your_own_page.md) for your
 application and you are not sure how to create one, please see the
-[documentation on this subject](your_own_page).
+[documentation on this subject](your_own_page.md).
 
 Of course we can generate and serve the above HTML directly from the
 server, but I'm choosing this to keep things simple and consistent
