@@ -1,3 +1,10 @@
+# 0.2.13
+
+* webpack 5 compatibility by adding --entry flag to npx webpack command
+* upgrade to ring 1.9.1, there was an internal api and a jetty server
+  version change in ring 1.9.0 that requires an upgrade
+* fix logging errors caused by CLJS 1.10.844
+
 # 0.2.12 Fix webpack-cli 
 
 Webpack 5 changes the cli so that the -o flag no longer supports a
