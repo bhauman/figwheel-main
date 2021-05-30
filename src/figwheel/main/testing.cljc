@@ -206,7 +206,7 @@
                                        libs []
                                        run-tests-args []}}]
        (format "(ns %s
-  (:require [cljs.test :refer-macros [run-tests]]
+  (:require [cljs.test :refer [run-tests]]
             %s))
 
   (run-tests %s)"
