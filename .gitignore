@@ -16,7 +16,6 @@ target
 .\#*
 *.jar
 *.class
-dev.cljs.edn
 figwheel-main.edn
 .java-version
 .lein-failures
