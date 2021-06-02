@@ -138,7 +138,8 @@
                        {::error true :cmd cmd :exit-code exit :stdout out :stderr err}))))))
 
      (defn run-bundle-cmd
-       ([opts] (run-bundle-cmd opts (:final-output-to (::config *config*))))
+       ([opts]
+        (run-bundle-cmd opts (:final-output-to (::config *config*))))
        ([opts final-output-to]
         (let [opts (fill-in-bundle-cmd-template opts final-output-to)]
           (run-bundle-cmd* opts))))
@@ -2063,8 +2064,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              cfg (if (get-in cfg [::build :id])
                    cfg
                    (assoc-in cfg [::build :id] "figwheel-main-option-build"))
-             output-to (get-in cfg [:options :output-to]
-                               (default-output-to cfg))
+             final-output-to (get-in (update-config cfg) [::config :final-output-to])
              main (:main cfg)
              cfg (-> cfg
                      (assoc-in [:options :aot-cache] false)
@@ -2083,56 +2083,57 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                          (format "<blockquote class=\"action-box\">Invoked main function: <code>%s/-main</code></blockquote>" (str main))
                                          (slurp
                                           (io/resource "public/com/bhauman/figwheel/helper/content/welcome_main_exec.html")))
-                                  :output-to output-to}))
+                                  :output-to final-output-to}))
                      (assoc-in [::config :mode] :repl))
              source (:uri (fw-util/ns->location (get-in cfg [:options :main])))]
          (let [{:keys [options repl-options repl-env-options ::config] :as b-cfg}
                (update-config cfg)
                {:keys [pprint-config]} config]
-           (validate-fix-target-classpath! b-cfg)
-           (if pprint-config
-             (do
-               (log/info ":pprint-config true - printing config:")
-               (print-conf b-cfg))
-             (cljs.env/ensure
-              (build-cljs (get-in b-cfg [::build :id] "figwheel-main-option-build")
-                          source
-                          (:options b-cfg) cljs.env/*compiler*)
-         ;; all the complexity below is to handle async results from -main
-              (let [stolen-repl-env (promise)
-                    result-prom (promise)]
-                (async-result/listen result-prom)
-                (try
-                  (with-redefs [cljs.repl/tear-down (partial deliver stolen-repl-env)]
-                    (let [res (cljs.cli/default-main repl-env-fn b-cfg)
-                          parsed-result (try
-                                          (read-string res)
-                                          (catch Throwable t
-                                            ::read-error))]
-                      (if (= parsed-result ::read-error)
-                        (deliver result-prom res)
-                        (if (and (coll? parsed-result)
-                                 (= (first parsed-result) :figwheel.main.async-result/wait))
-                          (let [[_ arg1 arg2] parsed-result
-                                timeout-val (or arg2 :figwheel.main.async-result/timed-out)]
-                            (when (= timeout-val (deref result-prom (or arg1 5000) timeout-val))
-                              (println (pr-str timeout-val))
-                              (throw (ex-info "Main script timed out" {:value timeout-val}))))
-                          (deliver result-prom parsed-result)))
-                      (let [final-result @result-prom]
-                        (if (and (map? final-result)
-                                 (= (get final-result :type)
-                                    :figwheel.main.async-result/exception))
-                          (throw (ex-info
-                                  (:value final-result "System error exit from ClojureScript")
-                                  {:type :js-eval-exception
-                                   :error final-result
-                                   :repl-env @stolen-repl-env}))
-                          (if (string? final-result)
-                            (println final-result)
-                            (println (pr-str final-result)))))))
-                  (finally
-                    (cljs.repl/tear-down @stolen-repl-env)))))))))
+           (binding [*config* b-cfg]
+             (validate-fix-target-classpath! b-cfg)
+             (if pprint-config
+               (do
+                 (log/info ":pprint-config true - printing config:")
+                 (print-conf b-cfg))
+               (cljs.env/ensure
+                (build-cljs (get-in b-cfg [::build :id] "figwheel-main-option-build")
+                            source
+                            (:options b-cfg) cljs.env/*compiler*)
+                ;; all the complexity below is to handle async results from -main
+                (let [stolen-repl-env (promise)
+                      result-prom (promise)]
+                  (async-result/listen result-prom)
+                  (try
+                    (with-redefs [cljs.repl/tear-down (partial deliver stolen-repl-env)]
+                      (let [res (cljs.cli/default-main repl-env-fn b-cfg)
+                            parsed-result (try
+                                            (read-string res)
+                                            (catch Throwable t
+                                              ::read-error))]
+                        (if (= parsed-result ::read-error)
+                          (deliver result-prom res)
+                          (if (and (coll? parsed-result)
+                                   (= (first parsed-result) :figwheel.main.async-result/wait))
+                            (let [[_ arg1 arg2] parsed-result
+                                  timeout-val (or arg2 :figwheel.main.async-result/timed-out)]
+                              (when (= timeout-val (deref result-prom (or arg1 5000) timeout-val))
+                                (println (pr-str timeout-val))
+                                (throw (ex-info "Main script timed out" {:value timeout-val}))))
+                            (deliver result-prom parsed-result)))
+                        (let [final-result @result-prom]
+                          (if (and (map? final-result)
+                                   (= (get final-result :type)
+                                      :figwheel.main.async-result/exception))
+                            (throw (ex-info
+                                    (:value final-result "System error exit from ClojureScript")
+                                    {:type :js-eval-exception
+                                     :error final-result
+                                     :repl-env @stolen-repl-env}))
+                            (if (string? final-result)
+                              (println final-result)
+                              (println (pr-str final-result)))))))
+                    (finally
+                      (cljs.repl/tear-down @stolen-repl-env))))))))))
 
      (defn add-default-system-app-handler [{:keys [options ::config] :as cfg}]
        (let [final-output-to (:final-output-to config)
