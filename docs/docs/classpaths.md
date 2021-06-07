@@ -371,6 +371,13 @@ violating a Leiningen fail-safe.
 If you call `lein classpath` you will now see that `target` is indeed
 on the classpath.
 
+**A note about uberjars**
+
+Be careful setting `:resource-paths` to include `target` when
+compiling an uberjar - it will be infinitely large! Instead, prefer to
+edit your figwheel-main config changing `:output-dir` to some
+subdirectory of resources, for example `resources/public/js`.
+
 > Learn more about
 > [Leiningen profiles here][lein-profiles] or with the lein command
 > `lein help profiles`
