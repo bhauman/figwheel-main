@@ -14,6 +14,7 @@
 
         ;; file watching
         hawk/hawk {:mvn/version "0.2.11"}
+        com.nextjournal/beholder {:mvn/version "1.0.0"}
 
         ;; possibly external
         binaryage/devtools {:mvn/version "0.9.10"}
