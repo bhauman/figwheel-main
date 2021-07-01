@@ -249,56 +249,56 @@
            (log/info "Watching paths:" (pr-str paths) "to compile build -" id)
            (log/debug "Build Inputs:" (pr-str inputs))
            (fww/add-watch!
-             [::autobuild id]
-             (merge
-               {::watch-info (merge
-                               (:extra-info reload-config)
-                               {:id            id
-                                :paths         paths
-                                :inputs        inputs
-                                :options       opts
-                                :compiler-env  cenv
-                                :reload-config reload-config})}
-               {:paths   paths
-                :filter  (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
-                :handler (fww/throttle
-                           (:wait-time-ms reload-config 50)
-                           (bound-fn [evts]
-                             (binding [cljs.env/*compiler* cenv]
-                               (let [files (mapv (comp #(.getCanonicalPath %) :file) evts)]
-                                 (try
-                                   (when-let [clj-files
-                                              (->> evts
-                                                   (filter
-                                                     (partial
-                                                       (fww/suffix-filter
-                                                         (set
-                                                           (cond
-                                                             (coll? (:reload-clj-files reload-config))
-                                                             (mapv name (:reload-clj-files reload-config))
-                                                             (false? (:reload-clj-files reload-config)) []
-                                                             :else ["clj" "cljc"]))) nil))
-                                                   (mapv (comp #(.getCanonicalPath %) :file))
-                                                   not-empty)]
-                                     (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
-                                     (try
-                                       (figwheel.core/reload-clj-files clj-files)
-                                       (catch Throwable t
-                                         (if (-> t ex-data :figwheel.core/internal)
-                                           (do
-                                             (log/error (.getMessage t) t)
-                                             (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
-                                           (do
-                                             (log/syntax-exception t)
-                                             (figwheel.core/notify-on-exception cenv t {})))
-                                         ;; skip cljs reloading in this case
-                                         (throw t))))
-                                   (log/debug "Detected changed cljs files: " (pr-str (map str files)))
-                                   (build-fn files)
-                                   (catch Throwable t
-                                     (log/error t)
-                                     (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
-                                     false))))))})))))
+            [::autobuild id]
+            (merge
+              {::watch-info (merge
+                             (:extra-info reload-config)
+                             {:id id
+                              :paths paths
+                              :inputs inputs
+                              :options opts
+                              :compiler-env cenv
+                              :reload-config reload-config})}
+              {:paths paths
+               :filter (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
+               :handler (fww/throttle
+                         (:wait-time-ms reload-config 50)
+                         (bound-fn [evts]
+                           (binding [cljs.env/*compiler* cenv]
+                             (let [files (mapv (comp #(.getCanonicalPath %) :file) evts)]
+                               (try
+                                 (when-let [clj-files
+                                            (->> evts
+                                                 (filter
+                                                   (partial
+                                                     (fww/suffix-filter
+                                                       (set
+                                                         (cond
+                                                           (coll? (:reload-clj-files reload-config))
+                                                           (mapv name (:reload-clj-files reload-config))
+                                                           (false? (:reload-clj-files reload-config)) []
+                                                           :else ["clj" "cljc"]))) nil))
+                                                 (mapv (comp #(.getCanonicalPath %) :file))
+                                                 not-empty)]
+                                   (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
+                                   (try
+                                     (figwheel.core/reload-clj-files clj-files)
+                                     (catch Throwable t
+                                       (if (-> t ex-data :figwheel.core/internal)
+                                         (do
+                                           (log/error (.getMessage t) t)
+                                           (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
+                                         (do
+                                           (log/syntax-exception t)
+                                           (figwheel.core/notify-on-exception cenv t {})))
+                                       ;; skip cljs reloading in this case
+                                       (throw t))))
+                                 (log/debug "Detected changed cljs files: " (pr-str (map str files)))
+                                 (build-fn files)
+                                 (catch Throwable t
+                                   (log/error t)
+                                   (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
+                                   false))))))})))))
 
      (declare read-edn-file)
 

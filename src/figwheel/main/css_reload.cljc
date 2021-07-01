@@ -180,12 +180,13 @@
      (defn start* [paths & [reload-config]]
        (fww/add-watch!
          [::watcher paths]
-         {:paths   paths
-          :filter  (fww/suffix-filter #{"css"})
+         {:paths paths
+          :filter (fww/suffix-filter #{"css"})
           :handler (fww/throttle
                      50
                      (bound-fn [evts]
-                       (when-let [files (not-empty (mapv (comp prep-css-file-path :file) evts))]
+                       (when-let [files (not-empty (mapv (comp prep-css-file-path :file)
+                                                         evts))]
                          (reload-css-files files))))}))
 
      (defn stop* [paths]
