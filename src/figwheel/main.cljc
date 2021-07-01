@@ -280,25 +280,25 @@
                                                         :else ["clj" "cljc"]))) nil))
                                                  (mapv (comp #(.getCanonicalPath %) :file))
                                                  not-empty)]
-                                  (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
-                                  (try
-                                    (figwheel.core/reload-clj-files clj-files)
-                                    (catch Throwable t
-                                      (if (-> t ex-data :figwheel.core/internal)
-                                        (do
-                                          (log/error (.getMessage t) t)
-                                          (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
-                                        (do
-                                          (log/syntax-exception t)
-                                          (figwheel.core/notify-on-exception cenv t {})))
+                                    (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
+                                    (try
+                                      (figwheel.core/reload-clj-files clj-files)
+                                      (catch Throwable t
+                                        (if (-> t ex-data :figwheel.core/internal)
+                                          (do
+                                            (log/error (.getMessage t) t)
+                                            (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
+                                          (do
+                                            (log/syntax-exception t)
+                                            (figwheel.core/notify-on-exception cenv t {})))
                                    ;; skip cljs reloading in this case
-                                      (throw t))))
-                                (log/debug "Detected changed cljs files: " (pr-str (map str files)))
-                                (build-fn files)
-                                (catch Throwable t
-                                  (log/error t)
-                                  (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
-                                  false))))))})))))
+                                        (throw t))))
+                                  (log/debug "Detected changed cljs files: " (pr-str (map str files)))
+                                  (build-fn files)
+                                  (catch Throwable t
+                                    (log/error t)
+                                    (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
+                                    false))))))})))))
 
      (declare read-edn-file)
 
