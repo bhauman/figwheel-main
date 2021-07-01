@@ -6,8 +6,6 @@
 
 (def ^:dynamic *watcher* (atom {:watcher nil :watches {}}))
 
-(def ^:dynamic *hawk-options* nil)
-
 (defn stop-watchers! [watchers]
   (doseq [watcher watchers]
     (beholder/stop watcher)))

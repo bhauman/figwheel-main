@@ -963,16 +963,6 @@ Default: 8000
     :repl-eval-timeout 10000 ;;waits for 10 seconds instead of 8"
   :group :un-common)
 
-(s/def ::hawk-options (s/map-of #{:watcher} #{:barbary :java :polling}))
-
-(def-spec-meta ::hawk-options
-  :doc
-  "If you need to watch files with polling instead of FS events. This can
-be useful for certain docker environments.
-
-    :hawk-options {:watcher :polling}"
-  :group :un-common)
-
 (s/def ::edn
   (ensure-all-registered-keys-included
    #{::edn ::bundles}
@@ -1036,5 +1026,4 @@ be useful for certain docker environments.
      ::ring-server
      ::broadcast
      ::broadcast-reload
-     ::repl-eval-timeout
-     ::hawk-options])))
+     ::repl-eval-timeout])))

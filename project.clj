@@ -17,7 +17,7 @@
    [org.eclipse.jetty.websocket/websocket-servlet "9.4.36.v20210114"]
    [org.eclipse.jetty.websocket/websocket-server  "9.4.36.v20210114"]
    [binaryage/devtools "0.9.10"]
-   [hawk "0.2.11"]
+   [com.nextjournal/beholder "1.0.0"]
    [expound "0.7.1"]]
   :resource-paths ["helper-resources"]
   :profiles {:dev {:dependencies [[cider/piggieback "0.3.9"]
