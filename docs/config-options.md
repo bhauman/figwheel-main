@@ -847,10 +847,3 @@ before throwing.
 Default: 8000
 
     :repl-eval-timeout 10000 ;;waits for 10 seconds instead of 8
-
-## :hawk-options
-
-If you need to watch files with polling instead of FS events. This can
-be useful for certain docker environments.
-
-    :hawk-options {:watcher :polling}

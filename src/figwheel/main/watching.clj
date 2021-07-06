@@ -2,21 +2,31 @@
   (:require
    [clojure.java.io :as io]
    [clojure.string :as string]
-   [hawk.core :as hawk]))
+   [nextjournal.beholder :as beholder]))
 
 (def ^:dynamic *watcher* (atom {:watcher nil :watches {}}))
 
-(def ^:dynamic *hawk-options* nil)
+(defn stop-watchers! [watchers]
+  (doseq [watcher watchers]
+    (beholder/stop watcher)))
 
-(defn alter-watches [{:keys [watcher watches]} f]
-  (when watcher (hawk/stop! watcher))
+(defn alter-watches [{:keys [watchers watches]} f]
+  (stop-watchers! watchers)
   (let [watches (f watches)
-        watcher (when (not-empty watches)
-                  (if *hawk-options*
-                    (apply hawk/watch! *hawk-options* (map vector (vals watches)))
-                    (apply hawk/watch! (map vector (vals watches)))))]
-    {:watcher watcher
-     :watches watches}))
+        watchers (doall
+                   (for [watch (vals watches)]
+                     (let [{:keys [paths filter handler]} watch
+                           ctx (atom {})]
+                       (apply beholder/watch
+                              (fn [e]
+                                (let [file (.toFile (:path e))
+                                      e (assoc e :file file)]
+                                  (when (or (not filter)
+                                            (filter ctx e))
+                                    (swap! ctx handler e))))
+                              paths))))]
+    {:watchers watchers
+     :watches  watches}))
 
 (defn add-watch! [watch-key watch]
   (swap! *watcher* alter-watches #(assoc % watch-key watch)))
@@ -24,19 +34,18 @@
 (defn remove-watch! [watch-key]
   (swap! *watcher* alter-watches #(dissoc % watch-key)))
 
+(defn stop! []
+  (stop-watchers! (:watchers @*watcher*)))
+
 (defn reset-watch! []
-  (let [{:keys [watcher]} @*watcher*]
-    (when watcher (hawk/stop! watcher))
-    (reset! *watcher* {})))
+  (stop!)
+  (reset! *watcher* {}))
 
 (defn running? []
   (some-> *watcher* deref :watcher :thread .isAlive))
 
 (defn join []
   (some-> *watcher* deref :watcher :thread .join))
-
-(defn stop! []
-  (some-> *watcher* deref :watcher hawk/stop!))
 
 (defn throttle [millis f]
   (fn [{:keys [collector] :as ctx} e]
