@@ -93,14 +93,14 @@ via [Homebrew][brew].
 In the terminal at the shell prompt enter:
 
 ```shell
-$ brew install clojure
+$ brew install clojure/tools/clojure
 ```
 
 If you've already installed Clojure, now is a great time to ensure
 that you have the latest version installed with:
 
 ```shell
-$ brew upgrade clojure
+$ brew upgrade clojure/tools/clojure
 ```
 
 You can check that everything has been installed correctly by running
