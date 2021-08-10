@@ -226,7 +226,7 @@ use to bundle the intermediate output of the compiler into its final
 bundled form.
 
 Figwheel adds some additional functionality to the `:bundle-cmd`. It
-interpolates the keywords `:output-to`, `:final-ouitput-dir` and
+interpolates the keywords `:output-to`, `:final-output-dir` and
 `:final-output-filename` into the command. In this case the
 `:output-to` is going to be replaced by the default `:output-to` path
 `./target/public/cljs-out/dev/main.js`. The `:final-output-dir` is
@@ -343,7 +343,7 @@ It adds:
 
 ```clojure
 {:closure-defines {...
-                   cljs.core/*global "window"}}
+                   cljs.core/*global* "window"}}
 ```
 
 ## Configuration Tips
