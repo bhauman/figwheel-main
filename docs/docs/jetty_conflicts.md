@@ -45,7 +45,7 @@ In your `deps.edn` this would look like this:
 
 ```clojure
 {:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.13"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.14"}
 		com.datomic/client-cloud {:mvn/version "0.8.71"}
 	    
 		;; directly specify all jetty dependencies
