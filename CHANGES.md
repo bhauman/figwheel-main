@@ -1,3 +1,16 @@
+# 0.2.15 Fix for logging errors with latest version of CLJS
+
+# 0.2.14 Detect file changes faster
+
+This removes the hawk watching library and utilizes
+com.nextjournal/beholder library instead. Which provides a much faster
+reloading experience if you have a large set of files. This library
+unfortunately includes the SL4j API library which causes a gross warning when
+figwheel starts and there are no logger implementations defined.
+
+* auto-testing fix for ClojureScript regression
+* Fix script running for :bundle builds
+
 # 0.2.13
 
 * webpack 5 compatibility by adding --entry flag to npx webpack command
