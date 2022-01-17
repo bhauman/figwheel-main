@@ -8,7 +8,7 @@ for table of contents script
 <h1 style="display:none" id="tutorial">Tutorial</h1>
 
 
-<div class="lead-in">This document is intended to get you aquainted with the features and
+<div class="lead-in">This document is intended to get you acquainted with the features and
 workflow of Figwheel.</div>
 
 This tutorial is based on the Clojure CLI tools. 
@@ -443,7 +443,7 @@ namespace and it is rooted in the `src` directory, which is on the
 classpath. This is what will allow the ClojureScript compiler to find
 and compile our code.
 
-> **TIP**: an extremely common mistake is to forget to replace hypens
+> **TIP**: an extremely common mistake is to forget to replace hyphens
 > `-` with underscores `_` when creating a namespace file path for a
 > source file.
 
@@ -455,7 +455,7 @@ cljs.user=> (require 'hello.cruel-world)
 nil
 ```
 
-That `nil` response is exactly what we want. If if there was a problem
+That `nil` response is exactly what we want. If there was a problem
 finding or compiling the file the REPL will let you know.
 
 Now we can call our `what-kind?` function defined in `hello.cruel-world`:
@@ -470,7 +470,7 @@ the string `"Cruel"`.
 
 But it seems like a bit much to type out the entire namespace for each
 call, so let's require `hello.cruel-world` again and create an alias
-for it. Remeber that you can hit the up arrow to get back to the
+for it. Remember that you can hit the up arrow to get back to the
 original require statement and edit it.
 
 ```clojure
@@ -550,7 +550,7 @@ REPL host page. This element contains all of the markup and style for
 the helper application. Let's override the helper app content, with
 the string returned by our `what-kind?` function.
 
-Make sure the REPL host page is visible while you type the folowing.
+Make sure the REPL host page is visible while you type the following.
 
 ```clojure
 hello.cruel-world=> (def app-element (js/document.getElementById "app"))
@@ -560,7 +560,7 @@ hello.cruel-world=> (set! (.-innerHTML app-element) (what-kind?))
 ```
 
 After that, on the REPL host page, you should see the helper app
-dissappear and be replaced by the words `Brilliantly Cruel`.
+disappear and be replaced by the words `Brilliantly Cruel`.
 
 Well that was just a brief tour of a REPL driven workflow. This was a
 simple example but it starts to demonstrate that you could possibly
@@ -579,7 +579,7 @@ get quite far into an application just using this simple setup.
 > you want to create and load Clojure files, everything is the same as
 > above except Clojure files end with `.clj`
 
-## Starting the REPL already intialized with your code
+## Starting the REPL already initialized with your code
 
 While it is perfectly workable to `require` all the code you need at
 the REPL, most of the time you will want to initialize the REPL with
@@ -745,7 +745,7 @@ the following feedback in the REPL.
 
 Getting feedback like this as you are coding is more timely than
 waiting until a file is compiled and loaded by hand and allows you to
-concentrate more on the problem with less interuptions from the
+concentrate more on the problem with less interruptions from the
 process.
 
 Now let's cause a compile error by adding parenthesis around `defn
@@ -1038,7 +1038,7 @@ $ clojure -m figwheel.main -O whitespace -bo cruel
 ```
 
 > **TIP**: you can use `clj -m figwheel.main --help` to learn all of
-> the `figwheel.main` CLI flags and their abbriviations
+> the `figwheel.main` CLI flags and their abbreviations
 
 If you execute the above command and then view
 `target/public/cljs-out/cruel-main.js` you will see that it is now a
@@ -1048,7 +1048,7 @@ You may think that this is a lot of code considering the size of our
 source file. Unfortunately we are getting all the code that is needed
 by the core ClojureScript library even though we are not using it.
 
-We can remedy this by using `advanced` compiliation which will perform
+We can remedy this by using `advanced` compilation which will perform
 a static code analysis and perform DCE (Dead code elimination) and
 remove any code that is not used.
 
