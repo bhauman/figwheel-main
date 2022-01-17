@@ -4,8 +4,8 @@
         ;; DEV for now its easier to use cider with top level deps
         ;; com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
         ;; com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
-        com.bhauman/figwheel-repl {:mvn/version "0.2.15"}
-        com.bhauman/figwheel-core {:mvn/version "0.2.15"}
+        com.bhauman/figwheel-repl {:mvn/version "0.2.16-SNAPSHOT"}
+        com.bhauman/figwheel-core {:mvn/version "0.2.16-SNAPSHOT"}
 
         ;; server
         ring/ring {:mvn/version "1.9.1"}
@@ -16,7 +16,7 @@
         com.nextjournal/beholder {:mvn/version "1.0.0"}
 
         ;; possibly external
-        binaryage/devtools {:mvn/version "0.9.10"}
+        binaryage/devtools {:mvn/version "1.0.4"}
 
         ;; going to make validation seperate?
         expound/expound {:mvn/version "0.7.0"}
