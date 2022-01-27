@@ -1,3 +1,8 @@
+# 0.2.16 Further Updates for latest version of CLJS
+
+* add a catch block around reload hook execution to prevent 
+  client process interruption
+
 # 0.2.15 Fix for logging errors with latest version of CLJS
 
 # 0.2.14 Detect file changes faster
