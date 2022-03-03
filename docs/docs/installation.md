@@ -291,14 +291,14 @@ to launch a REPL with `figwheel.main`.
 You can use this alias from the project root directory like so:
 
 ```shell
-$ clj -A:fig
+$ clj -M:fig
 ```
 
 You can also add additional flags as you wish. Let's look at the help
 documentation with the `-h` (or `--help`) option:
 
 ```shell
-$ clj -A:fig -h
+$ clj -M:fig -h
 ```
 
 > These are brief instructions to help you to start being productive
