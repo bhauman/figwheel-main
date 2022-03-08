@@ -128,7 +128,7 @@ $ clojure -m figwheel.main -b dev -r
 or with the defined alias:
 
 ```shell
-$ clojure -A:fig -b dev -r
+$ clojure -M:fig -b dev -r
 ```
 
 #### Start a build with Leiningen
