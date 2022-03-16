@@ -16,7 +16,7 @@
         com.nextjournal/beholder {:mvn/version "1.0.0"}
 
         ;; possibly external
-        binaryage/devtools {:mvn/version "1.0.4"}
+        binaryage/devtools {:mvn/version "1.0.5"}
 
         ;; going to make validation seperate?
         expound/expound {:mvn/version "0.7.0"}
