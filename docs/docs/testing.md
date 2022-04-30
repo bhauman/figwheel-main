@@ -18,10 +18,15 @@ tests in.</p></div>
 
 > Only available in `figwheel.main` >= 0.1.9-SNAPSHOT
 
+> Also keep in mind that the testing process helpers below are only intended
+> to work with [`:optimizations` config option] set to its' default `:none`
+
 ## Testing ClojureScript
 
 If you haven't written tests in ClojureScript yet, see the
 [testing guide over at clojurescript.org][cljs-testing].
+
+
 
 ## Auto testing
 
