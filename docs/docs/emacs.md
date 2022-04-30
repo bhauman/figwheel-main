@@ -145,7 +145,7 @@ would look like this:
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.16"}}
+        com.bhauman/figwheel-main {:mvn/version "0.2.17"}}
  :paths ["src" "resources" "target"]}
 ```
 
