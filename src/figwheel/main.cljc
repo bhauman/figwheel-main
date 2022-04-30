@@ -2169,7 +2169,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
              (add-default-system-app-handler (update-config cfg))
              {:keys [mode pprint-config ::build-once]} config
              repl-env (apply repl-env-fn (mapcat identity repl-env-options))
-             cenv (cljs.env/default-compiler-env options)
+             ;; prevent cljs compiler from running bundle-cmd as figwheel handles it already
+             cenv (cljs.env/default-compiler-env (dissoc options :bundle-cmd))
              repl-options (assoc repl-options :compiler-env cenv)]
          (validate-basic-assumptions! b-cfg)
          (validate-fix-target-classpath! b-cfg)
