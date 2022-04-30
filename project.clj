@@ -16,7 +16,7 @@
    [ring "1.9.1"]
    [org.eclipse.jetty.websocket/websocket-servlet "9.4.36.v20210114"]
    [org.eclipse.jetty.websocket/websocket-server  "9.4.36.v20210114"]
-   [binaryage/devtools "1.0.4"]
+   [binaryage/devtools "1.0.5"]
    [com.nextjournal/beholder "1.0.0"]
    [expound "0.7.1"]]
   :resource-paths ["helper-resources"]
