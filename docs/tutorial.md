@@ -93,7 +93,7 @@ Now let's use Figwheel to start a ClojureScript REPL. Make sure you
 are still in the `hello-cljs` directory and enter:
 
 ```clojure
-clj -m figwheel.main
+clj -M -m figwheel.main
 ```
 
 This command should fetch all the dependencies we need, boot up a
@@ -173,7 +173,7 @@ To see it in action launch a REPL with `figwheel.main` again, from the
 `hello-cljs` directory:
 
 ```shell
-$ clojure -m figwheel.main
+$ clojure -M -m figwheel.main
 ```
 
 > Its better to use the `clojure` command when using
@@ -403,7 +403,7 @@ Again, we will begin in our `hello-cljs` directory and start a REPL
 with `figwheel.main`.
 
 ```shell
-$ clojure -m figwheel.main
+$ clojure -M -m figwheel.main
 ```
 
 Once the REPL has started we will turn our attention to creating a
@@ -575,7 +575,7 @@ get quite far into an application just using this simple setup.
 > **TIP**: Much of what you learned above applies equally well to the
 > Clojure language. So if you would like to try your hand at Clojure,
 > as well, you can get a working Rebel Readline Clojure REPL by typing
-> `clojure -m rebel-readline.main` in the `hello-cljs` directory. If
+> `clojure -M -m rebel-readline.main` in the `hello-cljs` directory. If
 > you want to create and load Clojure files, everything is the same as
 > above except Clojure files end with `.clj`
 
@@ -588,7 +588,7 @@ something specific already loaded.
 You can accomplish this by using the following command:
 
 ```clojure
-$ clojure -m figwheel.main --compile hello.cruel-world --repl
+$ clojure -M -m figwheel.main --compile hello.cruel-world --repl
 ```
 
 This will compile and load the `hello.cruel-world` namespace into the
@@ -642,7 +642,7 @@ Now we will return to run our REPL again from the `hello-cljs`
 directory.
 
 ```clojure
-$ clojure -m figwheel.main --compile hello.cruel-world --repl
+$ clojure -M -m figwheel.main --compile hello.cruel-world --repl
 ```
 
 You should see the familiar output when starting a `figwheel.main`
@@ -848,11 +848,11 @@ It is easy to use a build file. From the `hello-cljs` directory, start
 `figwheel.main` again, using our new build file:
 
 ```shell
-$ clojure -m figwheel.main --build cruel --repl
+$ clojure -M -m figwheel.main --build cruel --repl
 ```
 
 This will create a working environment that is practically identical
-to when we previously called `clojure -m figwheel.main --compile
+to when we previously called `clojure -M -m figwheel.main --compile
 hello.cruel-world --repl`.
 
 You will notice that if you edit the `src/hello/cruel_world.cljs` file
@@ -910,7 +910,7 @@ adding **metadata** to the map that follows it.
 Now when we start up the `cruel` build with `figwheel.main` again:
 
 ```shell
-$ clojure -m figwheel.main --build cruel --repl
+$ clojure -M -m figwheel.main --build cruel --repl
 ```
 
 If we type an error in our code we'll see a much more concise message
@@ -1028,16 +1028,16 @@ flag. We will also specify the `--optimizations` level as
 Here's the long version of the command:
 
 ```shell
-$ clojure -m figwheel.main --optimizations whitespace  --build-once cruel
+$ clojure -M -m figwheel.main --optimizations whitespace  --build-once cruel
 ```
 
 and here's the command using abbreviated flags:
 
 ```shell
-$ clojure -m figwheel.main -O whitespace -bo cruel
+$ clojure -M -m figwheel.main -O whitespace -bo cruel
 ```
 
-> **TIP**: you can use `clj -m figwheel.main --help` to learn all of
+> **TIP**: you can use `clj -M -m figwheel.main --help` to learn all of
 > the `figwheel.main` CLI flags and their abbreviations
 
 If you execute the above command and then view
@@ -1053,7 +1053,7 @@ a static code analysis and perform DCE (Dead code elimination) and
 remove any code that is not used.
 
 ```shell
-$ clojure -m figwheel.main -O advanced -bo cruel
+$ clojure -M -m figwheel.main -O advanced -bo cruel
 ```
 
 If you now view the contents of `target/public/cljs-out/cruel-main.js`
