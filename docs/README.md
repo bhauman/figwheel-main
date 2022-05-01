@@ -200,7 +200,7 @@ On Mac OSX with brew:
 Now launch a ClojureScript REPL with:
 
 ```
-clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.17\"}}}"  -m figwheel.main
+clj -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.17\"}}}"  -M -m figwheel.main
 ```
 
 This will first compile browser REPL code to a temp directory, and
@@ -224,7 +224,7 @@ available. So, you can get Rebel Readline behavior by simply adding it
 to your dependencies.
 
 ```
-clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.17\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -m figwheel.main
+clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.17\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -M -m figwheel.main
 ```
 
 As of right now using Rebel readline does create some startup overhead
@@ -272,7 +272,7 @@ In `src/example/core.cljs`, place the following ClojureScript code:
 Then run the command:
 
 ```
-clojure -m figwheel.main -b dev -r
+clojure -M -m figwheel.main -b dev -r
 ```
 
 This will launch a REPL and start autobuilding and reloading the `src`
@@ -287,7 +287,7 @@ The `-r` or `--repl` flag indicates that a REPL should be launched.
 Interesting to note that the above command is equivalent to:
 
 ```
-clojure -m figwheel.main -co dev.cljs.edn -c -r
+clojure -M -m figwheel.main -co dev.cljs.edn -c -r
 ```
 
 You can also start your build running with the `build-dev` alias we
@@ -511,13 +511,13 @@ connections in addition to others.
 
 You can launch a Node REPL like so:
 
-    clojure -m figwheel.main -t node -r
+    clojure -M -m figwheel.main -t node -r
     
 You can quickly get a hot reloading CLJS node build up an running using the
 `deps.edn`, `example.core` and `dev.cljs.edn` above. Simply add a `--target node`
 or `-t node` to the compile command.
 
-    clojure -m figwheel.main -t node -b dev -r
+    clojure -M -m figwheel.main -t node -b dev -r
 
 This will launch a CLJS Node REPL initialized with `example.core` you
 can now edit `example/core.cljs` and it will be hot reloaded.
@@ -531,7 +531,7 @@ Of course if you add `:target :nodejs` to `dev.cljs.edn` like so:
 
 You be able to run the build more simply:
 
-    clojure -m figwheel.main -b dev -r
+    clojure -M -m figwheel.main -b dev -r
 
 ## Reload hooks
 
@@ -566,7 +566,7 @@ configuration.
 For example:
 
 ```
-clojure -m figwheel.main -pc -b dev -r
+clojure -M -m figwheel.main -pc -b dev -r
 ```
 
 Will output:
@@ -613,7 +613,7 @@ directory where this README is located.
 Then the command 
 
 ```shell
-clj -m figwheel.main -b helper -r 
+clj -M -m figwheel.main -b helper -r
 ```
 
 should launch a live development workflow for the Helper application. 
