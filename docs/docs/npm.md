@@ -270,9 +270,9 @@ Edit the `src/hello_world/core.cljs` to look like:
               (.format (moment) "dddd")))
 ```
 
-## Modify your index.html host page to load the bundle
+## Modify your HTML host page to load the bundle
 
-If you have an host page you will now need to point it at the bundled
+If you have a host page you will now need to point it at the bundled
 asset and NOT at the compiled ClojureScript.
 
 Our host page would normally need to include our compiled
