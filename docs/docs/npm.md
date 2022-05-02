@@ -272,20 +272,19 @@ Edit the `src/hello_world/core.cljs` to look like:
 
 ## Modify your index.html host page to load the bundle
 
-If you have an host page you will need to point it at the bundled
+If you have an host page you will now need to point it at the bundled
 asset and NOT at the compiled ClojureScript.
 
-We would normally point our HTML host page at the output of the
-ClojureScript compiler.
-
-For example our host page would include our compiled ClojureScript like so.
+Our host page would normally need to include our compiled
+ClojureScript like so:
 
 ```html
 <script src="cljs-out/dev-main.js"></script>
 ```
 
-We need instead to point our host page to the output of the JavaScript
-bundler. Like so ...
+However, since we are processing the compiled ClojureScript with a
+Javascript bundler, we will instead need to point our host page to the
+output of the JavaScript bundler. Like so ...
 
 ```html
 <script src="cljs-out/dev/main_bundle.js"></script>
