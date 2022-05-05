@@ -624,7 +624,7 @@ Using :parsel this will set :bundle-cmd to:
 
 And it will also add
 
-    :clojure-defines {"cljs.core/*global*""window"}
+    :closure-defines {"cljs.core/*global*""window"}
 
 when using :optimizations :simple or :advanced.
 
