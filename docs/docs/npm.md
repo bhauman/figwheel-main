@@ -340,7 +340,7 @@ When enabled `:auto-bundle` will set `:target` to `:bundle`.
 When choosing `:webpack` it will set `:bundle-cmd` to:
 
 ```clojure
-{:none ["npx" "webpack" "--mode=development" "--entry ":output-to 
+{:none ["npx" "webpack" "--mode=development" "--entry" :output-to 
         "--output-path" :final-output-dir
 		"--output-filename" :final-output-filename]
  :default ["npx" "webpack" "--mode=production" "--entry" :output-to 
