@@ -147,7 +147,7 @@ Let's add the `cljs-src` path to our classpath with CLI Tools. In your
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.17"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.18"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}
  ;; define paths here
@@ -256,7 +256,7 @@ Edit `deps.edn`:
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.17"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.18"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}
  ;; add "resources" path here
@@ -383,7 +383,7 @@ This is just a simple matter as we just need to add `"target"` to the
 ```clojure
 {:deps {org.clojure/clojure {:mvn/version "1.9.0"}
         org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.17"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.18"}
         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}
  ;; add "target" path here

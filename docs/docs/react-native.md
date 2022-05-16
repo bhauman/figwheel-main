@@ -94,7 +94,7 @@ Create a `deps.edn` file in the `MyAwesomeProject` directory:
 
 ```clojure
 {:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/figwheel-main {:mvn/version "0.2.17"}}
+        com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
  :paths ["src" "target"]}
 ```
 
