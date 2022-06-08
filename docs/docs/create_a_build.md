@@ -73,6 +73,13 @@ The contents of the `src/hello_world/core.cljs` file should be:
 (js/console.log "Hello there world!")
 ```
 
+**A note about uberjars**
+
+Be careful setting `:resource-paths` to include `target` when
+compiling an uberjar - it will be infinitely large! Instead, prefer to
+edit your figwheel-main config changing `:output-dir` to some
+subdirectory of resources, for example `resources/public/js`.
+
 ## Configuring a build
 
 The ClojureScript compiler can take a fairly extensive set of
