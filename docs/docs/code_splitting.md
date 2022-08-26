@@ -240,9 +240,9 @@ Now make a `resources/public/index.html` file:
   <body>
     <div id="app"></div>
     <!-- include the cljs_base.js target file -->
-    <script src="target/cljs-out/dev/cljs_base.js" type="text/javascript"></script>
+    <script src="/cljs-out/dev/cljs_base.js" type="text/javascript"></script>
     <!-- You will normally want to include at least one module otherwise nothing will happen -->		 
-    <script src="target/cljs-out/dev-foo.js" type="text/javascript"></script>
+    <script src="/cljs-out/dev-foo.js" type="text/javascript"></script>
   </body>
 </html>
 ```
