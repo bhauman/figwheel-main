@@ -81,6 +81,7 @@ Edit this file to look like the following:
   (let [app (gdom/getElement "app")
         button (gdom/createDom
                 "button"
+                nil
                 (gdom/createTextNode "Load Bar!"))]
     (gdom/removeChildren app)
     (gdom/append app button)
