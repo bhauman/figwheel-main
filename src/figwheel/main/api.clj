@@ -12,7 +12,7 @@
   Has two arities:
 
   (start build)
-  (start figwheel-config-or-build build & backgound-builds)
+  (start figwheel-config-or-build build & background-builds)
 
   You can call `start` with any number of `build` arguments. The first
   one will be the foreground build and any builds that follow will be
