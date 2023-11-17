@@ -497,6 +497,10 @@ Defaults to false.
 
 (s/def ::closure-language-in-out-opts
   #{:ecmascript-next    :es-next
+    :ecmascript-2021    :es-2021
+    :ecmascript-2020    :es-2020
+    :ecmascript-2019    :es-2019
+    :ecmascript-2018    :es-2018
     :ecmascript-2017    :es-2017
     :ecmascript-2016    :es-2016
     :ecmascript-2015    :es-2015
@@ -514,6 +518,10 @@ Defaults to false.
   "Configure the input and output languages for the closure library. May be:
 
 * :ecmascript-next identical to :es-next
+* :ecmascript-2021 identical to :es-2021
+* :ecmascript-2020 identical to :es-2020
+* :ecmascript-2019 identical to :es-2019
+* :ecmascript-2018 identical to :es-2018
 * :ecmascript-2017 identical to :es-2017
 * :ecmascript-2016 identical to :es-2016
 * :ecmascript-2015 identical to :es-2015
@@ -535,6 +543,10 @@ Defaults to :ecmascript5
   "Configure the input and output languages for the closure library. May be:
 
 * :ecmascript-next identical to :es-next
+* :ecmascript-2021 identical to :es-2021
+* :ecmascript-2020 identical to :es-2020
+* :ecmascript-2019 identical to :es-2019
+* :ecmascript-2018 identical to :es-2018
 * :ecmascript-2017 identical to :es-2017
 * :ecmascript-2016 identical to :es-2016
 * :ecmascript-2015 identical to :es-2015
