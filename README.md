@@ -477,7 +477,7 @@ anyfile in `target/public` and `resources/public`.
 
 The compiler by default compiles artifacts to `target` for easy cleaning.
 
-It is custmary to put your `index.html`, CSS files, and other
+It is customary to put your `index.html`, CSS files, and other
 web artifacts in the `resources/public` directory.
 
 ## Live CSS Reloading
