@@ -10,8 +10,6 @@
 
         ;; server
         ring/ring {:mvn/version "1.13.0"}
-        org.eclipse.jetty.websocket/websocket-servlet {:mvn/version "11.0.24"}
-        org.eclipse.jetty.websocket/websocket-jetty-server {:mvn/version "11.0.24"}
 
         ;; file watching
         com.nextjournal/beholder {:mvn/version "1.0.0"}
@@ -66,8 +64,6 @@
 
              }
             :extra-paths ["target" "devel" "dev"]}
-           :beta1 {:override-deps
-                   {org.clojure/clojure {:mvn/version "1.10.0-beta1"}}}
            :cljfmt {:extra-deps {cljfmt/cljfmt {:mvn/version "0.6.3"}}
                     :main-opts ["-m" "cljfmt.main"]}
            }

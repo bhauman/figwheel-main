@@ -6,7 +6,7 @@
   :scm {:name "git"
         :url "https://github.com/bhauman/figwheel-main"}
   :dependencies
-  [[org.clojure/clojure "1.10.0"]
+  [[org.clojure/clojure "1.10.3"]
    [org.clojure/clojurescript "1.10.773" :exclusions [commons-codec]]
    [org.clojure/data.json "2.4.0"]
    [com.bhauman/figwheel-repl "0.2.19-SNAPSHOT"]
@@ -15,8 +15,6 @@
    [com.bhauman/cljs-test-display "0.1.1"]
    [com.bhauman/certifiable "0.0.7"]
    [ring "1.13.0"]
-   [org.eclipse.jetty.websocket/websocket-servlet "11.0.24"]
-   [org.eclipse.jetty.websocket/websocket-jetty-server  "11.0.24"]
    [binaryage/devtools "1.0.5"]
    [com.nextjournal/beholder "1.0.0"]
    [expound "0.7.1"]]
