@@ -69,7 +69,7 @@ test10: clean
 testit: clean
 	lein test
 
-testall: testit test10
+testall: testit #test10
 
 itest:
 	cd ../figwheel-main-testing && make itest

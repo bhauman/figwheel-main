@@ -624,7 +624,7 @@ Using :parsel this will set :bundle-cmd to:
 
 And it will also add
 
-    :clojure-defines {"cljs.core/*global*""window"}
+    :clojure-defines {"cljs.core/*global*" "window"}
 
 when using :optimizations :simple or :advanced.
 
@@ -774,7 +774,7 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
  {:urlencoded true, :multipart true, :nested true, :keywordize true},
  :cookies true,
  :session
- {:flash true, :cookie-attrs {:http-only true, :same-site :strict}},
+ {:flash true, :cookie-attrs {:http-only true}},
  :static {:resources "public"},
  :responses {:content-types true, :default-charset "utf-8"},
  :figwheel.server.ring/dev

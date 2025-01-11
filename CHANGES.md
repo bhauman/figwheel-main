@@ -1,3 +1,10 @@
+# 0.2.19
+
+This is a re-working of the websocket server integration to account
+for changes in ring-jetty-adapter. This gets rid of a custom
+ring-jetty-adapter and now relies only on the public api of ring's
+adapter.
+
 # 0.2.16 Further Updates for latest version of CLJS
 
 * add a catch block around reload hook execution to prevent 
