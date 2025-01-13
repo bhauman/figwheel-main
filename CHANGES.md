@@ -1,3 +1,9 @@
+# 0.2.20
+
+The new ring-jetty-adapter times out after 30 seconds. Removed a
+serverside thread and added a client side Javascript interval
+to ping the server and keep to keep the connection alive.
+
 # 0.2.19
 
 This is a re-working of the websocket server integration to account

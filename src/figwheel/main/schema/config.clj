@@ -888,7 +888,9 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
 
 ```
 " (when-let [opt (resolve 'figwheel.server.ring/default-options)]
-    (with-out-str (clojure.pprint/pprint (deref opt))))
+    (with-out-str (clojure.pprint/pprint (update-in (deref opt)
+                                                    [:params :session]
+                                                    dissoc :store))))
        "```
 
 You can override these options by suppling your own to `:ring-stack-options`
