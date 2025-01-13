@@ -773,9 +773,7 @@ The default options are slightly modified from `ring.middleware.defaults/site-de
 {:params
  {:urlencoded true, :multipart true, :nested true, :keywordize true},
  :cookies true,
- :session
- {:flash true,
-  :cookie-attrs {:http-only true}},
+ :session {:flash true, :cookie-attrs {:http-only true}},
  :static {:resources "public"},
  :responses {:content-types true, :default-charset "utf-8"},
  :figwheel.server.ring/dev
