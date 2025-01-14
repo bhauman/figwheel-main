@@ -3,8 +3,8 @@
         org.clojure/clojurescript {:mvn/version "1.10.773" :exclusions [commons-codec/commons-codec]}
         org.clojure/data.json {:mvn/version "2.4.0"}
         ;; DEV for now its easier to use cider with top level deps
-        ;; com.bhauman/figwheel-core {:local/root "/Users/bhauman/workspace/figwheel/figwheel-core"}
-        ;; com.bhauman/figwheel-repl {:local/root "/Users/bhauman/workspace/figwheel/figwheel-repl"}
+        ;; com.bhauman/figwheel-core {:local/root "../figwheel-core"}
+        ;; com.bhauman/figwheel-repl {:local/root "../figwheel-repl"}
         com.bhauman/figwheel-repl {:mvn/version "0.2.21-SNAPSHOT"}
         com.bhauman/figwheel-core {:mvn/version "0.2.21-SNAPSHOT"}
 
