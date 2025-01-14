@@ -1,6 +1,6 @@
-# Contributing to Figwheel Main
+# Contributing to FigwheelMain
 
-First off, thank you for considering contributing to [Figwheel Main](https://github.com/bhauman/figwheel-main)! ð Your efforts are greatly appreciated and help make this project better for everyone.
+First off, thank you for considering contributing to [FigwheelMain](https://github.com/bhauman/figwheel-main)! Your efforts are greatly appreciated and help make this project better for everyone.
 
 ## Table of Contents
 
@@ -22,23 +22,23 @@ Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a wel
 
 ## How Can I Contribute?
 
-There are many ways to contribute to Figwheel Main, whether it's improving documentation, reporting issues, suggesting new features, or contributing code. Here's how you can get started:
+There are many ways to contribute to FigwheelMain, whether it's improving documentation, reporting issues, suggesting new features, or contributing code. Here's how you can get started:
 
 ### Reporting Bugs
 
-If you find a bug in Figwheel Main, please open an issue with the following information:
+If you find a bug in FigwheelMain, please open an issue with the following information:
 
 - **A clear and descriptive title**
 - **A detailed description** of the problem
 - **Steps to reproduce the issue**
 - **Expected vs. actual behavior**
-- **Environment information** (e.g., OS, version of Figwheel Main, etc.)
+- **Environment information** (e.g., OS, version of FigwheelMain, etc.)
 
 Before creating a new issue, please search existing issues to see if someone else has already reported the problem.
 
 ### Suggesting Enhancements
 
-Have an idea to make Figwheel Main better? We'd love to hear it! When suggesting enhancements, please:
+Have an idea to make FigwheelMain better? We'd love to hear it! When suggesting enhancements, please:
 
 - Provide a clear and descriptive title
 - Describe the enhancement in detail
@@ -164,7 +164,7 @@ Adhering to style guides improves readability and maintainability. Please follow
 - **Line Length**: Keep lines under 80 characters where possible.
 - **Whitespace**: Use blank lines to separate logical blocks of code.
 
-Consider using tools like [cljfmt](https://github.com/weavejester/cljfmt) and [eastwood](https://github.com/jonase/eastwood) for automated formatting and linting.
+Consider using tools like [cljfmt](https://github.com/weavejester/cljfmt) and for automated formatting and linting.
 
 ## Additional Notes
 
@@ -175,11 +175,9 @@ Consider using tools like [cljfmt](https://github.com/weavejester/cljfmt) and [e
   git merge upstream/main
   ```
 - **Ask Questions**: If you're unsure about something, feel free to [open an issue](https://github.com/bhauman/figwheel-main/issues) or join the community discussions.
-- **Respect Licensing**: Ensure that your contributions comply with the project's licensing terms. Figwheel Main is licensed under the [Eclipse Public License](https://github.com/bhauman/figwheel-main/blob/main/LICENSE).
+- **Respect Licensing**: Ensure that your contributions comply with the project's licensing terms. FigwheelMain is licensed under the [Eclipse Public License](https://github.com/bhauman/figwheel-main/blob/main/LICENSE).
 
-Thank you again for your interest in contributing to Figwheel Main! Together, we can make this project even better.
-
-Happy coding! ð
+Thank you again for your interest in contributing to FigwheelMain! 
 
 # License
 
