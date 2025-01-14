@@ -1480,6 +1480,7 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
      (defn get-repl-env-options [{:keys [repl-env-options ::config options] :as cfg}]
        (let [repl-options (get-repl-options cfg)]
          (merge
+          {:host (get-in config [:ring-server-options :host] "localhost")}
           (select-keys config
                        [:ring-server
                         :ring-server-options
