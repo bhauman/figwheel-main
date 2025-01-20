@@ -17,6 +17,7 @@
           ruby = pkgs.ruby_3_2;
           gemfile = ./Gemfile;
           lockfile = ./Gemfile.lock;
+          # generated with bundx
           gemset = ./gemset.nix;
         };
       in
@@ -25,6 +26,7 @@
           buildInputs = [
             pkgs.ruby_3_2
             gems
+            pkgs.bundix
             # Add other packages here, e.g.,
             # pkgs.nodejs
             # pkgs.yarn
