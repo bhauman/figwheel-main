@@ -19,7 +19,7 @@
    [com.bhauman/cljs-test-display "0.1.1"]
    [com.bhauman/certifiable "0.0.7"]]
   :resource-paths ["helper-resources"]
-  :profiles {:dev {:dependencies [[cider/piggieback "0.3.9"]
+  :profiles {:dev {:dependencies [[cider/piggieback "0.6.0"]
                                   #_[com.bhauman/rebel-readline-cljs "0.1.4"]]
                    :source-paths ["src" "devel" "dev"]
                    :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}})

@@ -25,7 +25,7 @@ pom.xml.asc
 .rebel_readline_history
 _site
 .sass-cache
-Gemfile.lock
+# Gemfile.lock
 docs/assets/compiled/js/out
 
 mod.cljs.edn
