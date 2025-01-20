@@ -5,6 +5,7 @@
         ;; DEV for now its easier to use cider with top level deps
         ;; com.bhauman/figwheel-core {:local/root "../figwheel-core"}
         ;; com.bhauman/figwheel-repl {:local/root "../figwheel-repl"}
+
         com.bhauman/figwheel-repl {:mvn/version "0.2.21-SNAPSHOT"}
         com.bhauman/figwheel-core {:mvn/version "0.2.21-SNAPSHOT"}
 
@@ -12,14 +13,14 @@
         ring/ring {:mvn/version "1.13.0"}
 
         ;; file watching
-        com.nextjournal/beholder {:mvn/version "1.0.0"}
+        com.nextjournal/beholder {:mvn/version "1.0.2"}
 
         ;; possibly external
-        binaryage/devtools {:mvn/version "1.0.5"}
+        binaryage/devtools {:mvn/version "1.0.7"}
 
         ;; going to make validation seperate?
-        expound/expound {:mvn/version "0.7.0"}
-        com.bhauman/spell-spec {:mvn/version "0.1.0"}
+        expound/expound {:mvn/version "0.9.0"}
+        com.bhauman/spell-spec {:mvn/version "0.1.2"}
         com.bhauman/cljs-test-display {:mvn/version "0.1.1"}
         com.bhauman/certifiable {:mvn/version "0.0.7"}}
 
@@ -45,7 +46,7 @@
            {:extra-paths ["dev"]
             :main-opts ["-e" (build-docs)]}
            :rebel
-           {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.3"}}}
+           {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
            :dev
            {:extra-deps
             {org.clojure/clojurescript {:mvn/version #_"1.10.339" "1.10.773" #_"1.10.844"}
@@ -64,7 +65,7 @@
 
              }
             :extra-paths ["target" "devel" "dev"]}
-           :cljfmt {:extra-deps {cljfmt/cljfmt {:mvn/version "0.6.3"}}
+           :cljfmt {:extra-deps {cljfmt/cljfmt {:mvn/version "0.9.2"}}
                     :main-opts ["-m" "cljfmt.main"]}
            }
 
