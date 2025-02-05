@@ -196,39 +196,39 @@ allow you to launch an arbitrary JavaScript environment.
 launch a JavaScript environment.
 
 * a **string** representing a shell script that will be supplied a URL or
-  a path to your compiled ClojureScript. Example: `"headless-chrome"`
-* a **vector** representing a shell command. Example: `["headless-chrome" :open-url]`
+  a path to your compiled ClojureScript. Example: `"headless-firefox"`
+* a **vector** representing a shell command. Example: `["headless-firefox" :open-url]`
 * a **namespaced symbol** that represents a Clojure function that will be
   supplied a map. Example: `user/run-test-env`
 
 I'm going to show how you can use the [`:launch-js` config option][launch-js]
-to launch a headless Chrome environment to run your tests using all 3
+to launch a headless Firefox environment to run your tests using all 3
 different methods.
 
 #### Shell Script method
 
 On my Mac in my `~/bin` directory I have an executable shell script named
-`headless-chrome` that has the following content:
+`headless-firefox` that has the following content:
 
 ```shell
 #!/bin/sh
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --repl "$@"
+/Applications/Firefox.app/Contents/MacOS/firefox --headless --profile /tmp/headless-firefox-cljs-testing-profile --no-remote --url "$@"
 ```
 
 The above script takes a single URL argument.
 
-Now we just have to add `:launch-js "headless-chrome"` to our
+Now we just have to add `:launch-js "headless-firefox"` to our
 Figwheel options. We can do this on the command line while we run our
 tests like so:
 
 ```shell
-clojure -m figwheel.main -fwo '{:launch-js "headless-chrome"}'  -m example.test-runner
+clojure -m figwheel.main -fwo '{:launch-js "headless-firefox"}'  -m example.test-runner
 ```
 
 We can also add the option in a `tests.cljs.edn` build file if we are using it:
 
 ```clojure
-^{:launch-js "headless-chrome"}
+^{:launch-js "headless-firefox"}
 {:main example.normal-test-runner}
 ```
 
@@ -238,22 +238,22 @@ And then use it like this:
 clojure -m figwheel.main -co tests.cljs.edn  -m example.test-runner
 ```
 
+
 #### The command vector method
 
 The command vector method is pretty much the same as the shell script
 method but it allows you to execute arbitrary shell commands without
 needing to write a script.
 
-The following will launch headless Chrome on my system:
+The following will launch headless Firefox on my system:
 
 ```clojure
-:launch-js ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-            "--headless" "--disable-gpu" "--repl" :open-url]
+:launch-js ["/Applications/Firefox.app/Contents/MacOS/firefox" "--headless" "--profile" "/tmp/headless-firefox-cljs-testing-profile" "--no-remote" "--url" :open-url]
 ```
 
 #### Using a Clojure function
 
-This time let's use a Clojure function to launch headless Chrome. First
+This time let's use a Clojure function to launch headless Firefox. First
 we'll place a `headless-js-env` function in our `user.clj` file.
 
 ```clojure
@@ -261,8 +261,9 @@ we'll place a `headless-js-env` function in our `user.clj` file.
    (:require [clojure.java.shell :as shell]))
 
 (defn headless-js-env [{:keys [open-url]}]
-  (shell/sh "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-            "--headless" "--disable-gpu" "--repl" open-url))
+  (shell/sh "/Applications/Firefox.app/Contents/MacOS/firefox" "--headless" 
+            "--profile" "/tmp/headless-firefox-cljs-testing-profile" 
+			"--no-remote" "--url" open-url))
 ```
 
 Now we will configure `:launch-js` to take a `user/headless-js-env` symbol:
@@ -271,6 +272,37 @@ Now we will configure `:launch-js` to take a `user/headless-js-env` symbol:
 ```shell
 clojure -m figwheel.main -fwo '{:launch-js user/headless-js-env}'  -m example.test-runner
 ```
+
+### Google Chrome
+
+For Chrome this script may work:
+
+```shell
+#!/bin/sh
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-dev-shm --disable-gpu --remote-debugging-port=9222 --repl "$@"
+```
+
+and the `:launch-js` vector would be:
+
+```clojure
+:launch-js ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            "--headless" "--disable-dev-shm" "--disable-gpu" "--remote-debugging-port=9222"
+			"--repl" :open-url]
+```
+
+and the Clojure function:
+
+```clojure
+(ns user
+   (:require [clojure.java.shell :as shell]))
+
+(defn headless-js-env [{:keys [open-url]}]
+  (shell/sh "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            "--headless" "--disable-dev-shm" "--disable-gpu" --remote-debugging-port=9222 
+			"--repl" open-url))
+```
+
+
 
 [cljs-test-display]: https://github.com/bhauman/cljs-test-display
 [auto-testing]: ../config-options#auto-testing
