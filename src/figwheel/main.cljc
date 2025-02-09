@@ -1409,7 +1409,11 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                            (= (:fwbuild query)
                               (:fwbuild connect-id))
                            (= (select-keys query kys)
-                              connect-id))))))))
+                              connect-id)))))
+           (and conn?
+                (:connect-url config)
+                (string/starts-with? (:connect-url config) "http"))
+           (assoc-in [:repl-env-options :http-async-endpoint] true))))
 
      (defn config-cljs-devtools [{:keys [::config options] :as cfg}]
        (if (and
