@@ -151,7 +151,7 @@ function shimRequire(requireMap) {
 // deprecated
 // this will not work when you use react native expo
 // use createBridgeComponent instead
-function startApp(options){
+function start(options){
   assert(options.appName, "must provide an appName");
   assertKeyType(options, "appName", "string");
   // The crux of the loading problem for React Native is that the code needs to be loaded synchronously
@@ -162,8 +162,8 @@ function startApp(options){
   ReactNative.AppRegistry.registerComponent(options.appName, () => createBridgeComponent(options));
 }
 
-module.exports = {
-  shimRequire: shimRequire,
-  start: startApp,
-  createBridgeComponent: createBridgeComponent
-};
+export {
+  shimRequire,
+  start,
+  createBridgeComponent
+}
