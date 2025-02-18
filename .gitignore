@@ -16,6 +16,7 @@ target
 .\#*
 *.jar
 *.class
+*~
 figwheel-main.edn
 .java-version
 .lein-failures
@@ -27,7 +28,8 @@ _site
 .sass-cache
 # Gemfile.lock
 docs/assets/compiled/js/out
-
+.DS_Store
+never-gonna-find*
 mod.cljs.edn
 
 target-webpack

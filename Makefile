@@ -74,6 +74,11 @@ testall: testit #test10
 itest:
 	cd ../figwheel-main-testing && make itest
 
+deployit:
+	rm -rf target
+	rm -rf docs/assets/compiled/js/out
+	pushd ../figwheel-core; lein deploy clojars; popd; pushd ../figwheel-repl; lein deploy clojars; popd; lein deploy clojars
+
 deploy: clean install docs helper testall # really needs to clean again before deploy
 	rm -rf target
 	rm -rf docs/assets/compiled/js/out
