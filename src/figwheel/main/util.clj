@@ -273,7 +273,7 @@
   (let [port (get-in config [:ring-server-options :port] figwheel.repl/default-port)
         host (get-in config [:ring-server-options :host] "localhost")]
     (fill-connect-url-template
-     (:connect-url config "ws://[[config-hostname]]:[[server-port]]/figwheel-connect")
+     (:connect-url config "ws://[[client-hostname]]:[[server-port]]/figwheel-connect")
      host
      port)))
 

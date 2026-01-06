@@ -168,7 +168,7 @@ the server.
 This url is actually a template that will be filled in.  For example
 the default `:connect-url` is:
 
-    "ws://[[config-hostname]]:[[server-port]]/figwheel-connect"
+    "ws://[[client-hostname]]:[[server-port]]/figwheel-connect"
 
 The available template variables are:
 
@@ -655,7 +655,7 @@ This adds default `:ring-server-options` for
     :ssl-port 9533
 
 This also changes the default `:connect-url` to
-`wss://[[config-hostname]]:<ssl-port>/figwheel-connect` and the
+`wss://[[client-hostname]]:<ssl-port>/figwheel-connect` and the
 default `:open-url` to `https://[[server-hostname]]:<ssl-port>` where
 `<ssl-port>` is replaced with the `:ssl-port` from
 `:ring-server-options`.
