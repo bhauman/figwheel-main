@@ -9,7 +9,7 @@ GEM
     kramdown-syntax-coderay (1.0.1)
       coderay (~> 1.1)
       kramdown (~> 2.0)
-    rexml (3.4.0)
+    rexml (3.4.2)
 
 PLATFORMS
   ruby
