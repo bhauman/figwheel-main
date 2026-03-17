@@ -171,13 +171,13 @@ new certificates can be created for that trusted root.
 
 You'll want the connection to Figwheel to go over SSL so we'll need
 to change the [`:connect-url`](/config-options#connect-url) to
-`"wss://[[config-hostname]]:9533/figwheel-connect"`
+`"wss://[[client-hostname]]:9533/figwheel-connect"`
 
 You'll also want the browser that pops open after the build starts to
 be an `https` URL as well. You can do this by setting
 [`:open-url`](/config-options#open-url) to `"https://[[server-hostname]]:9533"`
 
-It's important to remember that both `[[config-hostname]]` and
+It's important to remember that both `[[client-hostname]]` and
 `[[server-hostname]]` are template variables that are filled in by
 Figwheel.
 
@@ -186,7 +186,7 @@ Figwheel.
 So our finished configuration will something like:
 
 ```clj
-^{:connect-url "wss://[[config-hostname]]:9533/figwheel-connect"
+^{:connect-url "wss://[[client-hostname]]:9533/figwheel-connect"
   :open-url "https://[[server-hostname]]:9533"
   :ring-server-options {:ssl? true
                         :ssl-port 9533

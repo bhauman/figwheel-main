@@ -1011,7 +1011,7 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                            (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
                            (update-in [::config :ring-server-options :ssl?] (fnil identity true))
                            (update-in [::config :connect-url]
-                                      (fnil identity (format "wss://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
+                                      (fnil identity (format "wss://[[client-hostname]]:%d/figwheel-connect" ssl-port)))
                            (update-in [::config :open-url]
                                       (fnil identity (format "https://[[server-hostname]]:%d" ssl-port))))]
                (if (or (get-in cfg [::config :ring-server-options :keystore])
