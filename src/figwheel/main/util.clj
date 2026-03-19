@@ -254,7 +254,8 @@
   (defn fill-connect-url-template [url host server-port]
     (cond-> url
       (.contains url "[[config-hostname]]")
-      (string/replace "[[config-hostname]]" (or host "localhost"))
+      (string/replace "[[config-hostname]]" (let [h (or host "localhost")]
+                                              (if (= h "0.0.0.0") "localhost" h)))
 
       (.contains url "[[server-hostname]]")
       (string/replace "[[server-hostname]]" (or (some-> @localhost
@@ -273,7 +274,7 @@
   (let [port (get-in config [:ring-server-options :port] figwheel.repl/default-port)
         host (get-in config [:ring-server-options :host] "localhost")]
     (fill-connect-url-template
-     (:connect-url config "ws://[[config-hostname]]:[[server-port]]/figwheel-connect")
+     (:connect-url config "http://[[config-hostname]]:[[server-port]]/figwheel-connect")
      host
      port)))
 

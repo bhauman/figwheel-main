@@ -11,7 +11,7 @@
    [org.clojure/data.json "2.4.0"]
    [com.bhauman/figwheel-core "0.2.21-SNAPSHOT"]
    [com.bhauman/figwheel-repl "0.2.21-SNAPSHOT"]
-   [ring/ring "1.13.0"]
+   [ring/ring "1.15.3"]
    [com.nextjournal/beholder "1.0.2"]
    [binaryage/devtools "1.0.7"]
    [expound/expound "0.9.0"]

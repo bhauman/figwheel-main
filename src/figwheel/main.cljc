@@ -251,54 +251,54 @@
            (fww/add-watch!
             [::autobuild id]
             (merge
-              {::watch-info (merge
-                             (:extra-info reload-config)
-                             {:id id
-                              :paths paths
-                              :inputs inputs
-                              :options opts
-                              :compiler-env cenv
-                              :reload-config reload-config})}
-              {:paths paths
-               :filter (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
-               :handler (fww/throttle
-                         (:wait-time-ms reload-config 50)
-                         (bound-fn [evts]
-                           (binding [cljs.env/*compiler* cenv]
-                             (let [files (mapv (comp #(.getCanonicalPath %) :file) evts)]
-                               (try
-                                 (when-let [clj-files
-                                            (->> evts
-                                                 (filter
-                                                  (partial
-                                                   (fww/suffix-filter
-                                                    (set
-                                                     (cond
-                                                       (coll? (:reload-clj-files reload-config))
-                                                       (mapv name (:reload-clj-files reload-config))
-                                                       (false? (:reload-clj-files reload-config)) []
-                                                       :else ["clj" "cljc"]))) nil))
-                                                 (mapv (comp #(.getCanonicalPath %) :file))
-                                                 not-empty)]
-                                   (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
-                                   (try
-                                     (figwheel.core/reload-clj-files clj-files)
-                                     (catch Throwable t
-                                       (if (-> t ex-data :figwheel.core/internal)
-                                         (do
-                                           (log/error (.getMessage t) t)
-                                           (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
-                                         (do
-                                           (log/syntax-exception t)
-                                           (figwheel.core/notify-on-exception cenv t {})))
+             {::watch-info (merge
+                            (:extra-info reload-config)
+                            {:id id
+                             :paths paths
+                             :inputs inputs
+                             :options opts
+                             :compiler-env cenv
+                             :reload-config reload-config})}
+             {:paths paths
+              :filter (fww/suffix-filter #{"cljc" "cljs" "js" "clj"})
+              :handler (fww/throttle
+                        (:wait-time-ms reload-config 50)
+                        (bound-fn [evts]
+                          (binding [cljs.env/*compiler* cenv]
+                            (let [files (mapv (comp #(.getCanonicalPath %) :file) evts)]
+                              (try
+                                (when-let [clj-files
+                                           (->> evts
+                                                (filter
+                                                 (partial
+                                                  (fww/suffix-filter
+                                                   (set
+                                                    (cond
+                                                      (coll? (:reload-clj-files reload-config))
+                                                      (mapv name (:reload-clj-files reload-config))
+                                                      (false? (:reload-clj-files reload-config)) []
+                                                      :else ["clj" "cljc"]))) nil))
+                                                (mapv (comp #(.getCanonicalPath %) :file))
+                                                not-empty)]
+                                  (log/debug "Reloading clj files: " (pr-str (map str clj-files)))
+                                  (try
+                                    (figwheel.core/reload-clj-files clj-files)
+                                    (catch Throwable t
+                                      (if (-> t ex-data :figwheel.core/internal)
+                                        (do
+                                          (log/error (.getMessage t) t)
+                                          (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t)))))
+                                        (do
+                                          (log/syntax-exception t)
+                                          (figwheel.core/notify-on-exception cenv t {})))
                                   ;; skip cljs reloading in this case
-                                       (throw t))))
-                                 (log/debug "Detected changed cljs files: " (pr-str (map str files)))
-                                 (build-fn files)
-                                 (catch Throwable t
-                                   (log/error t)
-                                   (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
-                                   false))))))})))))
+                                      (throw t))))
+                                (log/debug "Detected changed cljs files: " (pr-str (map str files)))
+                                (build-fn files)
+                                (catch Throwable t
+                                  (log/error t)
+                                  (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
+                                  false))))))})))))
 
      (declare read-edn-file)
 
@@ -350,7 +350,6 @@
 ;; ----------------------------------------------------------------------------
 
 ;; Help
-
 
      (def help-template
        "Usage: clojure -m figwheel.main [init-opt*] [main-opt] [arg*]
@@ -648,14 +647,14 @@ classpath. Classpath-relative paths have prefix of @ or @/")
                     (cons "-s" args)
                     args)]
          (default-compile repl-env-fn
-           (merge (build-opt cfg build-name)
-                  {:args args
-                   ::build-main-opt true}))))
+                          (merge (build-opt cfg build-name)
+                                 {:args args
+                                  ::build-main-opt true}))))
 
      (defn build-once-main-opt [repl-env-fn [_ build-name & args] cfg]
        (default-compile repl-env-fn
-         (merge (build-once-opt cfg build-name)
-                {:args args})))
+                        (merge (build-once-opt cfg build-name)
+                               {:args args})))
 
      (declare default-output-dir default-output-to)
 
@@ -692,11 +691,11 @@ classpath. Classpath-relative paths have prefix of @ or @/")
 
      (defn helper-ring-app [handler html-body output-to & [force-index?]]
        (figwheel.server.ring/default-index-html
-         handler
-         (figwheel.server.ring/index-html (cond-> {}
-                                            html-body (assoc :body html-body)
-                                            output-to (assoc :output-to output-to)))
-         force-index?))
+        handler
+        (figwheel.server.ring/index-html (cond-> {}
+                                           html-body (assoc :body html-body)
+                                           output-to (assoc :output-to output-to)))
+        force-index?))
 
      (defn repl-main-opt [repl-env-fn args cfg]
        (let [cfg (if (should-add-temp-dir? cfg)
@@ -708,21 +707,21 @@ classpath. Classpath-relative paths have prefix of @ or @/")
              output-to (get-in cfg [:options :output-to]
                                (default-output-to cfg))]
          (default-compile
-           repl-env-fn
-           (-> cfg
-               (assoc :args args)
-               (update :options (fn [opt] (merge {:main 'figwheel.repl.preload} opt)))
-               (assoc-in [:options :aot-cache] true)
-               (assoc-in [::config
-                          :ring-stack-options
-                          :figwheel.server.ring/dev
-                          :figwheel.server.ring/system-app-handler]
-                         #(helper/middleware
-                           %
-                           {:header "REPL Host page"
-                            :body (slurp (io/resource "public/com/bhauman/figwheel/helper/content/repl_welcome.html"))
-                            :output-to output-to}))
-               (assoc-in [::config :mode] :repl)))))
+          repl-env-fn
+          (-> cfg
+              (assoc :args args)
+              (update :options (fn [opt] (merge {:main 'figwheel.repl.preload} opt)))
+              (assoc-in [:options :aot-cache] true)
+              (assoc-in [::config
+                         :ring-stack-options
+                         :figwheel.server.ring/dev
+                         :figwheel.server.ring/system-app-handler]
+                        #(helper/middleware
+                          %
+                          {:header "REPL Host page"
+                           :body (slurp (io/resource "public/com/bhauman/figwheel/helper/content/repl_welcome.html"))
+                           :output-to output-to}))
+              (assoc-in [::config :mode] :repl)))))
 
      (declare serve update-config)
 
@@ -1006,35 +1005,35 @@ classpath. Classpath-relative paths have prefix of @ or @/")
        (if-not (:use-ssl config)
          cfg
          (cond->
-             (let [ssl-port (get-in config [:ring-server-options :ssl-port] figwheel.repl/default-ssl-port)
-                   cfg (-> cfg
-                           (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
-                           (update-in [::config :ring-server-options :ssl?] (fnil identity true))
-                           (update-in [::config :connect-url]
-                                      (fnil identity (format "wss://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
-                           (update-in [::config :open-url]
-                                      (fnil identity (format "https://[[server-hostname]]:%d" ssl-port))))]
-               (if (or (get-in cfg [::config :ring-server-options :keystore])
-                       (get-in cfg [::config :ring-server-options :truststore]))
-                 cfg
-                 (do (log/info "Attempting to get an SSL certificate for localhost")
-                     (if-let [{:keys [server-keystore-path password]}
-                              (try
-                                (binding [certifiable.log/*log-fn*
-                                          (fn [level & args]
-                                            (when (log/levels-map level)
-                                              (log/fwlog! log/*logger* level (string/join " " (map str args)) nil)))]
-                                  (certifiable/create-dev-certificate-jks
-                                   (merge {:print-instructions? false}
-                                          (when-let [hosts (not-empty (:ssl-valid-hosts config))]
-                                            (certifiable/parse-domain-ip-arguments hosts)))))
-                                (catch Throwable t
-                                  (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
-                                  (log/error (.getMessage t) t)))]
-                       (cond-> cfg
-                           server-keystore-path (assoc-in [::config :ring-server-options :keystore] (str server-keystore-path))
-                           password (assoc-in [::config :ring-server-options :key-password] password))
-                       cfg)))))))
+          (let [ssl-port (get-in config [:ring-server-options :ssl-port] figwheel.repl/default-ssl-port)
+                cfg (-> cfg
+                        (assoc-in  [::config :ring-server-options :ssl-port] ssl-port)
+                        (update-in [::config :ring-server-options :ssl?] (fnil identity true))
+                        (update-in [::config :connect-url]
+                                   (fnil identity (format "https://[[config-hostname]]:%d/figwheel-connect" ssl-port)))
+                        (update-in [::config :open-url]
+                                   (fnil identity (format "https://[[server-hostname]]:%d" ssl-port))))]
+            (if (or (get-in cfg [::config :ring-server-options :keystore])
+                    (get-in cfg [::config :ring-server-options :truststore]))
+              cfg
+              (do (log/info "Attempting to get an SSL certificate for localhost")
+                  (if-let [{:keys [server-keystore-path password]}
+                           (try
+                             (binding [certifiable.log/*log-fn*
+                                       (fn [level & args]
+                                         (when (log/levels-map level)
+                                           (log/fwlog! log/*logger* level (string/join " " (map str args)) nil)))]
+                               (certifiable/create-dev-certificate-jks
+                                (merge {:print-instructions? false}
+                                       (when-let [hosts (not-empty (:ssl-valid-hosts config))]
+                                         (certifiable/parse-domain-ip-arguments hosts)))))
+                             (catch Throwable t
+                               (log/debug (with-out-str (clojure.pprint/pprint (Throwable->map t))))
+                               (log/error (.getMessage t) t)))]
+                    (cond-> cfg
+                      server-keystore-path (assoc-in [::config :ring-server-options :keystore] (str server-keystore-path))
+                      password (assoc-in [::config :ring-server-options :key-password] password))
+                    cfg)))))))
 
 ;; use tools reader read-string for better error messages
      #_(redn/read-string)
@@ -1349,7 +1348,7 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
          (-> {:options build-edn
               ::config (cond-> (assoc (meta build-edn) :clean-outputs true)
                          (:auto-testing (meta build-edn))
-                         (update :extra-main-files assoc :auto-testing true)) }
+                         (update :extra-main-files assoc :auto-testing true))}
              (merge {::build {:id build-id}})
              config-auto-bundle
              config-default-dirs
@@ -1409,11 +1408,7 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
                            (= (:fwbuild query)
                               (:fwbuild connect-id))
                            (= (select-keys query kys)
-                              connect-id)))))
-           (and conn?
-                (:connect-url config)
-                (string/starts-with? (:connect-url config) "http"))
-           (assoc-in [:repl-env-options :http-async-endpoint] true))))
+                              connect-id))))))))
 
      (defn config-cljs-devtools [{:keys [::config options] :as cfg}]
        (if (and
@@ -1595,10 +1590,10 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
         em-options))
 
      (defn extra-main-altered-output-filenames [nm options config]
-         {:output-to (output-to-for-extra-main (name nm) options)
-          :final-output-to (append-to-filename-before-ext
-                            (:final-output-to config)
-                            (str "-" (name nm)))})
+       {:output-to (output-to-for-extra-main (name nm) options)
+        :final-output-to (append-to-filename-before-ext
+                          (:final-output-to config)
+                          (str "-" (name nm)))})
 
      (defn- compile-resource-helper [res opts]
        (let [parts (-> res
