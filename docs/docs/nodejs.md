@@ -118,17 +118,9 @@ the output of the first run of the program.
 ```shell
 $ cat target/node/dev/node.log
 Tomorrow at 1:35 PM  <<<---
- [Figwheel REPL] Connected: http-long-polling
  [Figwheel REPL] Session ID: 2d024034-415d-4431-817f-a2cb196a618c
  [Figwheel REPL] Session Name: Roselle
-n found! Falling back to http-long-polling:
- For a more efficient connection ensure that "ws" is installed :: do -> 'npm install ws'
 ```
-
-> The note about `http-long-polling` can be corrected by adding the `ws`
-> library to your dev dependencies via `npm install ws
-> --save-dev`. This is desirable as it allows Figwheel to use a
-> Websocket for its REPL communication instead of long-polling.
 
 Since Figwheel is running you can now change the file to subtract one day.
 
@@ -230,5 +222,4 @@ For a better development experience:
 
 If you follow those instructions you will get a Chrome Dev Tools
 console that you can use.
-
 

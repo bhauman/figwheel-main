@@ -29,7 +29,7 @@ a different server.
 
 You **will** need to run Figwheel as well as your application
 server. It can be helpful to think of Figwheel as a separate tooling
-process that has its own Websocket server to handle REPL
+process that has its own SSE endpoint to handle REPL
 communication.
 
 Figwheel's tooling process is not required to be in a separate JVM
@@ -57,14 +57,14 @@ server. This is not needed at all. Figwheel has been setup to handle
 
 **How this works**
 
-The reason why Figwheel works as a Cross Origin Websocket is the same
+The reason why Figwheel works as a Cross Origin SSE connection is the same
 reason that services like Firebase and Pusher work as Cross Origin
 services.
 
 In this case, Figwheel is responsible for compiling your ClojureScript
 into JavaScript artifacts that get loaded by the browser. When it
 compiles these artifacts it inserts a URL that points to the Figwheel
-server to establish a Websocket connection. So when your app server
+server to establish an SSE connection. So when your app server
 serves these compiled artifacts the Figwheel client will call home to
 the Figwheel server to establish a REPL connection. Since the Figwheel
 server allows [CORS][cors] requests this works just fine.
@@ -154,7 +154,6 @@ to make things more concise on the command line.
 
 [base-example-gist]: https://gist.github.com/bhauman/a5251390d1b8db09f43c385fb505727d
 [cors]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-
 
 
 

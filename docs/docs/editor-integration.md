@@ -43,7 +43,7 @@ Piggieback nREPL Middleware     - re-directs nREPL evals to ClojureScript Compil
 |
 ClojureScript REPL Code         - compiles ClojureScript to JavaScript
 |
-Figwheel REPL Websocket Server  - pushes JavaScript to Browser
+Figwheel REPL SSE Server        - pushes JavaScript to Browser
 |
 Browser                         - Figwheel REPL Client code evaluates JavaScript
 |
@@ -112,13 +112,12 @@ JavaScript environments that are available to evaluate JavaScript.
 For this reason the ClojureScript REPL needs to be provided a
 Connection to a JavaScript environment.
 
-### Figwheel Websocket Server
+### Figwheel SSE Server
 
-The Figwheel provides a Websocket server that the Browser or Node can
-connect back to. It is over this connection that the ClojureScript
-REPL sends JavaScript code for evaluation. And it is also over this
-connection that the ClojureScript REPL receives the response as a
-result of the evaluation.
+Figwheel provides an SSE endpoint that the Browser or Node can connect
+back to. The ClojureScript REPL sends JavaScript code for evaluation
+over this stream, and the client sends evaluation responses back over
+HTTP POST.
 
 ## Editors and nREPL
 
@@ -186,7 +185,6 @@ See [this blog post](https://www.martinklepsch.org/posts/emacs-and-vim.html) for
 [atom]: https://atom.io/
 [sublime2]: https://www.sublimetext.com/2
 [vscode]: https://code.visualstudio.com/
-
 
 
 

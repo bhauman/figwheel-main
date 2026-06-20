@@ -67,7 +67,7 @@ A symbol or string indicating a ring-handler to embed in the
 figwheel.repl server. This aids in quickly getting a dev server up and
 running. If the figwheel server doesn't meet your needs you can simply
 start your own server. The figwheel.client will still be able to
-connect to its websocket endpoint.
+connect to its SSE endpoint.
 Default: none
 
     :ring-handler my-project.server/handler
@@ -168,7 +168,7 @@ the server.
 This url is actually a template that will be filled in.  For example
 the default `:connect-url` is:
 
-    "ws://[[config-hostname]]:[[server-port]]/figwheel-connect"
+    "http://[[config-hostname]]:[[server-port]]/figwheel-connect"
 
 The available template variables are:
 
@@ -184,9 +184,9 @@ On the client side:
     [[client-hostname]]  the js/location.hostname on the client
     [[client-port]]      the js/location.port on the client
 
-If the url starts with a Websocket scheme "ws://" a websocket
-connection will be established. If the url starts with an http scheme
-"http" an http long polling connection will be established.
+The URL should use an HTTP or HTTPS scheme. The client receives server
+messages over Server-Sent Events and sends responses back with HTTP
+POST requests.
 
 ## :open-url
 
@@ -655,7 +655,7 @@ This adds default `:ring-server-options` for
     :ssl-port 9533
 
 This also changes the default `:connect-url` to
-`wss://[[config-hostname]]:<ssl-port>/figwheel-connect` and the
+`https://[[config-hostname]]:<ssl-port>/figwheel-connect` and the
 default `:open-url` to `https://[[server-hostname]]:<ssl-port>` where
 `<ssl-port>` is replaced with the `:ssl-port` from
 `:ring-server-options`.

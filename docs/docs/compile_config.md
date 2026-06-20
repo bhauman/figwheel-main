@@ -72,7 +72,7 @@ The above command should print out something like the following:
  :aot-cache false,
  :closure-defines
  {figwheel.repl/connect-url
-  "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"},
+  "http://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"},
  :repl-requires
  ([figwheel.repl :refer-macros [conns focus]]
   [figwheel.main
@@ -357,7 +357,7 @@ You can see in our example above that its value is:
 ```clojure
 :closure-defines
   {figwheel.repl/connect-url
-   "ws://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"}
+   "http://localhost:9500/figwheel-connect?fwprocess=b96800&fwbuild=dev"}
 ```
 
 [advanced-guide]: https://clojurescript.org/reference/advanced-compilation

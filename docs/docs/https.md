@@ -19,7 +19,7 @@ to use HTTPS in your development environment.</div>
 It's important to remember that you may not need the figwheel server
 to use HTTPS. If you are serving your application from [your own
 server](/docs/your_own_server) and that server is using HTTPS then
-connecting to a local websocket (for Figwheel) should not require an
+connecting to a local SSE endpoint (for Figwheel) should not require an
 SSL connection. Another thing to note is that connections from a
 secure web page to `127.0.0.1` rather than `localhost` do not require
 an SSL connection either.
@@ -171,7 +171,7 @@ new certificates can be created for that trusted root.
 
 You'll want the connection to Figwheel to go over SSL so we'll need
 to change the [`:connect-url`](/config-options#connect-url) to
-`"wss://[[config-hostname]]:9533/figwheel-connect"`
+`"https://[[config-hostname]]:9533/figwheel-connect"`
 
 You'll also want the browser that pops open after the build starts to
 be an `https` URL as well. You can do this by setting
@@ -186,7 +186,7 @@ Figwheel.
 So our finished configuration will something like:
 
 ```clj
-^{:connect-url "wss://[[config-hostname]]:9533/figwheel-connect"
+^{:connect-url "https://[[config-hostname]]:9533/figwheel-connect"
   :open-url "https://[[server-hostname]]:9533"
   :ring-server-options {:ssl? true
                         :ssl-port 9533
@@ -241,6 +241,5 @@ option.
 
 The above should get you up and running will SSL and Figwheel. You
 should rely on `:use-ssl` when possible.
-
 
 

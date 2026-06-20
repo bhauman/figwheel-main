@@ -587,7 +587,7 @@ Will output:
  :aot-cache false,
  :closure-defines
  #:figwheel.repl{connect-url
-                 "ws://localhost:9550/figwheel-connect?fwprocess=c8712b&fwbuild=dev",
+                 "http://localhost:9550/figwheel-connect?fwprocess=c8712b&fwbuild=dev",
                  print-output "repl,console"}}
 ```
 
@@ -664,4 +664,3 @@ later version.
 [figwheel-main]: https://github.com/bhauman/figwheel-main
 [install-lein]: https://github.com/technomancy/leiningen#installation
 [CLI Tools]: https://clojure.org/guides/getting_started#_installation_on_mac_via_code_brew_code
-

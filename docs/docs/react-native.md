@@ -144,7 +144,7 @@ if you are using Expo we'll need to make a few adjustments first.
 Now we are ready to launch our ClojureScript application:
 
 First we will start the `figwheel-main` process to compile our project
-and create a Websocket for REPL communication.
+and create an SSE connection for REPL communication.
 
 ```shell
 $ clj -m figwheel.main -b ios -r
@@ -298,4 +298,3 @@ code and learn more about the details of how this is all managed.
 This also introduces a compiler pass taken from
 [Krell](https://github.com/vouch-opensource/krell) to support
 `js/require` of images and assets.
-

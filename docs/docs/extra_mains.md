@@ -228,7 +228,7 @@ from the CLJS REPL prompt to do this.
 There is a very simple technique for switching the focus of your REPL
 though. Reload the browser tab if you want the focus of your REPL to
 switch to that environment. The Figwheel REPL will focus on the last
-environment to connect to the Websocket. So to switch focus just
+environment to connect to the SSE endpoint. So to switch focus just
 reload the browser tab where you want to focus.
 
 You verify this with a `(js/console.log "focus is here")`. You will

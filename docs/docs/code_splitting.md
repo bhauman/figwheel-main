@@ -188,7 +188,7 @@ It will show compile configuration to be this:
  :aot-cache false,
  :closure-defines
  #:figwheel.repl{connect-url
-                 "ws://localhost:9500/figwheel-connect?fwprocess=279383&fwbuild=dev"},
+                 "http://localhost:9500/figwheel-connect?fwprocess=279383&fwbuild=dev"},
  :repl-requires
  ([figwheel.repl :refer-macros [conns focus]]
   [figwheel.main

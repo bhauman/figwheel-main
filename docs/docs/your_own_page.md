@@ -14,7 +14,7 @@ host page, but sooner or later you will want to supply your own.</div>
 ## The Figwheel server
 
 Figwheel starts a server when it launches a build and/or a REPL. The
-primary purpose of this server is to provide websocket communication
+primary purpose of this server is to provide SSE communication
 between the REPL and the client environment. Figwheel not only uses
 this connection to evaluate compiled REPL expressions, it also uses it
 to communicate hot reloads, compile errors, and other things.

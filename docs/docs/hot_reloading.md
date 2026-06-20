@@ -278,7 +278,7 @@ You can make each reload wait a second after each compile by setting
 ## Reloads are broadcast
 
 There can be any number of clients (browser tabs) with valid
-connections to the Figwheel websocket server. For sanity the Figwheel
+connections to the Figwheel SSE endpoint. For sanity the Figwheel
 REPL only communicates with one of these clients. However, reloads are
 **broadcast** to all clients that are connected to the current build-id.
 
@@ -293,7 +293,7 @@ If you want to disable this you can set the
 > Figwheel is careful about which clients are able to receive reload
 > and compile time messages. When you start Figwheel it assigns itself
 > a unique identifier. When a client connects to the Figwheel
-> websocket it can supply this process-id along with the
+> SSE endpoint it can supply this process-id along with the
 > build-id. Figwheel only sends messages to clients with the correct
 > identifiers. This prevents stale clients and clients with other
 > build-ids from getting the wrong reload messages and REPL evals.
