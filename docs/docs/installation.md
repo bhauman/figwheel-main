@@ -161,7 +161,7 @@ As a concrete example, in the root directory of your project place a
       {:dependencies [[org.clojure/clojurescript "1.10.773"]
                       [com.bhauman/figwheel-main "0.2.20"]
                       ;; optional but recommended
-                      [com.bhauman/rebel-readline-cljs "0.1.4"]]}})
+                      [com.bhauman/rebel-readline-cljs "0.1.11"]]}})
 ```
 
 We added all the dependencies to work with ClojureScript and Figwheel
@@ -198,7 +198,7 @@ following contents:
         org.clojure/clojurescript {:mvn/version "1.10.773"}
         com.bhauman/figwheel-main {:mvn/version "0.2.20"}
         ;; optional but recommended
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}}
 ```
 
 You can verify this worked by launching a generic `figwheel.main`
@@ -284,7 +284,7 @@ to launch a REPL with `figwheel.main`.
         org.clojure/clojurescript {:mvn/version "1.10.773"}
         com.bhauman/figwheel-main {:mvn/version "0.2.20"}
         ;; optional but recommended		
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}
  :aliases {:fig {:main-opts ["-m" "figwheel.main"]}}}
 ```
 

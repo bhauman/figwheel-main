@@ -224,7 +224,7 @@ available. So, you can get Rebel Readline behavior by simply adding it
 to your dependencies.
 
 ```
-clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.20\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.4\"}}}}"  -M -m figwheel.main
+clojure -Sdeps "{:deps {com.bhauman/figwheel-main {:mvn/version \"0.2.20\"} com.bhauman/rebel-readline-cljs {:mvn/version \"0.1.11\"}}}}"  -M -m figwheel.main
 ```
 
 As of right now using Rebel readline does create some startup overhead
@@ -246,7 +246,7 @@ Ensure your `deps.edn` file has the `figwheel.main` dependencies:
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}
  ;; setup some development paths
  :paths ["src" "target" "resources"]
  ;; setup a helpful alias to start the build
@@ -312,7 +312,7 @@ Ensure your `project.clj` file has `figwheel.main` dependencies:
 
 ```clojure
 :dependencies [[com.bhauman/figwheel-main "0.2.20"]
-               [com.bhauman/rebel-readline-cljs "0.1.4"]]
+               [com.bhauman/rebel-readline-cljs "0.1.11"]]
  ;; setup target as a resource path
 :resource-paths ["target" "resources"]
 ;; set up an alias to invoke your figwheel build
@@ -450,7 +450,7 @@ a `re-frame` dependency like so:
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}
         ;; adding re-frame
         re-frame {:mvn/version "1.10.5"}}
  :paths ["src" "target" "resources"]}

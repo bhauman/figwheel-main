@@ -162,7 +162,7 @@ To use Rebel Readline let's add `com.bhauman/rebel-readline-cljs
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}}
 ```
 
 Now when you launch `figwheel.main`, it will detect the presence of
@@ -630,7 +630,7 @@ We can fix this classpath warning by adding both `"src"` and
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}
  :paths ["src" "target"]}
 ```
 
@@ -1079,7 +1079,7 @@ should look like this:
 
 ```clojure
 {:deps {com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}}
  :paths ["src" "target" "resources"]}
 ```
 

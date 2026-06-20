@@ -44,7 +44,7 @@ And a `deps.edn` as well.
 
 ```clojure
 {:deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
-        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}
         com.bhauman/figwheel-main {:mvn/version "0.2.20"}}}
 ```
 

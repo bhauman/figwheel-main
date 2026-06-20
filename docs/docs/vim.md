@@ -200,8 +200,8 @@ So here's a minimal `deps.edn` (analogous to the previous `project.clj`):
  {org.clojure/clojure {:mvn/version "1.9.0"}
   org.clojure/clojurescript {:mvn/version "1.10.773"}
   com.bhauman/figwheel-main {:mvn/version "0.2.20"}
-  com.bhauman/rebel-readline {:mvn/version "0.1.4"}
-  com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+  com.bhauman/rebel-readline {:mvn/version "0.1.11"}
+  com.bhauman/rebel-readline-cljs {:mvn/version "0.1.11"}
   org.clojure/tools.nrepl {:mvn/version "0.2.13"}
   cider/cider-nrepl {:mvn/version "0.17.0"}
   cider/piggieback {:mvn/version "0.3.8"}}}
