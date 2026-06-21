@@ -80,6 +80,39 @@ yourself using many of these options you problably need to run your
 own server outside of figwheel.main."
   :group :common)
 
+(s/def ::port ::schema/integer-port)
+(s/def ::bind non-blank-string?)
+(s/def ::port-file (s/or :non-blank-string non-blank-string?
+                         :disabled false?))
+(s/def ::middleware (s/coll-of (s/or :symbol ::schema/unquoted-symbol
+                                      :string non-blank-string?)))
+(s/def ::nrepl-options (s/keys :opt-un [::port
+                                         ::bind
+                                         ::port-file
+                                         ::middleware]))
+(s/def ::nrepl (s/or :boolean boolean?
+                     :options ::nrepl-options))
+
+(def-spec-meta ::nrepl
+  :doc
+  "Configures the nREPL server that Figwheel starts for long running
+`:repl` and `:serve` workflows.
+
+By default Figwheel starts nREPL on a random available port and writes
+that port to `.nrepl-port`. Set this option to false to disable the
+nREPL server.
+
+The default middleware includes Piggieback so that editor nREPL clients
+can call `figwheel.main.api/cljs-repl` against a running build.
+
+    :nrepl false
+
+    :nrepl {:port 7888
+            :middleware [cider.piggieback/wrap-cljs-repl]}
+
+Use `:port-file false` to avoid writing `.nrepl-port`."
+  :group :common)
+
 (s/def ::rebel-readline boolean?)
 (def-spec-meta ::rebel-readline
   :doc
@@ -966,13 +999,20 @@ Default: 8000
 
 (s/def ::edn
   (ensure-all-registered-keys-included
-   #{::edn ::bundles}
+   #{::edn
+     ::bundles
+     ::nrepl-options
+     ::port
+     ::bind
+     ::port-file
+     ::middleware}
    (spell/strict-keys
     :opt-un
     [::watch-dirs
      ::css-dirs
      ::ring-handler
      ::ring-server-options
+     ::nrepl
      ::rebel-readline
      ::pprint-config
      ::open-file-command

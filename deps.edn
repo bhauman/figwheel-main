@@ -11,6 +11,8 @@
 
         ;; server
         ring/ring {:mvn/version "1.15.3"}
+        nrepl/nrepl {:mvn/version "1.0.0"}
+        cider/piggieback {:mvn/version "0.6.0"}
 
         ;; file watching
         com.nextjournal/beholder {:mvn/version "1.0.2"}

@@ -21,6 +21,8 @@
       [clojure.tools.reader.edn :as redn]
       [clojure.tools.reader.reader-types :as rtypes]
       [clojure.walk :as walk]
+      [nrepl.server :as nrepl-server]
+      [nrepl.transport :as nrepl-transport]
       [figwheel.core :as fw-core]
       [figwheel.main.ansi-party :as ansip]
       [figwheel.main.logging :as log]
@@ -1816,6 +1818,97 @@ I.E. {:closure-defines {cljs.core/*global* \"window\" ...}}"))
         (bound-var? 'nrepl.middleware.interruptible-eval/*msg*)
         (bound-var? 'clojure.tools.nrepl.middleware.interruptible-eval/*msg*)))
 
+     (def default-nrepl-port-file ".nrepl-port")
+     (def default-nrepl-middleware '[cider.piggieback/wrap-cljs-repl])
+     (defonce managed-nrepl-server (atom nil))
+
+     (defn figwheel-version []
+       (or (when-let [resource (io/resource "META-INF/maven/com.bhauman/figwheel-main/pom.properties")]
+             (with-open [reader (io/reader resource)]
+               (let [props (java.util.Properties.)]
+                 (.load props reader)
+                 (.getProperty props "version"))))
+           "unknown"))
+
+     (defn normalize-nrepl-options [nrepl]
+       (when-not (false? nrepl)
+         (merge {:port 0
+                 :port-file default-nrepl-port-file
+                 :middleware default-nrepl-middleware}
+                (when (map? nrepl) nrepl))))
+
+     (defn should-start-nrepl? [{:keys [mode nrepl ::build-once] :as config}]
+       (and (#{:repl :serve} mode)
+            (not build-once)
+            (not (false? nrepl))
+            (or (contains? config :nrepl)
+                (not (in-nrepl?)))))
+
+     (defn resolve-nrepl-middleware [middleware]
+       (mapv #(resolve-fn-var "nrepl middleware" %) middleware))
+
+     (defn add-figwheel-version-to-describe [msg]
+       (update-in msg [:versions :figwheel]
+                  #(or % {:version-string (figwheel-version)})))
+
+     (defn wrap-figwheel-describe [handler]
+       (fn [{:keys [op transport] :as msg}]
+         (if (= op "describe")
+           (handler
+            (assoc msg :transport
+                   (reify nrepl-transport/Transport
+                     (recv [_] (nrepl-transport/recv transport))
+                     (recv [_ timeout] (nrepl-transport/recv transport timeout))
+                     (send [this response]
+                       (nrepl-transport/send transport
+                                             (add-figwheel-version-to-describe response))
+                       this))))
+           (handler msg))))
+
+     (defn write-nrepl-port-file! [port-file port]
+       (when port-file
+         (io/make-parents port-file)
+         (spit port-file (str port))))
+
+     (defn delete-nrepl-port-file! [port-file]
+       (when port-file
+         (io/delete-file port-file true)))
+
+     (defn start-nrepl-server! [config]
+       (when (should-start-nrepl? config)
+         (when-not @managed-nrepl-server
+           (let [{:keys [middleware port-file] :as nrepl-options}
+                 (normalize-nrepl-options (:nrepl config))
+                 server-options
+                 (cond-> (dissoc nrepl-options :middleware :port-file)
+                   middleware
+                   (assoc :handler
+                          (wrap-figwheel-describe
+                           (apply nrepl-server/default-handler
+                                  (resolve-nrepl-middleware middleware)))))
+                 server (apply nrepl-server/start-server
+                               (mapcat identity server-options))
+                 port (:port server)]
+             (try
+               (write-nrepl-port-file! port-file port)
+               (reset! managed-nrepl-server
+                       {:server server
+                        :port-file port-file})
+               (log/info (format "nREPL server started on port %s" port))
+               (when port-file
+                 (log/info (format "nREPL port written to %s" port-file)))
+               server
+               (catch Throwable t
+                 (nrepl-server/stop-server server)
+                 (throw t)))))))
+
+     (defn stop-nrepl-server! []
+       (when-let [{:keys [server port-file]} @managed-nrepl-server]
+         (reset! managed-nrepl-server nil)
+         (delete-nrepl-port-file! port-file)
+         (nrepl-server/stop-server server)
+         (log/info "nREPL server stopped")))
+
      (defn nrepl-repl [repl-env repl-options]
        (if-let [piggie-repl (or (and (bound-var? 'cider.piggieback/*cljs-repl-env*)
                                      (resolve 'cider.piggieback/cljs-repl))
@@ -2209,7 +2302,8 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                          :config *config*})
                        (start-background-builds (select-keys cfg [::background-builds
                                                                   ::start-figwheel-options]))
-                       (doseq [init-fn (::initializers b-cfg)] (init-fn)))
+                       (doseq [init-fn (::initializers b-cfg)] (init-fn))
+                       (start-nrepl-server! config))
                      (cond
                        (and (= mode :repl) (not build-once))
                   ;; this forwards command line args
@@ -2232,6 +2326,7 @@ In the cljs.user ns, controls can be called without ns ie. (conns) instead of (f
                                (and
                                 (not (in-nrepl?))
                                 (= mode :repl)))
+                       (stop-nrepl-server!)
                        (fww/stop!)
                        (remove-watch cenv :figwheel.core/watch-hook)
                        (swap! build-registry dissoc (get-in *config* [::build :id])))))))))))

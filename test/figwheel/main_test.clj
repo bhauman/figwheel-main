@@ -4,7 +4,8 @@
    [figwheel.main.test.utils :refer [with-edn-files with-err-str logging-fixture]]
    [clojure.java.io :as io]
    [clojure.string :as string]
-   [clojure.test :refer [deftest testing is use-fixtures]]))
+   [clojure.test :refer [deftest testing is use-fixtures]]
+   [nrepl.core :as nrepl]))
 
 (use-fixtures :once logging-fixture)
 
@@ -101,5 +102,51 @@
 
     (is (not-empty (-> (main->config "-co" "dev.cljs.edn" "-c" "-s")
                        :figwheel.main/config :watch-dirs)))))
+
+(deftest nrepl-option-defaults
+  (is (= {:port 0
+          :port-file ".nrepl-port"
+          :middleware '[cider.piggieback/wrap-cljs-repl]}
+         (fm/normalize-nrepl-options nil)))
+  (is (nil? (fm/normalize-nrepl-options false)))
+  (is (= {:port 7888
+          :port-file false
+          :middleware []}
+         (fm/normalize-nrepl-options {:port 7888
+                                      :port-file false
+                                      :middleware []})))
+  (is (fm/should-start-nrepl? {:mode :serve}))
+  (is (not (fm/should-start-nrepl? {:mode :build-once})))
+  (is (not (fm/should-start-nrepl? {:mode :serve :nrepl false})))
+  (with-redefs [fm/in-nrepl? (fn [] true)]
+    (is (not (fm/should-start-nrepl? {:mode :serve})))
+    (is (fm/should-start-nrepl? {:mode :serve :nrepl true}))))
+
+(deftest managed-nrepl-server-lifecycle
+  (let [port-file "target/test-managed.nrepl-port"]
+    (io/delete-file port-file true)
+    (try
+      (is (fm/start-nrepl-server! {:mode :serve
+                                   :nrepl {:port 0
+                                           :port-file port-file}}))
+      (is (re-matches #"\d+" (slurp port-file)))
+      (finally
+        (fm/stop-nrepl-server!)
+        (is (not (.exists (io/file port-file))))))))
+
+(deftest managed-nrepl-describe-includes-figwheel-version
+  (let [server (fm/start-nrepl-server! {:mode :serve
+                                        :nrepl {:port 0
+                                                :port-file false}})
+        port (:port server)]
+    (try
+      (with-open [conn (nrepl/connect :host "127.0.0.1" :port port)]
+        (let [client (nrepl/client conn 2000)
+              describe-resp (nrepl/combine-responses
+                             (nrepl/message client {:op "describe"}))]
+          (is (contains? (:versions describe-resp) :clojure))
+          (is (contains? (:versions describe-resp) :figwheel))))
+      (finally
+        (fm/stop-nrepl-server!)))))
 
 #_(main-to-print-config "-pc" "-r")

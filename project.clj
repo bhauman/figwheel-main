@@ -12,6 +12,8 @@
    [com.bhauman/figwheel-core "0.2.21-SNAPSHOT"]
    [com.bhauman/figwheel-repl "0.2.21-SNAPSHOT"]
    [ring/ring "1.15.3"]
+   [nrepl "1.0.0"]
+   [cider/piggieback "0.6.0"]
    [com.nextjournal/beholder "1.0.2"]
    [binaryage/devtools "1.0.7"]
    [expound/expound "0.9.0"]
@@ -19,7 +21,6 @@
    [com.bhauman/cljs-test-display "0.1.1"]
    [com.bhauman/certifiable "0.0.7"]]
   :resource-paths ["helper-resources"]
-  :profiles {:dev {:dependencies [[cider/piggieback "0.6.0"]
-                                  #_[com.bhauman/rebel-readline-cljs "0.1.11"]]
+  :profiles {:dev {:dependencies [#_[com.bhauman/rebel-readline-cljs "0.1.11"]]
                    :source-paths ["src" "devel" "dev"]
                    :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}})

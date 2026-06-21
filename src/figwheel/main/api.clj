@@ -132,6 +132,8 @@
         (figwheel.repl/tear-down-server repl-env)
         (log/info "Remove all repl listeners")
         (figwheel.repl/clear-listeners)
+        (log/info "Stopping the nREPL server")
+        (fig/stop-nrepl-server!)
         (log/info "Remove all watchers")
         (fww/reset-watch!))
       true)
